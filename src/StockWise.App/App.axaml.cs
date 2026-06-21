@@ -27,6 +27,7 @@ public partial class App : Application
         var host = CreateHostBuilder().Build();
         Services = host.Services;
         Configuration = Services.GetRequiredService<IConfiguration>();
+        InitializeDatabase();
 
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
@@ -56,5 +57,11 @@ public partial class App : Application
                 // services.AddScoped<IAuthService, AuthService>();
         });
     }
-    
+    private static void InitializeDatabase()
+    {
+    // TODO: Добавить в задаче 0.3
+    // using var scope = Services.CreateScope();
+    // var context = scope.ServiceProvider.GetRequiredService<StockDbContext>();
+    // context.Database.EnsureCreated();
+    }
 }
