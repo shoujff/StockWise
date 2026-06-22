@@ -5,8 +5,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
 using System;
-using System.IO;
 using StockWise.App.ViewModels;
+using StockWise.Data;
 
 namespace StockWise.App;
 
@@ -53,7 +53,7 @@ public partial class App : Application
                 services.AddSingleton<MainWindow>();
                 services.AddSingleton<MainWindowViewModel>();
                 // TODO: Добавить остальные сервисы в следующих задачах
-                // services.AddDbContext<StockDbContext>();
+                services.AddDbContext<StockDb>();
                 // services.AddScoped<IAuthService, AuthService>();
         });
     }
