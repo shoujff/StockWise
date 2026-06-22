@@ -4,8 +4,10 @@ using Avalonia.Markup.Xaml;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.EntityFrameworkCore;
 using System;
 using StockWise.App.ViewModels;
+using StockWise.App.Repositories;
 using StockWise.Data;
 
 namespace StockWise.App;
@@ -52,9 +54,19 @@ public partial class App : Application
                 services.AddSingleton(configuration);
                 services.AddSingleton<MainWindow>();
                 services.AddSingleton<MainWindowViewModel>();
-                // TODO: Добавить остальные сервисы в следующих задачах
-                services.AddDbContext<StockDb>();
-                // services.AddScoped<IAuthService, AuthService>();
+
+                var connString = configuration.GetConnectionString("DefaultConnection");
+                services.AddDbContext<StockDb>(options =>
+                    options.UseSqlServer(connString));
+
+                services.AddSingleton<DapperContext>();
+
+                services.AddScoped<UserRepository>();
+                services.AddScoped<CategoryRepository>();
+                services.AddScoped<ItemRepository>();
+                services.AddScoped<WarehouseRepository>();
+                services.AddScoped<StockBalanceRepository>();
+                services.AddScoped<TransactionRepository>();
         });
     }
     private static void InitializeDatabase()
