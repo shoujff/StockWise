@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using StockWise.App.ViewModels;
 using StockWise.App.Repositories;
+using StockWise.App.Services;
 using StockWise.Data;
 
 namespace StockWise.App;
@@ -67,6 +68,8 @@ public partial class App : Application
                 services.AddScoped<WarehouseRepository>();
                 services.AddScoped<StockBalanceRepository>();
                 services.AddScoped<TransactionRepository>();
+                services.AddScoped<RolePermissionRepository>();
+                services.AddScoped<IAuthService, AuthService>();
         });
     }
     private static void InitializeDatabase()

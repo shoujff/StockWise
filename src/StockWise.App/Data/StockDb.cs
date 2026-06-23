@@ -13,6 +13,7 @@ public class StockDb : DbContext
     public DbSet<Warehouse> Warehouses => Set<Warehouse>();
     public DbSet<StockBalance> StockBalances => Set<StockBalance>();
     public DbSet<Transaction> Transactions => Set<Transaction>();
+    public DbSet<RolePermission> RolePermissions => Set<RolePermission>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
