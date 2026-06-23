@@ -1,30 +1,29 @@
 ﻿using Avalonia;
+using Avalonia.Controls.ApplicationLifetimes;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
-using StockWise.Data;
 using System;
-using System.IO;
-using System.Text.Json;
+using System.Linq;
+using StockWise.App.Models;
+using StockWise.App.ViewModels;
+using StockWise.App.Views;
+using StockWise.App.Repositories;
+using StockWise.App.Services;
+using StockWise.Data;
 
 namespace StockWise.App;
 
 internal class Program
 {
-    public static IServiceProvider ServiceProvider { get; private set; } = null!;
-
     [STAThread]
     public static void Main(string[] args)
     {
-        var json = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "appsettings.json"));
-        var settings = JsonSerializer.Deserialize<AppSettings>(json)!;
-        var connString = settings.ConnectionStrings.DefaultConnection;
+        var host = CreateHostBuilder(args).Build();
+        App.Services = host.Services;
 
-        var services = new ServiceCollection();
-        services.AddDbContext<StockDb>(options =>
-            options.UseSqlServer(connString));
-        services.AddSingleton(settings);
-
-        ServiceProvider = services.BuildServiceProvider();
+        InitializeDatabase();
 
         BuildAvaloniaApp()
             .StartWithClassicDesktopLifetime(args);
@@ -35,13 +34,63 @@ internal class Program
             .UsePlatformDetect()
             .WithInterFont()
             .LogToTrace();
-}
-public class AppSettings
-{
-    public ConnectionStringsSection ConnectionStrings { get; set; } = new();
 
-    public class ConnectionStringsSection
+    private static IHostBuilder CreateHostBuilder(string[] args)
     {
-        public string DefaultConnection { get; set; } = string.Empty;
+        return Host.CreateDefaultBuilder(args).ConfigureAppConfiguration((context, config) =>
+        {
+            config.SetBasePath(AppContext.BaseDirectory);
+            config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+            config.AddJsonFile($"appsettings.{context.HostingEnvironment.EnvironmentName}.json", optional: true);
+            config.AddEnvironmentVariables();
+        })
+        .ConfigureServices((context, services) =>
+        {
+            var configuration = context.Configuration;
+            services.AddSingleton(configuration);
+            services.AddSingleton<MainWindow>();
+            services.AddSingleton<MainWindowViewModel>();
+
+            var connString = configuration.GetConnectionString("DefaultConnection");
+            services.AddDbContext<StockDb>(options =>
+                options.UseSqlServer(connString));
+
+            services.AddSingleton<DapperContext>();
+
+            services.AddScoped<UserRepository>();
+            services.AddScoped<CategoryRepository>();
+            services.AddScoped<ItemRepository>();
+            services.AddScoped<WarehouseRepository>();
+            services.AddScoped<StockBalanceRepository>();
+            services.AddScoped<TransactionRepository>();
+            services.AddScoped<RolePermissionRepository>();
+            services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<IItemService, ItemService>();
+        });
+    }
+
+    private static void InitializeDatabase()
+    {
+        using var scope = App.Services!.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<StockDb>();
+        context.Database.Migrate();
+
+        var configuration = scope.ServiceProvider.GetRequiredService<IConfiguration>();
+        var adminLogin = configuration.GetSection("Auth:DefaultAdminUsername").Get<string>() ?? "admin";
+        var adminPassword = configuration.GetSection("Auth:DefaultAdminPassword").Get<string>() ?? "Admin123!";
+
+        if (!context.Users.Any(u => u.Login == adminLogin))
+        {
+            context.Users.Add(new User
+            {
+                Login = adminLogin,
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword(adminPassword, workFactor: 12),
+                FirstName = "Администратор",
+                LastName = "",
+                Role = "Admin"
+            });
+            context.SaveChanges();
+        }
     }
 }

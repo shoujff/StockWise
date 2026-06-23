@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
+using Microsoft.EntityFrameworkCore;
 using StockWise.App.Models;
 using StockWise.Data;
 
@@ -24,5 +26,22 @@ public class ItemRepository : BaseRepository<Item>
         if (categoryId.HasValue)
             sql += " AND CategoryId = @categoryId";
         return await connection.QueryAsync<Item>(sql, new { search = $"%{searchTerm}%", categoryId });
+    }
+
+    public async Task<Item?> GetByArticleAsync(string article)
+    {
+        return await _dbSet.FirstOrDefaultAsync(x => x.Article == article);
+    }
+
+    public async Task<Item?> GetByBarcodeAsync(string barcode)
+    {
+        return await _dbSet.FirstOrDefaultAsync(x => x.Barcode == barcode);
+    }
+
+    public async Task<string?> GetLastArticleAsync()
+    {
+        return await _dbSet.OrderByDescending(x => x.Id)
+            .Select(x => x.Article)
+            .FirstOrDefaultAsync();
     }
 }

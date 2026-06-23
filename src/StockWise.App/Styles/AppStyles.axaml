@@ -1,0 +1,310 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Styles.Resources>
+        <SolidColorBrush x:Key="SidebarBg">#1C1C2E</SolidColorBrush>
+        <SolidColorBrush x:Key="SidebarHover">#2A2A42</SolidColorBrush>
+        <SolidColorBrush x:Key="SidebarSelected">#3D3D5C</SolidColorBrush>
+        <SolidColorBrush x:Key="SidebarText">#B0B0C0</SolidColorBrush>
+        <SolidColorBrush x:Key="SidebarTextSelected">#FFFFFF</SolidColorBrush>
+        <SolidColorBrush x:Key="AccentColor">#6750A4</SolidColorBrush>
+        <SolidColorBrush x:Key="AccentLight">#7C6FBE</SolidColorBrush>
+        <SolidColorBrush x:Key="AccentDark">#4A3B7C</SolidColorBrush>
+        <SolidColorBrush x:Key="HeaderBg">#F5F5F8</SolidColorBrush>
+        <SolidColorBrush x:Key="WorkspaceBg">#FAFAFE</SolidColorBrush>
+        <SolidColorBrush x:Key="DividerColor">#2E2E48</SolidColorBrush>
+
+        <LinearGradientBrush x:Key="AccentGradient" StartPoint="0,0" EndPoint="1,0">
+            <GradientStop Offset="0" Color="#6750A4" />
+            <GradientStop Offset="1" Color="#7C6FBE" />
+        </LinearGradientBrush>
+
+        <LinearGradientBrush x:Key="ButtonGradient" StartPoint="0,0" EndPoint="1,0">
+            <GradientStop Offset="0" Color="#6750A4" />
+            <GradientStop Offset="1" Color="#8068C7" />
+        </LinearGradientBrush>
+
+        <LinearGradientBrush x:Key="ButtonHoverGradient" StartPoint="0,0" EndPoint="1,0">
+            <GradientStop Offset="0" Color="#7C6FBE" />
+            <GradientStop Offset="1" Color="#8E7AD4" />
+        </LinearGradientBrush>
+    </Styles.Resources>
+
+    <!-- ════════════════════════════════════ -->
+    <!-- САЙДБАР                               -->
+    <!-- ════════════════════════════════════ -->
+
+    <Style Selector="RadioButton.navItem">
+        <Setter Property="Height" Value="48" />
+        <Setter Property="Padding" Value="20,0,16,0" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border Name="RootBorder"
+                        Background="{TemplateBinding Background}"
+                        Padding="{TemplateBinding Padding}"
+                        Height="{TemplateBinding Height}">
+                    <Grid ColumnDefinitions="32,*,Auto" VerticalAlignment="Center">
+                        <ContentControl Grid.Column="0"
+                                        Content="{TemplateBinding Content}"
+                                        Width="24" Height="24"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Center" />
+                        <TextBlock Grid.Column="1"
+                                   Text="{TemplateBinding Content}"
+                                   FontSize="14"
+                                   FontWeight="500"
+                                   VerticalAlignment="Center"
+                                   TextTrimming="CharacterEllipsis"
+                                   Foreground="{StaticResource SidebarText}" />
+                        <Border Name="ActiveIndicator"
+                                Grid.Column="2"
+                                Width="3"
+                                Height="24"
+                                CornerRadius="2"
+                                Background="{StaticResource AccentColor}"
+                                Opacity="0"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Center"
+                                Margin="0,0,2,0" />
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+
+    <Style Selector="RadioButton.navItem:pointerover /template/ Border#RootBorder">
+        <Setter Property="Background" Value="{StaticResource SidebarHover}" />
+    </Style>
+
+    <Style Selector="RadioButton.navItem:checked /template/ Border#RootBorder">
+        <Setter Property="Background" Value="{StaticResource SidebarSelected}" />
+    </Style>
+
+    <Style Selector="RadioButton.navItem:checked /template/ TextBlock">
+        <Setter Property="Foreground" Value="{StaticResource SidebarTextSelected}" />
+        <Setter Property="FontWeight" Value="600" />
+    </Style>
+
+    <Style Selector="RadioButton.navItem:checked /template/ Border#ActiveIndicator">
+        <Setter Property="Opacity" Value="1" />
+    </Style>
+
+    <Style Selector="Border.sidebarDivider">
+        <Setter Property="Height" Value="1" />
+        <Setter Property="Margin" Value="16,8" />
+        <Setter Property="Background" Value="{StaticResource DividerColor}" />
+    </Style>
+
+    <Style Selector="TextBlock.sidebarSection">
+        <Setter Property="FontSize" Value="11" />
+        <Setter Property="FontWeight" Value="600" />
+        <Setter Property="Foreground" Value="{StaticResource SidebarText}" />
+        <Setter Property="Opacity" Value="0.5" />
+        <Setter Property="Margin" Value="20,16,16,4" />
+    </Style>
+
+    <Style Selector="Border.logoArea">
+        <Setter Property="Height" Value="64" />
+        <Setter Property="Padding" Value="20,0,16,0" />
+    </Style>
+
+    <Style Selector="TextBlock.logoText">
+        <Setter Property="FontSize" Value="20" />
+        <Setter Property="FontWeight" Value="700" />
+        <Setter Property="Foreground" Value="{StaticResource SidebarTextSelected}" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+
+    <Style Selector="TextBlock.logoVersion">
+        <Setter Property="FontSize" Value="11" />
+        <Setter Property="Foreground" Value="{StaticResource SidebarText}" />
+        <Setter Property="Opacity" Value="0.5" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Margin" Value="6,0,0,0" />
+    </Style>
+
+    <Style Selector="Border.userArea">
+        <Setter Property="Padding" Value="14,12" />
+        <Setter Property="Background" Value="{StaticResource SidebarHover}" />
+    </Style>
+
+    <Style Selector="Border.avatar">
+        <Setter Property="Width" Value="36" />
+        <Setter Property="Height" Value="36" />
+        <Setter Property="CornerRadius" Value="18" />
+        <Setter Property="Background" Value="{StaticResource AccentColor}" />
+    </Style>
+
+    <Style Selector="Button.userLogout">
+        <Setter Property="Width" Value="32" />
+        <Setter Property="Height" Value="32" />
+        <Setter Property="FontSize" Value="15" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{StaticResource SidebarText}" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+
+    <Style Selector="Button.userLogout:pointerover">
+        <Setter Property="Background" Value="#3A3A54" />
+        <Setter Property="Foreground" Value="#FF6B6B" />
+    </Style>
+
+    <!-- ════════════════════════════════════ -->
+    <!-- ХЕДЕР                                 -->
+    <!-- ════════════════════════════════════ -->
+
+    <Style Selector="Border.pageHeader">
+        <Setter Property="Background" Value="White" />
+        <Setter Property="Padding" Value="28,18" />
+    </Style>
+
+    <Style Selector="Border.pageHeaderAccent">
+        <Setter Property="Height" Value="3" />
+        <Setter Property="Background" Value="{StaticResource AccentGradient}" />
+    </Style>
+
+    <Style Selector="TextBlock.pageTitle">
+        <Setter Property="FontSize" Value="24" />
+        <Setter Property="FontWeight" Value="700" />
+        <Setter Property="Foreground" Value="#1A1A2E" />
+    </Style>
+
+    <Style Selector="TextBlock.pageDate">
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="Foreground" Value="#AAA" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+
+    <!-- ════════════════════════════════════ -->
+    <!-- ВОРКСПЕЙС                             -->
+    <!-- ════════════════════════════════════ -->
+
+    <Style Selector="Border.workspace">
+        <Setter Property="Background" Value="{StaticResource WorkspaceBg}" />
+        <Setter Property="Padding" Value="28" />
+    </Style>
+
+    <Style Selector="Border.placeholderCard">
+        <Setter Property="Background" Value="White" />
+        <Setter Property="CornerRadius" Value="16" />
+        <Setter Property="Padding" Value="48,56" />
+        <Setter Property="BoxShadow" Value="0 4 24 0 rgba(0,0,0,0.06)" />
+    </Style>
+
+    <!-- ════════════════════════════════════ -->
+    <!-- LOGIN / REGISTER                      -->
+    <!-- ════════════════════════════════════ -->
+
+    <Style Selector="Border.loginCard">
+        <Setter Property="Background" Value="White" />
+        <Setter Property="CornerRadius" Value="16" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="BoxShadow" Value="0 8 40 0 rgba(0,0,0,0.15)" />
+        <Setter Property="Width" Value="400" />
+    </Style>
+
+    <Style Selector="Border.loginCardTop">
+        <Setter Property="Height" Value="6" />
+        <Setter Property="Background" Value="{StaticResource AccentGradient}" />
+        <Setter Property="CornerRadius" Value="16,16,0,0" />
+    </Style>
+
+    <Style Selector="Border.loginCardBody">
+        <Setter Property="Padding" Value="40,32" />
+    </Style>
+
+    <Style Selector="TextBox.loginField">
+        <Setter Property="Height" Value="48" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="Padding" Value="14,0,14,0" />
+        <Setter Property="CornerRadius" Value="10" />
+        <Setter Property="Background" Value="#F5F5F8" />
+        <Setter Property="BorderBrush" Value="#E4E4EC" />
+        <Setter Property="BorderThickness" Value="2" />
+        <Setter Property="Watermark" Value="Введите значение" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+
+    <Style Selector="TextBox.loginField:focus">
+        <Setter Property="BorderBrush" Value="{StaticResource AccentColor}" />
+        <Setter Property="Background" Value="White" />
+    </Style>
+
+    <Style Selector="TextBlock.loginIcon">
+        <Setter Property="FontSize" Value="18" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Margin" Value="14,0,8,0" />
+    </Style>
+
+    <Style Selector="Button.loginButton">
+        <Setter Property="Height" Value="48" />
+        <Setter Property="FontSize" Value="15" />
+        <Setter Property="FontWeight" Value="700" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="Background" Value="{StaticResource ButtonGradient}" />
+        <Setter Property="CornerRadius" Value="10" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+
+    <Style Selector="Button.loginButton:pointerover">
+        <Setter Property="Background" Value="{StaticResource ButtonHoverGradient}" />
+    </Style>
+
+    <Style Selector="Button.loginButton:pressed">
+        <Setter Property="Background" Value="{StaticResource AccentDark}" />
+    </Style>
+
+    <Style Selector="CheckBox.loginCheckbox">
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="Foreground" Value="#666" />
+    </Style>
+
+    <Style Selector="Border.authDivider">
+        <Setter Property="Height" Value="1" />
+        <Setter Property="Background" Value="#EEEEF2" />
+        <Setter Property="Margin" Value="0,4,0,0" />
+    </Style>
+
+    <Style Selector="Button.authLink">
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="FontWeight" Value="600" />
+        <Setter Property="Foreground" Value="{StaticResource AccentColor}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Padding" Value="4,0" />
+    </Style>
+
+    <Style Selector="Button.authLink:pointerover">
+        <Setter Property="Foreground" Value="{StaticResource AccentLight}" />
+    </Style>
+
+    <Style Selector="Button.authLink:pressed">
+        <Setter Property="Foreground" Value="{StaticResource AccentDark}" />
+    </Style>
+
+    <Style Selector="Border.loginErrorBox">
+        <Setter Property="Background" Value="#FFF0F0" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="Padding" Value="12,10" />
+    </Style>
+
+    <Style Selector="TextBlock.loginError">
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="FontWeight" Value="500" />
+        <Setter Property="Foreground" Value="#D32F2F" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+    </Style>
+
+</Styles>

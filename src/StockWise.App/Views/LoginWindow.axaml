@@ -1,0 +1,26 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:StockWise.App.ViewModels"
+        xmlns:views="clr-namespace:StockWise.App.Views"
+        x:Class="StockWise.App.Views.LoginWindow"
+        Title="StockWise — Вход"
+        Width="480" Height="740"
+        MinHeight="620"
+        CanResize="False"
+        WindowStartupLocation="CenterScreen"
+        Background="{StaticResource SidebarBg}">
+
+    <Window.DataTemplates>
+        <DataTemplate DataType="{x:Type vm:LoginViewModel}">
+            <views:LoginView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:RegisterViewModel}">
+            <views:RegisterView />
+        </DataTemplate>
+    </Window.DataTemplates>
+
+    <ContentControl Name="ContentArea"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch" />
+
+</Window>

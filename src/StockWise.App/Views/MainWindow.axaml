@@ -1,0 +1,142 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:StockWise.App.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="800"
+        x:Class="StockWise.App.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Title="StockWise — Управление складом"
+        Width="1200" Height="800"
+        MinWidth="900" MinHeight="600"
+        WindowStartupLocation="CenterScreen"
+        Background="#FAFAFE">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel />
+    </Design.DataContext>
+
+    <Grid ColumnDefinitions="240,*">
+
+        <Border Grid.Column="0" Background="{StaticResource SidebarBg}">
+            <Grid RowDefinitions="Auto,*,Auto">
+
+                <Border Grid.Row="0" Classes="logoArea">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Spacing="4">
+                        <TextBlock Text="📦" FontSize="24" VerticalAlignment="Center" />
+                        <TextBlock Text="StockWise" Classes="logoText" />
+                        <TextBlock Text="{Binding Version}" Classes="logoVersion" />
+                    </StackPanel>
+                </Border>
+
+                <ScrollViewer Grid.Row="1">
+                    <StackPanel>
+
+                        <TextBlock Text="НАВИГАЦИЯ" Classes="sidebarSection" />
+                        <RadioButton Content="📊  Дашборд" Classes="navItem"
+                                     GroupName="nav" IsChecked="True" />
+                        <RadioButton Content="📦  Товары" Classes="navItem"
+                                     GroupName="nav" />
+                        <RadioButton Content="📂  Категории" Classes="navItem"
+                                     GroupName="nav" />
+                        <RadioButton Content="🏭  Склады" Classes="navItem"
+                                     GroupName="nav" />
+                        <RadioButton Content="📄  Документы" Classes="navItem"
+                                     GroupName="nav" />
+                        <RadioButton Content="📋  Заказы" Classes="navItem"
+                                     GroupName="nav" />
+                        <RadioButton Content="🔄  Инвентаризация" Classes="navItem"
+                                     GroupName="nav" />
+
+                        <Border Classes="sidebarDivider" />
+
+                        <TextBlock Text="АНАЛИТИКА" Classes="sidebarSection" />
+                        <RadioButton Content="📈  Отчёты" Classes="navItem"
+                                     GroupName="nav" />
+
+                        <Border Classes="sidebarDivider" />
+
+                        <TextBlock Text="АДМИНИСТРИРОВАНИЕ" Classes="sidebarSection" />
+                        <RadioButton Content="👥  Пользователи" Classes="navItem"
+                                     GroupName="nav" />
+                        <RadioButton Content="⚙️  Настройки" Classes="navItem"
+                                     GroupName="nav" />
+
+                    </StackPanel>
+                </ScrollViewer>
+
+                <Border Grid.Row="2" Classes="userArea">
+                    <Grid ColumnDefinitions="36,*,Auto">
+                        <Border Grid.Column="0" Classes="avatar">
+                            <TextBlock Text="A" FontSize="16" FontWeight="700"
+                                       Foreground="White"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" />
+                        </Border>
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0">
+                            <TextBlock Text="Admin" FontSize="14" FontWeight="600"
+                                       Foreground="{StaticResource SidebarTextSelected}" />
+                            <TextBlock Text="admin@stockwise.local" FontSize="11"
+                                       Foreground="{StaticResource SidebarText}"
+                                       TextTrimming="CharacterEllipsis" />
+                        </StackPanel>
+                        <Button Grid.Column="2" Content="⏻"
+                                Classes="userLogout"
+                                ToolTip.Tip="Выйти" />
+                    </Grid>
+                </Border>
+
+            </Grid>
+        </Border>
+
+        <Grid Grid.Column="1" RowDefinitions="Auto,Auto,*">
+
+            <Border Grid.Row="0" Classes="pageHeader">
+                <Grid ColumnDefinitions="*,Auto">
+                    <TextBlock Text="Дашборд" Classes="pageTitle" />
+                    <TextBlock Grid.Column="1"
+                               Text="Сегодня — 23 июня 2026"
+                               Classes="pageDate" />
+                </Grid>
+            </Border>
+
+            <Border Grid.Row="1" Classes="pageHeaderAccent" />
+
+            <Border Grid.Row="2" Classes="workspace">
+
+                <Border Classes="placeholderCard"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center">
+                    <StackPanel Spacing="20" HorizontalAlignment="Center">
+                        <Border Width="80" Height="80"
+                                CornerRadius="40"
+                                Background="{StaticResource AccentColor}"
+                                Opacity="0.1"
+                                HorizontalAlignment="Center">
+                            <TextBlock Text="📊" FontSize="36"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" />
+                        </Border>
+                        <TextBlock Text="Добро пожаловать в StockWise!"
+                                   FontSize="22" FontWeight="700"
+                                   Foreground="#1A1A2E"
+                                   HorizontalAlignment="Center" />
+                        <TextBlock Text="Выберите раздел в боковом меню для начала работы"
+                                   FontSize="14"
+                                   Foreground="#999"
+                                   HorizontalAlignment="Center" />
+                        <Border Height="1" Background="#EEE" Margin="0,8" />
+                        <TextBlock Text="📦  Товары    📄  Документы    📊  Отчёты"
+                                   FontSize="13"
+                                   Foreground="#CCC"
+                                   HorizontalAlignment="Center" />
+                    </StackPanel>
+                </Border>
+
+            </Border>
+
+        </Grid>
+
+    </Grid>
+
+</Window>

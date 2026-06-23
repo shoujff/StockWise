@@ -1,7 +1,7 @@
 using Avalonia.Controls;
 using StockWise.App.ViewModels;
 
-namespace StockWise.App;
+namespace StockWise.App.Views;
 
 public partial class MainWindow : Window
 {
