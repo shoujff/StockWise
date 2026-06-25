@@ -19,6 +19,9 @@ public partial class App : Application
 
     public override void OnFrameworkInitializationCompleted()
     {
+        var themeService = Services!.GetRequiredService<ThemeService>();
+        themeService.Initialize();
+
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             var authService = Services!.GetRequiredService<IAuthService>();

@@ -1,38 +1,109 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- 1. ДИЗАЙН-ТОКЕНЫ (переиспользуемые ресурсы) -->
+    <!-- ═══════════════════════════════════════════ -->
+
     <Styles.Resources>
-        <SolidColorBrush x:Key="SidebarBg">#1C1C2E</SolidColorBrush>
-        <SolidColorBrush x:Key="SidebarHover">#2A2A42</SolidColorBrush>
-        <SolidColorBrush x:Key="SidebarSelected">#3D3D5C</SolidColorBrush>
-        <SolidColorBrush x:Key="SidebarText">#B0B0C0</SolidColorBrush>
-        <SolidColorBrush x:Key="SidebarTextSelected">#FFFFFF</SolidColorBrush>
-        <SolidColorBrush x:Key="AccentColor">#6750A4</SolidColorBrush>
-        <SolidColorBrush x:Key="AccentLight">#7C6FBE</SolidColorBrush>
-        <SolidColorBrush x:Key="AccentDark">#4A3B7C</SolidColorBrush>
-        <SolidColorBrush x:Key="HeaderBg">#F5F5F8</SolidColorBrush>
-        <SolidColorBrush x:Key="WorkspaceBg">#FAFAFE</SolidColorBrush>
-        <SolidColorBrush x:Key="DividerColor">#2E2E48</SolidColorBrush>
+        <FontFamily x:Key="FontMono">JetBrains Mono, Consolas</FontFamily>
+        <FontFamily x:Key="FontUI">Inter</FontFamily>
 
         <LinearGradientBrush x:Key="AccentGradient" StartPoint="0,0" EndPoint="1,0">
-            <GradientStop Offset="0" Color="#6750A4" />
-            <GradientStop Offset="1" Color="#7C6FBE" />
+            <GradientStop Offset="0" Color="#00FFFF" />
+            <GradientStop Offset="1" Color="#FF00FF" />
         </LinearGradientBrush>
 
         <LinearGradientBrush x:Key="ButtonGradient" StartPoint="0,0" EndPoint="1,0">
-            <GradientStop Offset="0" Color="#6750A4" />
-            <GradientStop Offset="1" Color="#8068C7" />
+            <GradientStop Offset="0" Color="#00CCFF" />
+            <GradientStop Offset="1" Color="#0066FF" />
         </LinearGradientBrush>
 
-        <LinearGradientBrush x:Key="ButtonHoverGradient" StartPoint="0,0" EndPoint="1,0">
-            <GradientStop Offset="0" Color="#7C6FBE" />
-            <GradientStop Offset="1" Color="#8E7AD4" />
+        <LinearGradientBrush x:Key="ButtonGradientHover" StartPoint="0,0" EndPoint="1,0">
+            <GradientStop Offset="0" Color="#00FFFF" />
+            <GradientStop Offset="1" Color="#0088FF" />
         </LinearGradientBrush>
+
+        <LinearGradientBrush x:Key="ButtonDangerGradient" StartPoint="0,0" EndPoint="1,0">
+            <GradientStop Offset="0" Color="#FF3366" />
+            <GradientStop Offset="1" Color="#CC0044" />
+        </LinearGradientBrush>
+
+        <LinearGradientBrush x:Key="PanelGradient" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Offset="0" Color="#0D0D14" />
+            <GradientStop Offset="1" Color="#14141F" />
+        </LinearGradientBrush>
+
+        <DrawingBrush x:Key="GridPattern" TileMode="Tile" Stretch="None"
+                      DestinationRect="0,0,32,32" Opacity="0.5">
+            <DrawingBrush.Drawing>
+                <DrawingGroup>
+                    <GeometryDrawing Geometry="M0,0 L32,0 M0,0 L0,32">
+                        <GeometryDrawing.Pen>
+                            <Pen Brush="#00BCD4" Thickness="0.5" />
+                        </GeometryDrawing.Pen>
+                    </GeometryDrawing>
+                    <GeometryDrawing Geometry="M16,0 L16,32 M0,16 L32,16">
+                        <GeometryDrawing.Pen>
+                            <Pen Brush="#4D00BCD4" Thickness="0.2" />
+                        </GeometryDrawing.Pen>
+                    </GeometryDrawing>
+                </DrawingGroup>
+            </DrawingBrush.Drawing>
+        </DrawingBrush>
     </Styles.Resources>
 
-    <!-- ════════════════════════════════════ -->
-    <!-- САЙДБАР                               -->
-    <!-- ════════════════════════════════════ -->
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- 2. ТИПОГРАФИЯ                               -->
+    <!-- ═══════════════════════════════════════════ -->
+
+    <Style Selector="TextBlock.display">
+        <Setter Property="FontSize" Value="32" />
+        <Setter Property="FontWeight" Value="700" />
+        <Setter Property="FontFamily" Value="{StaticResource FontMono}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimary}" />
+    </Style>
+
+    <Style Selector="TextBlock.heading">
+        <Setter Property="FontSize" Value="20" />
+        <Setter Property="FontWeight" Value="600" />
+        <Setter Property="FontFamily" Value="{StaticResource FontUI}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimary}" />
+    </Style>
+
+    <Style Selector="TextBlock.body">
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontWeight" Value="400" />
+        <Setter Property="FontFamily" Value="{StaticResource FontUI}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimary}" />
+    </Style>
+
+    <Style Selector="TextBlock.mono">
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="FontWeight" Value="400" />
+        <Setter Property="FontFamily" Value="{StaticResource FontMono}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextSecondary}" />
+    </Style>
+
+    <Style Selector="TextBlock.caption">
+        <Setter Property="FontSize" Value="11" />
+        <Setter Property="FontWeight" Value="500" />
+        <Setter Property="FontFamily" Value="{StaticResource FontUI}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextMuted}" />
+        <Setter Property="LetterSpacing" Value="0.1" />
+    </Style>
+
+    <Style Selector="TextBlock.label">
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="FontWeight" Value="500" />
+        <Setter Property="FontFamily" Value="{StaticResource FontUI}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextSecondary}" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- 2. САЙДБАР                                  -->
+    <!-- ═══════════════════════════════════════════ -->
 
     <Style Selector="RadioButton.navItem">
         <Setter Property="Height" Value="48" />
@@ -57,19 +128,20 @@
                                    Text="{TemplateBinding Content}"
                                    FontSize="14"
                                    FontWeight="500"
+                                   FontFamily="{StaticResource FontUI}"
                                    VerticalAlignment="Center"
                                    TextTrimming="CharacterEllipsis"
-                                   Foreground="{StaticResource SidebarText}" />
+                                   Foreground="{DynamicResource SidebarText}" />
                         <Border Name="ActiveIndicator"
                                 Grid.Column="2"
-                                Width="3"
-                                Height="24"
+                                Width="3" Height="24"
                                 CornerRadius="2"
-                                Background="{StaticResource AccentColor}"
+                                Background="{DynamicResource ActiveIndicator}"
                                 Opacity="0"
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Center"
-                                Margin="0,0,2,0" />
+                                Margin="0,0,2,0"
+                                BoxShadow="0 0 8 2 #00BCD4" />
                     </Grid>
                 </Border>
             </ControlTemplate>
@@ -77,15 +149,15 @@
     </Style>
 
     <Style Selector="RadioButton.navItem:pointerover /template/ Border#RootBorder">
-        <Setter Property="Background" Value="{StaticResource SidebarHover}" />
+        <Setter Property="Background" Value="{DynamicResource SidebarHover}" />
     </Style>
 
     <Style Selector="RadioButton.navItem:checked /template/ Border#RootBorder">
-        <Setter Property="Background" Value="{StaticResource SidebarSelected}" />
+        <Setter Property="Background" Value="{DynamicResource SidebarSelected}" />
     </Style>
 
     <Style Selector="RadioButton.navItem:checked /template/ TextBlock">
-        <Setter Property="Foreground" Value="{StaticResource SidebarTextSelected}" />
+        <Setter Property="Foreground" Value="{DynamicResource SidebarTextSelected}" />
         <Setter Property="FontWeight" Value="600" />
     </Style>
 
@@ -96,13 +168,15 @@
     <Style Selector="Border.sidebarDivider">
         <Setter Property="Height" Value="1" />
         <Setter Property="Margin" Value="16,8" />
-        <Setter Property="Background" Value="{StaticResource DividerColor}" />
+        <Setter Property="Background" Value="{DynamicResource DividerColor}" />
     </Style>
 
     <Style Selector="TextBlock.sidebarSection">
         <Setter Property="FontSize" Value="11" />
         <Setter Property="FontWeight" Value="600" />
-        <Setter Property="Foreground" Value="{StaticResource SidebarText}" />
+        <Setter Property="FontFamily" Value="{StaticResource FontUI}" />
+        <Setter Property="LetterSpacing" Value="0.1" />
+        <Setter Property="Foreground" Value="{DynamicResource SidebarText}" />
         <Setter Property="Opacity" Value="0.5" />
         <Setter Property="Margin" Value="20,16,16,4" />
     </Style>
@@ -115,13 +189,15 @@
     <Style Selector="TextBlock.logoText">
         <Setter Property="FontSize" Value="20" />
         <Setter Property="FontWeight" Value="700" />
-        <Setter Property="Foreground" Value="{StaticResource SidebarTextSelected}" />
+        <Setter Property="FontFamily" Value="{StaticResource FontMono}" />
+        <Setter Property="Foreground" Value="{DynamicResource SidebarTextSelected}" />
         <Setter Property="VerticalAlignment" Value="Center" />
     </Style>
 
     <Style Selector="TextBlock.logoVersion">
         <Setter Property="FontSize" Value="11" />
-        <Setter Property="Foreground" Value="{StaticResource SidebarText}" />
+        <Setter Property="FontFamily" Value="{StaticResource FontMono}" />
+        <Setter Property="Foreground" Value="{DynamicResource SidebarText}" />
         <Setter Property="Opacity" Value="0.5" />
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="Margin" Value="6,0,0,0" />
@@ -129,14 +205,15 @@
 
     <Style Selector="Border.userArea">
         <Setter Property="Padding" Value="14,12" />
-        <Setter Property="Background" Value="{StaticResource SidebarHover}" />
+        <Setter Property="Background" Value="{DynamicResource SidebarHover}" />
     </Style>
 
     <Style Selector="Border.avatar">
         <Setter Property="Width" Value="36" />
         <Setter Property="Height" Value="36" />
         <Setter Property="CornerRadius" Value="18" />
-        <Setter Property="Background" Value="{StaticResource AccentColor}" />
+        <Setter Property="Background" Value="{DynamicResource AccentCyan}" />
+        <Setter Property="BoxShadow" Value="0 0 12 0 #00BCD4" />
     </Style>
 
     <Style Selector="Button.userLogout">
@@ -144,7 +221,7 @@
         <Setter Property="Height" Value="32" />
         <Setter Property="FontSize" Value="15" />
         <Setter Property="Background" Value="Transparent" />
-        <Setter Property="Foreground" Value="{StaticResource SidebarText}" />
+        <Setter Property="Foreground" Value="{DynamicResource SidebarText}" />
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="CornerRadius" Value="8" />
         <Setter Property="Cursor" Value="Hand" />
@@ -153,68 +230,357 @@
     </Style>
 
     <Style Selector="Button.userLogout:pointerover">
-        <Setter Property="Background" Value="#3A3A54" />
-        <Setter Property="Foreground" Value="#FF6B6B" />
+        <Setter Property="Background" Value="{DynamicResource BgTertiary}" />
+        <Setter Property="Foreground" Value="{DynamicResource AccentRed}" />
     </Style>
 
-    <!-- ════════════════════════════════════ -->
-    <!-- ХЕДЕР                                 -->
-    <!-- ════════════════════════════════════ -->
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- 3. ХЕДЕР                                   -->
+    <!-- ═══════════════════════════════════════════ -->
 
     <Style Selector="Border.pageHeader">
-        <Setter Property="Background" Value="White" />
+        <Setter Property="Background" Value="{DynamicResource PageHeaderBg}" />
         <Setter Property="Padding" Value="28,18" />
     </Style>
 
     <Style Selector="Border.pageHeaderAccent">
         <Setter Property="Height" Value="3" />
-        <Setter Property="Background" Value="{StaticResource AccentGradient}" />
+        <Setter Property="Background" Value="{DynamicResource AccentGradient}" />
     </Style>
 
     <Style Selector="TextBlock.pageTitle">
         <Setter Property="FontSize" Value="24" />
         <Setter Property="FontWeight" Value="700" />
-        <Setter Property="Foreground" Value="#1A1A2E" />
+        <Setter Property="FontFamily" Value="{StaticResource FontMono}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimary}" />
     </Style>
 
     <Style Selector="TextBlock.pageDate">
         <Setter Property="FontSize" Value="13" />
-        <Setter Property="Foreground" Value="#AAA" />
+        <Setter Property="FontFamily" Value="{StaticResource FontMono}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextMuted}" />
         <Setter Property="VerticalAlignment" Value="Center" />
     </Style>
 
-    <!-- ════════════════════════════════════ -->
-    <!-- ВОРКСПЕЙС                             -->
-    <!-- ════════════════════════════════════ -->
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- 4. ВОРКСПЕЙС                                -->
+    <!-- ═══════════════════════════════════════════ -->
 
     <Style Selector="Border.workspace">
-        <Setter Property="Background" Value="{StaticResource WorkspaceBg}" />
+        <Setter Property="Background" Value="{DynamicResource WorkspaceBg}" />
         <Setter Property="Padding" Value="28" />
     </Style>
 
-    <Style Selector="Border.placeholderCard">
-        <Setter Property="Background" Value="White" />
-        <Setter Property="CornerRadius" Value="16" />
-        <Setter Property="Padding" Value="48,56" />
-        <Setter Property="BoxShadow" Value="0 4 24 0 rgba(0,0,0,0.06)" />
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- 5. КНОПКИ                                   -->
+    <!-- ═══════════════════════════════════════════ -->
+
+    <Style Selector="Button.primaryButton">
+        <Setter Property="Height" Value="38" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontWeight" Value="600" />
+        <Setter Property="FontFamily" Value="{StaticResource FontUI}" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="Background" Value="{DynamicResource ButtonGradient}" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Padding" Value="20,0" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="BorderThickness" Value="0" />
     </Style>
 
-    <!-- ════════════════════════════════════ -->
-    <!-- LOGIN / REGISTER                      -->
-    <!-- ════════════════════════════════════ -->
+    <Style Selector="Button.primaryButton:pointerover">
+        <Setter Property="Background" Value="{DynamicResource ButtonGradientHover}" />
+    </Style>
+
+    <Style Selector="Button.primaryButton:pressed">
+        <Setter Property="Background" Value="{DynamicResource AccentBlue}" />
+    </Style>
+
+    <Style Selector="Button.secondaryButton">
+        <Setter Property="Height" Value="38" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontWeight" Value="500" />
+        <Setter Property="FontFamily" Value="{StaticResource FontUI}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextSecondary}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Padding" Value="20,0" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderPrimary}" />
+    </Style>
+
+    <Style Selector="Button.secondaryButton:pointerover">
+        <Setter Property="BorderBrush" Value="{DynamicResource AccentCyan}" />
+        <Setter Property="Foreground" Value="{DynamicResource AccentCyan}" />
+    </Style>
+
+    <Style Selector="Button.secondaryButton:pressed">
+        <Setter Property="Background" Value="{DynamicResource BgTertiary}" />
+    </Style>
+
+    <Style Selector="Button.ghostButton">
+        <Setter Property="Height" Value="38" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontWeight" Value="500" />
+        <Setter Property="FontFamily" Value="{StaticResource FontUI}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextMuted}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Padding" Value="16,0" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+
+    <Style Selector="Button.ghostButton:pointerover">
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimary}" />
+        <Setter Property="Background" Value="{DynamicResource BgTertiary}" />
+    </Style>
+
+    <Style Selector="Button.dangerButton">
+        <Setter Property="Height" Value="38" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontWeight" Value="500" />
+        <Setter Property="FontFamily" Value="{StaticResource FontUI}" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="Background" Value="{DynamicResource ButtonDangerGradient}" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Padding" Value="20,0" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+
+    <Style Selector="Button.dangerButton:pointerover">
+        <Setter Property="Opacity" Value="0.9" />
+    </Style>
+
+    <Style Selector="Button.dangerButton:pressed">
+        <Setter Property="Opacity" Value="0.8" />
+    </Style>
+
+    <Style Selector="Button.iconButton">
+        <Setter Property="Width" Value="38" />
+        <Setter Property="Height" Value="38" />
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="Background" Value="{DynamicResource ButtonSecondaryBg}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextSecondary}" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderPrimary}" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+
+    <Style Selector="Button.iconButton:pointerover">
+        <Setter Property="BorderBrush" Value="{DynamicResource AccentCyan}" />
+        <Setter Property="Foreground" Value="{DynamicResource AccentCyan}" />
+        <Setter Property="Background" Value="{DynamicResource BgTertiary}" />
+    </Style>
+
+    <Style Selector="Button.tableActionBtn">
+        <Setter Property="Width" Value="32" />
+        <Setter Property="Height" Value="32" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{DynamicResource TextTertiary}" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+
+    <Style Selector="Button.tableActionBtn:pointerover">
+        <Setter Property="Background" Value="{DynamicResource BgTertiary}" />
+        <Setter Property="Foreground" Value="{DynamicResource AccentCyan}" />
+    </Style>
+
+    <Style Selector="Button.tableActionBtnDanger">
+        <Setter Property="Width" Value="32" />
+        <Setter Property="Height" Value="32" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{DynamicResource TextTertiary}" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+
+    <Style Selector="Button.tableActionBtnDanger:pointerover">
+        <Setter Property="Background" Value="{DynamicResource BgTertiary}" />
+        <Setter Property="Foreground" Value="{DynamicResource AccentRed}" />
+    </Style>
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- 6. ИНПУТЫ (TextBox, ComboBox)              -->
+    <!-- ═══════════════════════════════════════════ -->
+
+    <Style Selector="TextBox.formField">
+        <Setter Property="Height" Value="42" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontFamily" Value="{StaticResource FontUI}" />
+        <Setter Property="Padding" Value="12,0" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="Background" Value="{DynamicResource FieldBg}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource FieldBorder}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimary}" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+
+    <Style Selector="TextBox.formField:focus">
+        <Setter Property="BorderBrush" Value="{DynamicResource FieldBorderFocus}" />
+        <Setter Property="Background" Value="{DynamicResource FieldBgFocus}" />
+    </Style>
+
+    <Style Selector="TextBox.formField:pointerover">
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderSecondary}" />
+    </Style>
+
+    <Style Selector="TextBox.searchField">
+        <Setter Property="Height" Value="42" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontFamily" Value="{StaticResource FontUI}" />
+        <Setter Property="Padding" Value="14,0" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="Background" Value="{DynamicResource FieldBg}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource FieldBorder}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimary}" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+
+    <Style Selector="TextBox.searchField:focus">
+        <Setter Property="BorderBrush" Value="{DynamicResource FieldBorderFocus}" />
+        <Setter Property="Background" Value="{DynamicResource FieldBgFocus}" />
+    </Style>
+
+    <Style Selector="TextBox.searchField:pointerover">
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderSecondary}" />
+    </Style>
+
+    <Style Selector="ComboBox.formField, ComboBox.filterCombo">
+        <Setter Property="Height" Value="42" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontFamily" Value="{StaticResource FontUI}" />
+        <Setter Property="Padding" Value="12,0" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="Background" Value="{DynamicResource FieldBg}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource FieldBorder}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimary}" />
+    </Style>
+
+    <Style Selector="ComboBox.formField:focus, ComboBox.filterCombo:focus">
+        <Setter Property="BorderBrush" Value="{DynamicResource FieldBorderFocus}" />
+        <Setter Property="Background" Value="{DynamicResource FieldBgFocus}" />
+    </Style>
+
+    <Style Selector="ComboBox.formField:pointerover, ComboBox.filterCombo:pointerover">
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderSecondary}" />
+    </Style>
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- 7. КАРТОЧКИ                                 -->
+    <!-- ═══════════════════════════════════════════ -->
+
+    <Style Selector="Border.card">
+        <Setter Property="Background" Value="{DynamicResource CardBg}" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderPrimary}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Padding" Value="24" />
+    </Style>
+
+    <Style Selector="Border.tableCard">
+        <Setter Property="Background" Value="{DynamicResource CardBg}" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderPrimary}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Padding" Value="0" />
+    </Style>
+
+    <Style Selector="Border.formCard">
+        <Setter Property="Background" Value="{DynamicResource CardBg}" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderPrimary}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Padding" Value="24" />
+    </Style>
+
+    <Style Selector="Border.glassCard">
+        <Setter Property="Background" Value="{DynamicResource GlassBg}" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderAccent}" />
+        <Setter Property="BorderThickness" Value="1" />
+    </Style>
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- 8. ДАТАГРИД / ТАБЛИЦЫ                      -->
+    <!-- ═══════════════════════════════════════════ -->
+
+    <Style Selector="DataGrid.dataTable">
+        <Setter Property="Background" Value="{DynamicResource CardBg}" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="RowHeight" Value="44" />
+        <Setter Property="ColumnHeaderHeight" Value="40" />
+        <Setter Property="GridLinesVisibility" Value="Horizontal" />
+        <Setter Property="HorizontalScrollBarVisibility" Value="Auto" />
+    </Style>
+
+    <Style Selector="DataGrid.dataTable DataGridColumnHeader">
+        <Setter Property="Background" Value="{DynamicResource TableHeaderBg}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextSecondary}" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="FontWeight" Value="600" />
+        <Setter Property="FontFamily" Value="{StaticResource FontUI}" />
+        <Setter Property="Padding" Value="12,0" />
+    </Style>
+
+    <Style Selector="DataGrid.dataTable DataGridCell">
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="FontFamily" Value="{StaticResource FontUI}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimary}" />
+        <Setter Property="Padding" Value="12,0" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+
+    <Style Selector="DataGrid.dataTable DataGridRow:pointerover">
+        <Setter Property="Background" Value="{DynamicResource TableRowHover}" />
+    </Style>
+
+    <Style Selector="DataGrid.dataTable DataGridRow:selected /template/ ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource TableRowSelected}" />
+    </Style>
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- 8. LOGIN / REGISTER                        -->
+    <!-- ═══════════════════════════════════════════ -->
 
     <Style Selector="Border.loginCard">
-        <Setter Property="Background" Value="White" />
-        <Setter Property="CornerRadius" Value="16" />
+        <Setter Property="Background" Value="{DynamicResource CardBg}" />
+        <Setter Property="CornerRadius" Value="8" />
         <Setter Property="Padding" Value="0" />
-        <Setter Property="BoxShadow" Value="0 8 40 0 rgba(0,0,0,0.15)" />
-        <Setter Property="Width" Value="400" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderPrimary}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Width" Value="420" />
     </Style>
 
     <Style Selector="Border.loginCardTop">
         <Setter Property="Height" Value="6" />
-        <Setter Property="Background" Value="{StaticResource AccentGradient}" />
-        <Setter Property="CornerRadius" Value="16,16,0,0" />
+        <Setter Property="Background" Value="{DynamicResource AccentGradient}" />
+        <Setter Property="CornerRadius" Value="8,8,0,0" />
     </Style>
 
     <Style Selector="Border.loginCardBody">
@@ -224,23 +590,29 @@
     <Style Selector="TextBox.loginField">
         <Setter Property="Height" Value="48" />
         <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontFamily" Value="{StaticResource FontUI}" />
         <Setter Property="Padding" Value="14,0,14,0" />
-        <Setter Property="CornerRadius" Value="10" />
-        <Setter Property="Background" Value="#F5F5F8" />
-        <Setter Property="BorderBrush" Value="#E4E4EC" />
-        <Setter Property="BorderThickness" Value="2" />
-        <Setter Property="Watermark" Value="Введите значение" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="Background" Value="{DynamicResource FieldBg}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource FieldBorder}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimary}" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
     </Style>
 
     <Style Selector="TextBox.loginField:focus">
-        <Setter Property="BorderBrush" Value="{StaticResource AccentColor}" />
-        <Setter Property="Background" Value="White" />
+        <Setter Property="BorderBrush" Value="{DynamicResource FieldBorderFocus}" />
+        <Setter Property="Background" Value="{DynamicResource FieldBgFocus}" />
+    </Style>
+
+    <Style Selector="TextBox.loginField:pointerover">
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderSecondary}" />
     </Style>
 
     <Style Selector="TextBlock.loginIcon">
         <Setter Property="FontSize" Value="18" />
         <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Foreground" Value="{DynamicResource TextMuted}" />
         <Setter Property="Margin" Value="14,0,8,0" />
     </Style>
 
@@ -248,37 +620,41 @@
         <Setter Property="Height" Value="48" />
         <Setter Property="FontSize" Value="15" />
         <Setter Property="FontWeight" Value="700" />
+        <Setter Property="FontFamily" Value="{StaticResource FontUI}" />
         <Setter Property="Foreground" Value="White" />
-        <Setter Property="Background" Value="{StaticResource ButtonGradient}" />
-        <Setter Property="CornerRadius" Value="10" />
+        <Setter Property="Background" Value="{DynamicResource ButtonGradient}" />
+        <Setter Property="CornerRadius" Value="4" />
         <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="BorderThickness" Value="0" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
     </Style>
 
     <Style Selector="Button.loginButton:pointerover">
-        <Setter Property="Background" Value="{StaticResource ButtonHoverGradient}" />
+        <Setter Property="Background" Value="{DynamicResource ButtonGradientHover}" />
     </Style>
 
     <Style Selector="Button.loginButton:pressed">
-        <Setter Property="Background" Value="{StaticResource AccentDark}" />
+        <Setter Property="Background" Value="{DynamicResource AccentBlue}" />
     </Style>
 
     <Style Selector="CheckBox.loginCheckbox">
         <Setter Property="FontSize" Value="13" />
-        <Setter Property="Foreground" Value="#666" />
+        <Setter Property="FontFamily" Value="{StaticResource FontUI}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextMuted}" />
     </Style>
 
     <Style Selector="Border.authDivider">
         <Setter Property="Height" Value="1" />
-        <Setter Property="Background" Value="#EEEEF2" />
+        <Setter Property="Background" Value="{DynamicResource DividerColor}" />
         <Setter Property="Margin" Value="0,4,0,0" />
     </Style>
 
     <Style Selector="Button.authLink">
         <Setter Property="FontSize" Value="13" />
         <Setter Property="FontWeight" Value="600" />
-        <Setter Property="Foreground" Value="{StaticResource AccentColor}" />
+        <Setter Property="FontFamily" Value="{StaticResource FontUI}" />
+        <Setter Property="Foreground" Value="{DynamicResource AccentCyan}" />
         <Setter Property="Cursor" Value="Hand" />
         <Setter Property="HorizontalAlignment" Value="Center" />
         <Setter Property="Background" Value="Transparent" />
@@ -287,266 +663,233 @@
     </Style>
 
     <Style Selector="Button.authLink:pointerover">
-        <Setter Property="Foreground" Value="{StaticResource AccentLight}" />
+        <Setter Property="Foreground" Value="{DynamicResource AccentBlue}" />
     </Style>
 
     <Style Selector="Button.authLink:pressed">
-        <Setter Property="Foreground" Value="{StaticResource AccentDark}" />
+        <Setter Property="Opacity" Value="0.8" />
     </Style>
 
     <Style Selector="Border.loginErrorBox">
-        <Setter Property="Background" Value="#FFF0F0" />
-        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="Background" Value="{DynamicResource ErrorBg}" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AccentRed}" />
+        <Setter Property="BorderThickness" Value="1" />
         <Setter Property="Padding" Value="12,10" />
     </Style>
 
     <Style Selector="TextBlock.loginError">
         <Setter Property="FontSize" Value="13" />
         <Setter Property="FontWeight" Value="500" />
-        <Setter Property="Foreground" Value="#D32F2F" />
+        <Setter Property="FontFamily" Value="{StaticResource FontUI}" />
+        <Setter Property="Foreground" Value="{DynamicResource ErrorText}" />
         <Setter Property="HorizontalAlignment" Value="Center" />
     </Style>
 
-    <!-- ════════════════════════════════════ -->
-    <!-- ТАБЛИЦЫ                               -->
-    <!-- ════════════════════════════════════ -->
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- 9. БЭДЖИ / СТАТУСЫ                         -->
+    <!-- ═══════════════════════════════════════════ -->
 
-    <Style Selector="Border.tableCard">
-        <Setter Property="Background" Value="White" />
-        <Setter Property="CornerRadius" Value="12" />
-        <Setter Property="BoxShadow" Value="0 2 12 0 rgba(0,0,0,0.06)" />
-        <Setter Property="Padding" Value="0" />
+    <Style Selector="Border.badge">
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="Padding" Value="8,4" />
+        <Setter Property="Height" Value="24" />
+        <Setter Property="Background" Value="{DynamicResource BgTertiary}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderPrimary}" />
+        <Setter Property="BorderThickness" Value="1" />
     </Style>
 
-    <Style Selector="DataGrid.dataTable">
-        <Setter Property="Background" Value="White" />
-        <Setter Property="BorderThickness" Value="0" />
-        <Setter Property="RowHeight" Value="44" />
-        <Setter Property="ColumnHeaderHeight" Value="40" />
-        <Setter Property="GridLinesVisibility" Value="Horizontal" />
-        <Setter Property="HorizontalScrollBarVisibility" Value="Auto" />
-    </Style>
-
-    <Style Selector="DataGrid.dataTable DataGridColumnHeader">
-        <Setter Property="Background" Value="#F0F0F6" />
-        <Setter Property="Foreground" Value="#555" />
-        <Setter Property="FontSize" Value="12" />
+    <Style Selector="TextBlock.badgeText">
+        <Setter Property="FontSize" Value="11" />
         <Setter Property="FontWeight" Value="600" />
-        <Setter Property="Padding" Value="12,0" />
-    </Style>
-
-    <Style Selector="DataGrid.dataTable DataGridCell">
-        <Setter Property="FontSize" Value="13" />
-        <Setter Property="Foreground" Value="#333" />
-        <Setter Property="Padding" Value="12,0" />
+        <Setter Property="FontFamily" Value="{StaticResource FontUI}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextSecondary}" />
         <Setter Property="VerticalAlignment" Value="Center" />
     </Style>
 
-    <!-- ════════════════════════════════════ -->
-    <!-- КНОПКИ                                -->
-    <!-- ════════════════════════════════════ -->
+    <Style Selector="Border.badgeSuccess">
+        <Setter Property="Background" Value="{DynamicResource SuccessBg}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AccentGreen}" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="Padding" Value="8,4" />
+        <Setter Property="Height" Value="24" />
+        <Setter Property="BorderThickness" Value="1" />
+    </Style>
 
-    <Style Selector="Button.primaryButton">
-        <Setter Property="Height" Value="38" />
-        <Setter Property="FontSize" Value="14" />
+    <Style Selector="Border.badgeWarning">
+        <Setter Property="Background" Value="{DynamicResource WarningBg}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AccentAmber}" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="Padding" Value="8,4" />
+        <Setter Property="Height" Value="24" />
+        <Setter Property="BorderThickness" Value="1" />
+    </Style>
+
+    <Style Selector="Border.badgeDanger">
+        <Setter Property="Background" Value="{DynamicResource ErrorBg}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AccentRed}" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="Padding" Value="8,4" />
+        <Setter Property="Height" Value="24" />
+        <Setter Property="BorderThickness" Value="1" />
+    </Style>
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- 10. EMPTY STATE                            -->
+    <!-- ═══════════════════════════════════════════ -->
+
+    <Style Selector="StackPanel.emptyState">
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Spacing" Value="12" />
+    </Style>
+
+    <Style Selector="TextBlock.emptyStateIcon">
+        <Setter Property="FontSize" Value="48" />
+        <Setter Property="FontFamily" Value="{StaticResource FontUI}" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+    </Style>
+
+    <Style Selector="TextBlock.emptyStateTitle">
+        <Setter Property="FontSize" Value="18" />
         <Setter Property="FontWeight" Value="600" />
-        <Setter Property="Foreground" Value="White" />
-        <Setter Property="Background" Value="{StaticResource ButtonGradient}" />
-        <Setter Property="CornerRadius" Value="8" />
-        <Setter Property="Cursor" Value="Hand" />
-        <Setter Property="Padding" Value="20,0" />
-        <Setter Property="HorizontalContentAlignment" Value="Center" />
-        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="FontFamily" Value="{StaticResource FontMono}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextSecondary}" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
     </Style>
 
-    <Style Selector="Button.primaryButton:pointerover">
-        <Setter Property="Background" Value="{StaticResource ButtonHoverGradient}" />
+    <Style Selector="TextBlock.emptyStateHint">
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="FontFamily" Value="{StaticResource FontUI}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextMuted}" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
     </Style>
 
-    <Style Selector="Button.primaryButton:pressed">
-        <Setter Property="Background" Value="{StaticResource AccentDark}" />
-    </Style>
-
-    <Style Selector="Button.secondaryButton">
-        <Setter Property="Height" Value="38" />
-        <Setter Property="FontSize" Value="14" />
-        <Setter Property="FontWeight" Value="500" />
-        <Setter Property="Foreground" Value="#555" />
-        <Setter Property="Background" Value="#F0F0F6" />
-        <Setter Property="CornerRadius" Value="8" />
-        <Setter Property="Cursor" Value="Hand" />
-        <Setter Property="Padding" Value="20,0" />
-        <Setter Property="HorizontalContentAlignment" Value="Center" />
-        <Setter Property="VerticalContentAlignment" Value="Center" />
-        <Setter Property="BorderThickness" Value="0" />
-    </Style>
-
-    <Style Selector="Button.secondaryButton:pointerover">
-        <Setter Property="Background" Value="#E4E4EC" />
-    </Style>
-
-    <Style Selector="Button.dangerButton">
-        <Setter Property="Height" Value="38" />
-        <Setter Property="FontSize" Value="14" />
-        <Setter Property="FontWeight" Value="500" />
-        <Setter Property="Foreground" Value="#D32F2F" />
-        <Setter Property="Background" Value="#FFF0F0" />
-        <Setter Property="CornerRadius" Value="8" />
-        <Setter Property="Cursor" Value="Hand" />
-        <Setter Property="Padding" Value="20,0" />
-        <Setter Property="BorderThickness" Value="0" />
-        <Setter Property="HorizontalContentAlignment" Value="Center" />
-        <Setter Property="VerticalContentAlignment" Value="Center" />
-    </Style>
-
-    <Style Selector="Button.dangerButton:pointerover">
-        <Setter Property="Background" Value="#FFE0E0" />
-        <Setter Property="Foreground" Value="#C62828" />
-    </Style>
-
-    <Style Selector="Button.iconButton">
-        <Setter Property="Width" Value="38" />
-        <Setter Property="Height" Value="38" />
-        <Setter Property="FontSize" Value="16" />
-        <Setter Property="Background" Value="#F0F0F6" />
-        <Setter Property="Foreground" Value="#555" />
-        <Setter Property="CornerRadius" Value="8" />
-        <Setter Property="Cursor" Value="Hand" />
-        <Setter Property="BorderThickness" Value="0" />
-        <Setter Property="HorizontalContentAlignment" Value="Center" />
-        <Setter Property="VerticalContentAlignment" Value="Center" />
-    </Style>
-
-    <Style Selector="Button.iconButton:pointerover">
-        <Setter Property="Background" Value="#E4E4EC" />
-        <Setter Property="Foreground" Value="#333" />
-    </Style>
-
-    <Style Selector="Button.tableActionBtn">
-        <Setter Property="Width" Value="32" />
-        <Setter Property="Height" Value="32" />
-        <Setter Property="FontSize" Value="14" />
-        <Setter Property="Background" Value="Transparent" />
-        <Setter Property="Foreground" Value="#888" />
-        <Setter Property="CornerRadius" Value="6" />
-        <Setter Property="Cursor" Value="Hand" />
-        <Setter Property="BorderThickness" Value="0" />
-        <Setter Property="HorizontalContentAlignment" Value="Center" />
-        <Setter Property="VerticalContentAlignment" Value="Center" />
-    </Style>
-
-    <Style Selector="Button.tableActionBtn:pointerover">
-        <Setter Property="Background" Value="#F0F0F6" />
-        <Setter Property="Foreground" Value="{StaticResource AccentColor}" />
-    </Style>
-
-    <Style Selector="Button.tableActionBtnDanger">
-        <Setter Property="Width" Value="32" />
-        <Setter Property="Height" Value="32" />
-        <Setter Property="FontSize" Value="14" />
-        <Setter Property="Background" Value="Transparent" />
-        <Setter Property="Foreground" Value="#888" />
-        <Setter Property="CornerRadius" Value="6" />
-        <Setter Property="Cursor" Value="Hand" />
-        <Setter Property="BorderThickness" Value="0" />
-        <Setter Property="HorizontalContentAlignment" Value="Center" />
-        <Setter Property="VerticalContentAlignment" Value="Center" />
-    </Style>
-
-    <Style Selector="Button.tableActionBtnDanger:pointerover">
-        <Setter Property="Background" Value="#FFF0F0" />
-        <Setter Property="Foreground" Value="#D32F2F" />
-    </Style>
-
-    <!-- ════════════════════════════════════ -->
-    <!-- ФОРМЫ                                 -->
-    <!-- ════════════════════════════════════ -->
-
-    <Style Selector="Border.formCard">
-        <Setter Property="Background" Value="White" />
-        <Setter Property="CornerRadius" Value="12" />
-        <Setter Property="BoxShadow" Value="0 2 12 0 rgba(0,0,0,0.06)" />
-        <Setter Property="Padding" Value="24" />
-    </Style>
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- 11. ФОРМЫ (заголовки, лейблы)              -->
+    <!-- ═══════════════════════════════════════════ -->
 
     <Style Selector="TextBlock.formSectionTitle">
         <Setter Property="FontSize" Value="15" />
         <Setter Property="FontWeight" Value="700" />
-        <Setter Property="Foreground" Value="#1A1A2E" />
+        <Setter Property="FontFamily" Value="{StaticResource FontUI}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimary}" />
         <Setter Property="Margin" Value="0,0,0,4" />
     </Style>
 
-    <Style Selector="TextBlock.formLabel">
-        <Setter Property="FontSize" Value="13" />
-        <Setter Property="FontWeight" Value="500" />
-        <Setter Property="Foreground" Value="#666" />
-        <Setter Property="VerticalAlignment" Value="Center" />
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- 12. АВАТАР / ДИВАЙДЕРЫ                     -->
+    <!-- ═══════════════════════════════════════════ -->
+
+    <Style Selector="Border.avatarBase">
+        <Setter Property="Width" Value="36" />
+        <Setter Property="Height" Value="36" />
+        <Setter Property="CornerRadius" Value="18" />
     </Style>
 
-    <Style Selector="TextBox.formField">
-        <Setter Property="Height" Value="42" />
-        <Setter Property="FontSize" Value="14" />
-        <Setter Property="Padding" Value="12,0" />
-        <Setter Property="CornerRadius" Value="8" />
-        <Setter Property="Background" Value="#F5F5F8" />
-        <Setter Property="BorderBrush" Value="#E4E4EC" />
+    <Style Selector="Border.divider">
+        <Setter Property="Height" Value="1" />
+        <Setter Property="Background" Value="{DynamicResource DividerColor}" />
+    </Style>
+
+    <Style Selector="Border.accentLine">
+        <Setter Property="Height" Value="1" />
+        <Setter Property="Background" Value="{DynamicResource AccentLine}" />
+    </Style>
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- 13. SKELETON LOADER (shimmer)              -->
+    <!-- ═══════════════════════════════════════════ -->
+
+    <Style Selector="Border.skeleton">
+        <Setter Property="Background" Value="{DynamicResource SkeletonColor}" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="Opacity" Value="0.3" />
+        <Style.Animations>
+            <Animation Duration="0:0:1.5" IterationCount="INFINITE">
+                <KeyFrame Cue="0%">
+                    <Setter Property="Opacity" Value="0.3" />
+                </KeyFrame>
+                <KeyFrame Cue="50%">
+                    <Setter Property="Opacity" Value="0.8" />
+                </KeyFrame>
+                <KeyFrame Cue="100%">
+                    <Setter Property="Opacity" Value="0.3" />
+                </KeyFrame>
+            </Animation>
+        </Style.Animations>
+    </Style>
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- 14. АНИМАЦИИ И ТРАНЗИШЕНЫ                  -->
+    <!-- ═══════════════════════════════════════════ -->
+
+    <Style Selector="Button.primaryButton, Button.secondaryButton, Button.ghostButton, Button.dangerButton, Button.iconButton, Button.loginButton, Button.tableActionBtn, Button.tableActionBtnDanger, Button.userLogout, Button.authLink">
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Property="Background" Duration="0:0:0.15" />
+                <BrushTransition Property="Foreground" Duration="0:0:0.15" />
+                <BrushTransition Property="BorderBrush" Duration="0:0:0.15" />
+            </Transitions>
+        </Setter>
+    </Style>
+
+    <Style Selector="RadioButton.navItem /template/ Border#RootBorder">
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Property="Background" Duration="0:0:0.15" />
+            </Transitions>
+        </Setter>
+    </Style>
+
+    <Style Selector="Border.tableCard, Border.formCard, Border.card, Border.loginCard, Border.glassCard">
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Property="BorderBrush" Duration="0:0:0.2" />
+            </Transitions>
+        </Setter>
+    </Style>
+
+    <Style Selector="TextBox.formField, TextBox.searchField, TextBox.loginField">
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Property="BorderBrush" Duration="0:0:0.15" />
+                <BrushTransition Property="Background" Duration="0:0:0.15" />
+            </Transitions>
+        </Setter>
+    </Style>
+
+    <Style Selector="ComboBox.formField, ComboBox.filterCombo">
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Property="BorderBrush" Duration="0:0:0.15" />
+                <BrushTransition Property="Background" Duration="0:0:0.15" />
+            </Transitions>
+        </Setter>
+    </Style>
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- 15. ФОКУС-СТИЛИ (a11y)                    -->
+    <!-- ═══════════════════════════════════════════ -->
+
+    <Style Selector="Button:focus-visible">
+        <Setter Property="BorderBrush" Value="{DynamicResource AccentCyan}" />
         <Setter Property="BorderThickness" Value="2" />
-        <Setter Property="VerticalContentAlignment" Value="Center" />
     </Style>
 
-    <Style Selector="TextBox.formField:focus">
-        <Setter Property="BorderBrush" Value="{StaticResource AccentColor}" />
-        <Setter Property="Background" Value="White" />
+    <Style Selector="RadioButton.navItem:focus-visible /template/ Border#RootBorder">
+        <Setter Property="BorderThickness" Value="2" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AccentCyan}" />
     </Style>
 
-    <Style Selector="ComboBox.formField">
-        <Setter Property="Height" Value="42" />
-        <Setter Property="FontSize" Value="14" />
-        <Setter Property="Padding" Value="12,0" />
-        <Setter Property="CornerRadius" Value="8" />
-        <Setter Property="Background" Value="#F5F5F8" />
-        <Setter Property="BorderBrush" Value="#E4E4EC" />
+    <Style Selector="TextBox.formField:focus-visible, TextBox.searchField:focus-visible, TextBox.loginField:focus-visible">
+        <Setter Property="BorderBrush" Value="{DynamicResource FieldBorderFocus}" />
         <Setter Property="BorderThickness" Value="2" />
     </Style>
 
-    <Style Selector="ComboBox.formField:focus">
-        <Setter Property="BorderBrush" Value="{StaticResource AccentColor}" />
-        <Setter Property="Background" Value="White" />
-    </Style>
-
-    <!-- ════════════════════════════════════ -->
-    <!-- ПОИСК                                 -->
-    <!-- ════════════════════════════════════ -->
-
-    <Style Selector="TextBox.searchField">
-        <Setter Property="Height" Value="42" />
-        <Setter Property="FontSize" Value="14" />
-        <Setter Property="Padding" Value="14,0" />
-        <Setter Property="CornerRadius" Value="8" />
-        <Setter Property="Background" Value="#F5F5F8" />
-        <Setter Property="BorderBrush" Value="#E4E4EC" />
+    <Style Selector="ComboBox.formField:focus-visible, ComboBox.filterCombo:focus-visible">
+        <Setter Property="BorderBrush" Value="{DynamicResource FieldBorderFocus}" />
         <Setter Property="BorderThickness" Value="2" />
-        <Setter Property="VerticalContentAlignment" Value="Center" />
-    </Style>
-
-    <Style Selector="TextBox.searchField:focus">
-        <Setter Property="BorderBrush" Value="{StaticResource AccentColor}" />
-        <Setter Property="Background" Value="White" />
-    </Style>
-
-    <Style Selector="ComboBox.filterCombo">
-        <Setter Property="Height" Value="42" />
-        <Setter Property="FontSize" Value="14" />
-        <Setter Property="Padding" Value="12,0" />
-        <Setter Property="CornerRadius" Value="8" />
-        <Setter Property="Background" Value="#F5F5F8" />
-        <Setter Property="BorderBrush" Value="#E4E4EC" />
-        <Setter Property="BorderThickness" Value="2" />
-    </Style>
-
-    <Style Selector="ComboBox.filterCombo:focus">
-        <Setter Property="BorderBrush" Value="{StaticResource AccentColor}" />
-        <Setter Property="Background" Value="White" />
     </Style>
 
 </Styles>

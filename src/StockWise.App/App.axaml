@@ -1,12 +1,16 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="StockWise.App.App"
-             RequestedThemeVariant="Light">
+             RequestedThemeVariant="Dark">
+
+    <Application.Resources>
+        <FontFamily x:Key="FontMono">Consolas</FontFamily>
+        <FontFamily x:Key="FontUI">Inter</FontFamily>
+    </Application.Resources>
 
     <Application.Styles>
         <FluentTheme />
 
-        <!-- Пользовательские стили оболочки -->
         <StyleInclude Source="avares://StockWise.App/Styles/AppStyles.axaml" />
     </Application.Styles>
 </Application>

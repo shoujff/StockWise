@@ -7,7 +7,7 @@
              x:DataType="vm:ItemListViewModel"
              x:Class="StockWise.App.Views.ItemListView">
 
-    <Grid RowDefinitions="Auto,Auto,*" Background="{StaticResource WorkspaceBg}">
+    <Grid RowDefinitions="Auto,Auto,*" Background="{DynamicResource WorkspaceBg}">
 
         <Border Grid.Row="0" Classes="pageHeader">
             <Grid ColumnDefinitions="*,Auto">
@@ -46,31 +46,34 @@
 
             <Border Grid.Row="1" Classes="tableCard">
                 <Grid RowDefinitions="Auto,*">
-                    <TextBlock Grid.Row="0" Margin="16,12" FontSize="13" Foreground="#888">
+                    <TextBlock Grid.Row="0" Margin="16,12" FontSize="13" Foreground="{DynamicResource TextTertiary}">
                         <Run Text="Загружено товаров: " />
-                        <Run Text="{Binding Items.Count}" FontWeight="600" Foreground="#333" />
+                        <Run Text="{Binding Items.Count}" FontWeight="600" Foreground="{DynamicResource TextPrimary}" />
                     </TextBlock>
 
-                    <TextBlock Grid.Row="1" Text="Загрузка..."
-                               IsVisible="{Binding IsLoading}"
-                               HorizontalAlignment="Center"
-                               VerticalAlignment="Center"
-                               FontSize="14"
-                               Foreground="#999" />
+                    <StackPanel Grid.Row="1" Spacing="8" Margin="16,8"
+                                IsVisible="{Binding IsLoading}">
+                        <Border Classes="skeleton" Height="44" />
+                        <Border Classes="skeleton" Height="44" />
+                        <Border Classes="skeleton" Height="44" />
+                        <Border Classes="skeleton" Height="44" />
+                        <Border Classes="skeleton" Height="44" />
+                        <Border Classes="skeleton" Height="44" />
+                    </StackPanel>
 
                     <ScrollViewer Grid.Row="1" IsVisible="{Binding HasItems}">
                         <ItemsControl ItemsSource="{Binding Items}" Margin="8">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Border Padding="12,8" Margin="0,2" CornerRadius="6" Background="#F8F8FC">
+                                    <Border Padding="12,8" Margin="0,2" CornerRadius="6" Background="{DynamicResource BgTertiary}">
                                         <Grid ColumnDefinitions="120,*,150,60,80,80,*,100">
-                                            <TextBlock Grid.Column="0" Text="{Binding Article}" FontSize="13" Foreground="#888" />
-                                            <TextBlock Grid.Column="1" Text="{Binding Name}" FontSize="14" FontWeight="600" Foreground="#333" />
-                                            <TextBlock Grid.Column="2" Text="{Binding CategoryName}" FontSize="13" Foreground="#666" />
-                                            <TextBlock Grid.Column="3" Text="{Binding Unit}" FontSize="13" Foreground="#888" />
-                                            <TextBlock Grid.Column="4" Text="{Binding MinStock}" FontSize="13" Foreground="#888" />
-                                            <TextBlock Grid.Column="5" Text="{Binding MaxStock}" FontSize="13" Foreground="#888" />
-                                            <TextBlock Grid.Column="6" Text="{Binding Barcode}" FontSize="13" Foreground="#888" />
+                                            <TextBlock Grid.Column="0" Text="{Binding Article}" FontSize="13" Foreground="{DynamicResource TextTertiary}" />
+                                            <TextBlock Grid.Column="1" Text="{Binding Name}" FontSize="14" FontWeight="600" Foreground="{DynamicResource TextPrimary}" />
+                                            <TextBlock Grid.Column="2" Text="{Binding CategoryName}" FontSize="13" Foreground="{DynamicResource TextSecondary}" />
+                                            <TextBlock Grid.Column="3" Text="{Binding Unit}" FontSize="13" Foreground="{DynamicResource TextTertiary}" />
+                                            <TextBlock Grid.Column="4" Text="{Binding MinStock}" FontSize="13" Foreground="{DynamicResource TextTertiary}" />
+                                            <TextBlock Grid.Column="5" Text="{Binding MaxStock}" FontSize="13" Foreground="{DynamicResource TextTertiary}" />
+                                            <TextBlock Grid.Column="6" Text="{Binding Barcode}" FontSize="13" Foreground="{DynamicResource TextTertiary}" />
                                             <StackPanel Grid.Column="7" Orientation="Horizontal" Spacing="4" HorizontalAlignment="Center">
                                                 <Button Content="✏️" Classes="tableActionBtn"
                                                         Command="{Binding $parent[ItemsControl].DataContext.EditCommand}"
@@ -88,20 +91,17 @@
                         </ItemsControl>
                     </ScrollViewer>
 
-                    <StackPanel Grid.Row="1" Spacing="12"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
+                    <StackPanel Grid.Row="1" Classes="emptyState"
                                 IsVisible="{Binding HasNoItems}">
-                        <TextBlock Text="📦" FontSize="48"
-                                   HorizontalAlignment="Center" />
+                        <TextBlock Text="📦" Classes="emptyStateIcon" />
                         <TextBlock Text="Товары не найдены"
-                                   FontSize="18" FontWeight="600"
-                                   Foreground="#555"
-                                   HorizontalAlignment="Center" />
+                                   Classes="emptyStateTitle" />
                         <TextBlock Text="Измените параметры поиска или создайте новый товар"
-                                   FontSize="13"
-                                   Foreground="#999"
-                                   HorizontalAlignment="Center" />
+                                   Classes="emptyStateHint" />
+                        <Button Content="+ Создать товар" Classes="primaryButton"
+                                Command="{Binding CreateCommand}"
+                                HorizontalAlignment="Center"
+                                Margin="0,8,0,0" />
                     </StackPanel>
                 </Grid>
             </Border>

@@ -7,16 +7,16 @@
              x:DataType="vm:RegisterViewModel"
              x:Class="StockWise.App.Views.RegisterView">
 
-    <Grid Background="{StaticResource SidebarBg}">
+    <Grid Background="{DynamicResource BgPrimary}">
 
         <Ellipse Width="500" Height="500"
-                 Fill="{StaticResource AccentColor}"
+                 Fill="{DynamicResource AccentCyan}"
                  Opacity="0.08"
                  HorizontalAlignment="Left"
                  VerticalAlignment="Top"
                  Margin="-100,-100,0,0" />
         <Ellipse Width="400" Height="400"
-                 Fill="{StaticResource AccentColor}"
+                 Fill="{DynamicResource AccentCyan}"
                  Opacity="0.06"
                  HorizontalAlignment="Right"
                  VerticalAlignment="Bottom"
@@ -39,17 +39,17 @@
                                        HorizontalAlignment="Center" />
                             <TextBlock Text="StockWise"
                                        FontSize="26" FontWeight="700"
-                                       Foreground="#1A1A2E"
+                                       Foreground="{DynamicResource TextPrimary}"
                                        HorizontalAlignment="Center" />
                             <TextBlock Text="Управление складом"
                                        FontSize="13"
-                                       Foreground="#999"
+                                       Foreground="{DynamicResource TextMuted}"
                                        HorizontalAlignment="Center" />
                         </StackPanel>
 
                         <TextBlock Text="Регистрация"
                                    FontSize="18" FontWeight="600"
-                                   Foreground="#333"
+                                   Foreground="{DynamicResource TextSecondary}"
                                    HorizontalAlignment="Center" />
 
                         <Grid Height="48" ColumnDefinitions="Auto,*">
@@ -99,7 +99,8 @@
 
                         <Button Content="ЗАРЕГИСТРИРОВАТЬСЯ"
                                 Classes="loginButton"
-                                Command="{Binding RegisterCommand}" />
+                                Command="{Binding RegisterCommand}"
+                                IsDefault="True" />
 
                         <StackPanel Spacing="0">
                             <Border Classes="authDivider" />

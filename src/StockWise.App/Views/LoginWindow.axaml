@@ -6,9 +6,9 @@
         Title="StockWise — Вход"
         Width="480" Height="740"
         MinHeight="620"
-        CanResize="False"
+        CanResize="True"
         WindowStartupLocation="CenterScreen"
-        Background="{StaticResource SidebarBg}">
+        Background="{DynamicResource BgPrimary}">
 
     <Window.DataTemplates>
         <DataTemplate DataType="{x:Type vm:LoginViewModel}">
@@ -19,8 +19,12 @@
         </DataTemplate>
     </Window.DataTemplates>
 
-    <ContentControl Name="ContentArea"
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Stretch" />
+    <Grid>
+        <Border IsHitTestVisible="False"
+                Background="{StaticResource GridPattern}" Opacity="0.15" />
+        <ContentControl Name="ContentArea"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch" />
+    </Grid>
 
 </Window>

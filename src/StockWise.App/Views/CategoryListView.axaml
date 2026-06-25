@@ -7,7 +7,7 @@
              x:DataType="vm:CategoryListViewModel"
              x:Class="StockWise.App.Views.CategoryListView">
 
-    <Grid RowDefinitions="Auto,Auto,*" Background="{StaticResource WorkspaceBg}">
+    <Grid RowDefinitions="Auto,Auto,*" Background="{DynamicResource WorkspaceBg}">
 
         <Border Grid.Row="0" Classes="pageHeader">
             <Grid ColumnDefinitions="*,Auto">
@@ -37,11 +37,11 @@
                                     <Border Padding="8,4" CornerRadius="6">
                                         <StackPanel Orientation="Horizontal" Spacing="6">
                                             <TextBlock Text="{Binding Level, StringFormat='{}{0}'}"
-                                                       FontSize="11" Foreground="#AAA" Width="16" />
+                                                       FontSize="11" Foreground="{DynamicResource TextMuted}" Width="16" />
                                             <TextBlock Text="📁" FontSize="14" />
                                             <TextBlock Text="{Binding Name}"
                                                        FontSize="14" FontWeight="500"
-                                                       Foreground="#333" />
+                                                       Foreground="{DynamicResource TextPrimary}" />
                                         </StackPanel>
                                     </Border>
                                 </TreeDataTemplate>
@@ -57,7 +57,7 @@
                     <TextBlock Grid.Row="0"
                                Text="{Binding HeaderText}"
                                FontSize="16" FontWeight="600"
-                               Foreground="#1A1A2E" />
+                               Foreground="{DynamicResource TextPrimary}" />
 
                     <StackPanel Grid.Row="1" Spacing="12">
                         <TextBlock Text="Название категории" Classes="formLabel" />
@@ -76,6 +76,7 @@
                         <Button Content="💾 Сохранить"
                                 Classes="primaryButton"
                                 Command="{Binding SaveCommand}"
+                                IsDefault="True"
                                 HorizontalAlignment="Stretch" />
 
                         <Button Content="Отмена"

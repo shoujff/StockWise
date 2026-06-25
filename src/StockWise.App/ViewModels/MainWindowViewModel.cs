@@ -24,6 +24,8 @@ public partial class MainWindowViewModel : ObservableObject
 {
     private readonly IItemService _itemService;
     private readonly ICategoryService _categoryService;
+    private readonly IAuthService _authService;
+    private readonly ThemeService _themeService;
 
     [ObservableProperty]
     private string _version = "v1.0.0";
@@ -40,10 +42,27 @@ public partial class MainWindowViewModel : ObservableObject
     [ObservableProperty]
     private object? _currentPageViewModel;
 
-    public MainWindowViewModel(IItemService itemService, ICategoryService categoryService)
+    [ObservableProperty]
+    private string _themeIcon = "🌙";
+
+    public event Action? LogoutRequested;
+
+    public MainWindowViewModel(
+        IItemService itemService,
+        ICategoryService categoryService,
+        IAuthService authService,
+        ThemeService themeService)
     {
         _itemService = itemService;
         _categoryService = categoryService;
+        _authService = authService;
+        _themeService = themeService;
+        _themeService.ThemeChanged += OnThemeChanged;
+    }
+
+    private void OnThemeChanged(AppTheme theme)
+    {
+        ThemeIcon = theme == AppTheme.Dark ? "☀️" : "🌙";
     }
 
     public void Initialize()
@@ -78,6 +97,19 @@ public partial class MainWindowViewModel : ObservableObject
             PageType.Categories => CreateCategoryListViewModel(),
             _ => null
         };
+    }
+
+    [RelayCommand]
+    private void ToggleTheme()
+    {
+        _themeService.Toggle();
+    }
+
+    [RelayCommand]
+    private void Logout()
+    {
+        _authService.Logout();
+        LogoutRequested?.Invoke();
     }
 
     [RelayCommand]

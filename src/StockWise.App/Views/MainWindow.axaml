@@ -11,7 +11,7 @@
         Width="1200" Height="800"
         MinWidth="900" MinHeight="600"
         WindowStartupLocation="CenterScreen"
-        Background="#FAFAFE">
+        Background="{DynamicResource BgPrimary}">
 
     <Window.DataTemplates>
         <DataTemplate DataType="vm:ItemListViewModel">
@@ -31,7 +31,7 @@
 
     <Grid ColumnDefinitions="240,*">
 
-        <Border Grid.Column="0" Background="{StaticResource SidebarBg}">
+        <Border Grid.Column="0" Background="{DynamicResource SidebarBg}">
             <Grid RowDefinitions="Auto,*,Auto">
 
                 <Border Grid.Row="0" Classes="logoArea">
@@ -100,7 +100,7 @@
                 </ScrollViewer>
 
                 <Border Grid.Row="2" Classes="userArea">
-                    <Grid ColumnDefinitions="36,*,Auto">
+                    <Grid ColumnDefinitions="36,*,Auto,Auto">
                         <Border Grid.Column="0" Classes="avatar">
                             <TextBlock Text="A" FontSize="16" FontWeight="700"
                                        Foreground="White"
@@ -109,13 +109,18 @@
                         </Border>
                         <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0">
                             <TextBlock Text="Admin" FontSize="14" FontWeight="600"
-                                       Foreground="{StaticResource SidebarTextSelected}" />
+                                       Foreground="{DynamicResource SidebarTextSelected}" />
                             <TextBlock Text="admin@stockwise.local" FontSize="11"
-                                       Foreground="{StaticResource SidebarText}"
+                                       Foreground="{DynamicResource SidebarText}"
                                        TextTrimming="CharacterEllipsis" />
                         </StackPanel>
-                        <Button Grid.Column="2" Content="⏻"
+                        <Button Grid.Column="2" Content="{Binding ThemeIcon}"
                                 Classes="userLogout"
+                                Command="{Binding ToggleThemeCommand}"
+                                ToolTip.Tip="Сменить тему" />
+                        <Button Grid.Column="3" Content="⏻"
+                                Classes="userLogout"
+                                Command="{Binding LogoutCommand}"
                                 ToolTip.Tip="Выйти" />
                     </Grid>
                 </Border>
@@ -136,9 +141,41 @@
 
             <Border Grid.Row="1" Classes="pageHeaderAccent" />
 
+            <Border Grid.Row="2" IsHitTestVisible="False"
+                    Background="{StaticResource GridPattern}" Opacity="0.15" />
             <ContentControl Grid.Row="2" Content="{Binding CurrentPageViewModel}"
                               HorizontalContentAlignment="Stretch"
-                              VerticalContentAlignment="Stretch" />
+                              VerticalContentAlignment="Stretch">
+                <ContentControl.Styles>
+                    <Style Selector="ContentControl > UserControl">
+                        <Style.Animations>
+                            <Animation Duration="0:0:0.3" FillMode="Both">
+                                <KeyFrame Cue="0%">
+                                    <Setter Property="Opacity" Value="0" />
+                                    <Setter Property="RenderTransform">
+                                        <Setter.Value>
+                                            <TranslateTransform Y="12" />
+                                        </Setter.Value>
+                                    </Setter>
+                                </KeyFrame>
+                                <KeyFrame Cue="100%">
+                                    <Setter Property="Opacity" Value="1" />
+                                    <Setter Property="RenderTransform">
+                                        <Setter.Value>
+                                            <TranslateTransform Y="0" />
+                                        </Setter.Value>
+                                    </Setter>
+                                </KeyFrame>
+                            </Animation>
+                        </Style.Animations>
+                    </Style>
+                </ContentControl.Styles>
+                <ContentControl.Transitions>
+                    <Transitions>
+                        <DoubleTransition Property="Opacity" Duration="0:0:0.3" />
+                    </Transitions>
+                </ContentControl.Transitions>
+            </ContentControl>
 
         </Grid>
 
