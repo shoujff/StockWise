@@ -51,4 +51,5 @@ public interface IItemService
     Task<ItemDto?> GetByBarcodeAsync(string barcode);
     Task<bool> IsArticleUniqueAsync(string article, int? excludeId = null);
     Task<bool> IsBarcodeUniqueAsync(string barcode, int? excludeId = null);
+    Task<string> GetNextArticleAsync();
 }

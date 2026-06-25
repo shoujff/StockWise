@@ -1,0 +1,101 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:StockWise.App.ViewModels"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="700"
+             x:DataType="vm:CategoryListViewModel"
+             x:Class="StockWise.App.Views.CategoryListView">
+
+    <Grid RowDefinitions="Auto,Auto,*" Background="{StaticResource WorkspaceBg}">
+
+        <Border Grid.Row="0" Classes="pageHeader">
+            <Grid ColumnDefinitions="*,Auto">
+                <TextBlock Text="Категории" Classes="pageTitle" />
+                <Button Grid.Column="1" Content="+ Новая категория"
+                        Classes="primaryButton"
+                        Command="{Binding StartCreateCommand}" />
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="1" Classes="pageHeaderAccent" />
+
+        <Grid Grid.Row="2" ColumnDefinitions="1*,320" Margin="28,20,28,0">
+
+            <Border Grid.Column="0" Classes="tableCard" Margin="0,0,12,0">
+                <Grid RowDefinitions="Auto,*">
+                    <TextBlock Grid.Row="0" Text="Дерево категорий"
+                               Classes="formSectionTitle" Margin="16,12,16,8" />
+
+                    <ScrollViewer Grid.Row="1">
+                        <TreeView ItemsSource="{Binding Roots}"
+                                  SelectedItem="{Binding SelectedNode}"
+                                  Background="Transparent"
+                                  BorderThickness="0">
+                            <TreeView.ItemTemplate>
+                                <TreeDataTemplate ItemsSource="{Binding Children}">
+                                    <Border Padding="8,4" CornerRadius="6">
+                                        <StackPanel Orientation="Horizontal" Spacing="6">
+                                            <TextBlock Text="{Binding Level, StringFormat='{}{0}'}"
+                                                       FontSize="11" Foreground="#AAA" Width="16" />
+                                            <TextBlock Text="📁" FontSize="14" />
+                                            <TextBlock Text="{Binding Name}"
+                                                       FontSize="14" FontWeight="500"
+                                                       Foreground="#333" />
+                                        </StackPanel>
+                                    </Border>
+                                </TreeDataTemplate>
+                            </TreeView.ItemTemplate>
+                        </TreeView>
+                    </ScrollViewer>
+                </Grid>
+            </Border>
+
+            <Border Grid.Column="1" Classes="formCard">
+                <Grid RowDefinitions="Auto,Auto,Auto" RowSpacing="16">
+
+                    <TextBlock Grid.Row="0"
+                               Text="{Binding HeaderText}"
+                               FontSize="16" FontWeight="600"
+                               Foreground="#1A1A2E" />
+
+                    <StackPanel Grid.Row="1" Spacing="12">
+                        <TextBlock Text="Название категории" Classes="formLabel" />
+                        <TextBox Classes="formField"
+                                 Watermark="Введите название"
+                                 Text="{Binding EditName}" />
+
+                        <Border Classes="loginErrorBox"
+                                IsVisible="{Binding HasError}">
+                            <TextBlock Text="{Binding ErrorMessage}"
+                                       Classes="loginError" />
+                        </Border>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="2" Spacing="8">
+                        <Button Content="💾 Сохранить"
+                                Classes="primaryButton"
+                                Command="{Binding SaveCommand}"
+                                HorizontalAlignment="Stretch" />
+
+                        <Button Content="Отмена"
+                                Classes="secondaryButton"
+                                Command="{Binding CancelEditCommand}"
+                                HorizontalAlignment="Stretch" />
+
+                        <Button Content="🗑️ Удалить категорию"
+                                Classes="dangerButton"
+                                Command="{Binding DeleteCommand}"
+                                CommandParameter="{Binding SelectedNode.Id}"
+                                HorizontalAlignment="Stretch"
+                                IsVisible="{Binding IsEditing}" />
+                    </StackPanel>
+
+                </Grid>
+            </Border>
+
+        </Grid>
+
+    </Grid>
+
+</UserControl>

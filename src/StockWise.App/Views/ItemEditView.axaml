@@ -1,0 +1,121 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:StockWise.App.ViewModels"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="700"
+             x:DataType="vm:ItemEditViewModel"
+             x:Class="StockWise.App.Views.ItemEditView">
+
+    <Grid RowDefinitions="Auto,Auto,*" Background="{StaticResource WorkspaceBg}">
+
+        <Border Grid.Row="0" Classes="pageHeader">
+            <Grid ColumnDefinitions="*,Auto">
+                <TextBlock Text="{Binding PageTitle}" Classes="pageTitle" />
+                <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8">
+                    <Button Content="Отмена" Classes="secondaryButton"
+                            Command="{Binding CancelCommand}" />
+                    <Button Content="💾 Сохранить" Classes="primaryButton"
+                            Command="{Binding SaveCommand}"
+                            IsEnabled="{Binding IsNotSaving}" />
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="1" Classes="pageHeaderAccent" />
+
+        <ScrollViewer Grid.Row="2">
+            <Grid Margin="28,20,28,0" RowDefinitions="Auto,Auto">
+
+                <Border Grid.Row="0" Classes="formCard">
+                    <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
+                          ColumnDefinitions="200,*,200,*"
+                          RowSpacing="16" ColumnSpacing="16">
+
+                        <TextBlock Grid.Row="0" Grid.ColumnSpan="4"
+                                   Text="Основная информация"
+                                   Classes="formSectionTitle" />
+
+                        <TextBlock Grid.Row="1" Grid.Column="0"
+                                   Text="Наименование *" Classes="formLabel" />
+                        <TextBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3"
+                                 Classes="formField"
+                                 Watermark="Введите название товара"
+                                 Text="{Binding Name}" />
+
+                        <TextBlock Grid.Row="2" Grid.Column="0"
+                                   Text="Артикул" Classes="formLabel" />
+                        <TextBox Grid.Row="2" Grid.Column="1"
+                                 Classes="formField"
+                                 IsReadOnly="True"
+                                 Text="{Binding Article}" />
+                        <TextBlock Grid.Row="2" Grid.Column="2"
+                                   Text="Единица измерения" Classes="formLabel" />
+                        <TextBox Grid.Row="2" Grid.Column="3"
+                                 Classes="formField"
+                                 Watermark="шт, кг, м"
+                                 Text="{Binding Unit}" />
+
+                        <TextBlock Grid.Row="3" Grid.Column="0"
+                                   Text="Категория" Classes="formLabel" />
+                        <ComboBox Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3"
+                                  Classes="formField"
+                                  ItemsSource="{Binding Categories}"
+                                  SelectedItem="{Binding SelectedCategory}"
+                                  PlaceholderText="Выберите категорию">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Path}" />
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+
+                        <TextBlock Grid.Row="4" Grid.ColumnSpan="4"
+                                   Text="Параметры учёта"
+                                   Classes="formSectionTitle" Margin="0,8,0,0" />
+
+                        <TextBlock Grid.Row="5" Grid.Column="0"
+                                   Text="Мин. остаток" Classes="formLabel" />
+                        <TextBox Grid.Row="5" Grid.Column="1"
+                                 Classes="formField"
+                                 Text="{Binding MinStock}" />
+
+                        <TextBlock Grid.Row="5" Grid.Column="2"
+                                   Text="Макс. остаток" Classes="formLabel" />
+                        <TextBox Grid.Row="5" Grid.Column="3"
+                                 Classes="formField"
+                                 Text="{Binding MaxStock}" />
+
+                        <StackPanel Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="4"
+                                    Orientation="Horizontal" Spacing="8">
+                            <CheckBox IsChecked="{Binding IsBatch}"
+                                      Content="Партионный учёт (срок годности, партия)" />
+                        </StackPanel>
+
+                        <TextBlock Grid.Row="7" Grid.ColumnSpan="4"
+                                   Text="Маркировка"
+                                   Classes="formSectionTitle" Margin="0,8,0,0" />
+
+                        <TextBlock Grid.Row="8" Grid.Column="0"
+                                   Text="Штрихкод" Classes="formLabel" />
+                        <TextBox Grid.Row="8" Grid.Column="1" Grid.ColumnSpan="3"
+                                 Classes="formField"
+                                 Watermark="Введите штрихкод товара"
+                                 Text="{Binding Barcode}" />
+
+                    </Grid>
+                </Border>
+
+                <Border Grid.Row="1" Classes="loginErrorBox"
+                        IsVisible="{Binding HasError}"
+                        Margin="0,16,0,0">
+                    <TextBlock Text="{Binding ErrorMessage}"
+                               Classes="loginError" />
+                </Border>
+
+            </Grid>
+        </ScrollViewer>
+
+    </Grid>
+
+</UserControl>

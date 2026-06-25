@@ -4,20 +4,19 @@ using StockWise.App.ViewModels;
 
 namespace StockWise.App.Views;
 
-public partial class MainWindow : Window
+public partial class CategoryListView : UserControl
 {
-    private readonly MainWindowViewModel _viewModel;
-
-    public MainWindow(MainWindowViewModel viewModel)
+    public CategoryListView()
     {
         InitializeComponent();
-        DataContext = viewModel;
-        _viewModel = viewModel;
     }
 
     protected override void OnLoaded(RoutedEventArgs e)
     {
         base.OnLoaded(e);
-        _viewModel.Initialize();
+        if (DataContext is CategoryListViewModel vm)
+        {
+            vm.LoadCommand.Execute(null);
+        }
     }
 }

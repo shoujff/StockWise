@@ -50,6 +50,9 @@ internal class Program
             services.AddSingleton(configuration);
             services.AddSingleton<MainWindow>();
             services.AddSingleton<MainWindowViewModel>();
+            services.AddTransient<ItemListViewModel>();
+            services.AddTransient<ItemEditViewModel>();
+            services.AddTransient<CategoryListViewModel>();
 
             var connString = configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<StockDb>(options =>
@@ -90,7 +93,38 @@ internal class Program
                 LastName = "",
                 Role = "Admin"
             });
-            context.SaveChanges();
         }
+
+        if (!context.Categories.Any())
+        {
+            var electronics = new Category { Name = "Электроника", SortOrder = 1 };
+            var construction = new Category { Name = "Строительные материалы", SortOrder = 2 };
+            var stationery = new Category { Name = "Канцелярия", SortOrder = 3 };
+
+            context.Categories.AddRange(electronics, construction, stationery);
+            context.SaveChanges();
+
+            context.Categories.AddRange(
+                new Category { Name = "Бытовая техника", ParentId = electronics.Id, SortOrder = 1 },
+                new Category { Name = "Компьютеры", ParentId = electronics.Id, SortOrder = 2 },
+                new Category { Name = "Телефоны", ParentId = electronics.Id, SortOrder = 3 },
+                new Category { Name = "Электрика", ParentId = construction.Id, SortOrder = 1 },
+                new Category { Name = "Сантехника", ParentId = construction.Id, SortOrder = 2 },
+                new Category { Name = "Отделочные материалы", ParentId = construction.Id, SortOrder = 3 },
+                new Category { Name = "Бумага", ParentId = stationery.Id, SortOrder = 1 },
+                new Category { Name = "Ручки", ParentId = stationery.Id, SortOrder = 2 }
+            );
+        }
+
+        if (!context.Warehouses.Any())
+        {
+            context.Warehouses.AddRange(
+                new Warehouse { Name = "Основной склад", Address = "ул. Ленина, 10", IsActive = true },
+                new Warehouse { Name = "Склад №2", Address = "ул. Промышленная, 5", IsActive = true },
+                new Warehouse { Name = "Мелкооптовый", Address = "ТЦ \"Гигант\", пав. 12", IsActive = true }
+            );
+        }
+
+        context.SaveChanges();
     }
 }

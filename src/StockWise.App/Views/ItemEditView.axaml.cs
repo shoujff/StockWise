@@ -4,20 +4,19 @@ using StockWise.App.ViewModels;
 
 namespace StockWise.App.Views;
 
-public partial class MainWindow : Window
+public partial class ItemEditView : UserControl
 {
-    private readonly MainWindowViewModel _viewModel;
-
-    public MainWindow(MainWindowViewModel viewModel)
+    public ItemEditView()
     {
         InitializeComponent();
-        DataContext = viewModel;
-        _viewModel = viewModel;
     }
 
     protected override void OnLoaded(RoutedEventArgs e)
     {
         base.OnLoaded(e);
-        _viewModel.Initialize();
+        if (DataContext is ItemEditViewModel vm)
+        {
+            vm.LoadCommand.Execute(null);
+        }
     }
 }

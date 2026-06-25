@@ -1,0 +1,113 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:StockWise.App.ViewModels"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="700"
+             x:DataType="vm:ItemListViewModel"
+             x:Class="StockWise.App.Views.ItemListView">
+
+    <Grid RowDefinitions="Auto,Auto,*" Background="{StaticResource WorkspaceBg}">
+
+        <Border Grid.Row="0" Classes="pageHeader">
+            <Grid ColumnDefinitions="*,Auto">
+                <TextBlock Text="Номенклатура" Classes="pageTitle" />
+                <Button Grid.Column="1" Content="+ Новый товар"
+                        Classes="primaryButton"
+                        Command="{Binding CreateCommand}" />
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="1" Classes="pageHeaderAccent" />
+
+        <Grid Grid.Row="2" RowDefinitions="Auto,*" Margin="28,20,28,0">
+
+            <Grid Grid.Row="0" ColumnDefinitions="1*,200,Auto" Margin="0,0,0,16">
+                <TextBox Grid.Column="0" Classes="searchField"
+                         Watermark="Поиск по названию, артикулу или штрихкоду..."
+                         Text="{Binding SearchTerm}" />
+                <ComboBox Grid.Column="1" Classes="filterCombo"
+                          ItemsSource="{Binding Categories}"
+                          SelectedItem="{Binding SelectedCategory}"
+                          PlaceholderText="Все категории"
+                          Margin="12,0,0,0">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Path}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+                <Button Grid.Column="2" Content="⟳"
+                        Classes="iconButton"
+                        Command="{Binding SearchCommand}"
+                        Margin="8,0,0,0"
+                        ToolTip.Tip="Обновить" />
+            </Grid>
+
+            <Border Grid.Row="1" Classes="tableCard">
+                <Grid RowDefinitions="Auto,*">
+                    <TextBlock Grid.Row="0" Margin="16,12" FontSize="13" Foreground="#888">
+                        <Run Text="Загружено товаров: " />
+                        <Run Text="{Binding Items.Count}" FontWeight="600" Foreground="#333" />
+                    </TextBlock>
+
+                    <TextBlock Grid.Row="1" Text="Загрузка..."
+                               IsVisible="{Binding IsLoading}"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               FontSize="14"
+                               Foreground="#999" />
+
+                    <ScrollViewer Grid.Row="1" IsVisible="{Binding HasItems}">
+                        <ItemsControl ItemsSource="{Binding Items}" Margin="8">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Padding="12,8" Margin="0,2" CornerRadius="6" Background="#F8F8FC">
+                                        <Grid ColumnDefinitions="120,*,150,60,80,80,*,100">
+                                            <TextBlock Grid.Column="0" Text="{Binding Article}" FontSize="13" Foreground="#888" />
+                                            <TextBlock Grid.Column="1" Text="{Binding Name}" FontSize="14" FontWeight="600" Foreground="#333" />
+                                            <TextBlock Grid.Column="2" Text="{Binding CategoryName}" FontSize="13" Foreground="#666" />
+                                            <TextBlock Grid.Column="3" Text="{Binding Unit}" FontSize="13" Foreground="#888" />
+                                            <TextBlock Grid.Column="4" Text="{Binding MinStock}" FontSize="13" Foreground="#888" />
+                                            <TextBlock Grid.Column="5" Text="{Binding MaxStock}" FontSize="13" Foreground="#888" />
+                                            <TextBlock Grid.Column="6" Text="{Binding Barcode}" FontSize="13" Foreground="#888" />
+                                            <StackPanel Grid.Column="7" Orientation="Horizontal" Spacing="4" HorizontalAlignment="Center">
+                                                <Button Content="✏️" Classes="tableActionBtn"
+                                                        Command="{Binding $parent[ItemsControl].DataContext.EditCommand}"
+                                                        CommandParameter="{Binding Id}"
+                                                        ToolTip.Tip="Редактировать" />
+                                                <Button Content="🗑️" Classes="tableActionBtnDanger"
+                                                        Command="{Binding $parent[ItemsControl].DataContext.DeleteCommand}"
+                                                        CommandParameter="{Binding Id}"
+                                                        ToolTip.Tip="Удалить" />
+                                            </StackPanel>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+
+                    <StackPanel Grid.Row="1" Spacing="12"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                IsVisible="{Binding HasNoItems}">
+                        <TextBlock Text="📦" FontSize="48"
+                                   HorizontalAlignment="Center" />
+                        <TextBlock Text="Товары не найдены"
+                                   FontSize="18" FontWeight="600"
+                                   Foreground="#555"
+                                   HorizontalAlignment="Center" />
+                        <TextBlock Text="Измените параметры поиска или создайте новый товар"
+                                   FontSize="13"
+                                   Foreground="#999"
+                                   HorizontalAlignment="Center" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+        </Grid>
+
+    </Grid>
+
+</UserControl>

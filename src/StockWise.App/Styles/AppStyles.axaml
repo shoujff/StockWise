@@ -307,4 +307,246 @@
         <Setter Property="HorizontalAlignment" Value="Center" />
     </Style>
 
+    <!-- ════════════════════════════════════ -->
+    <!-- ТАБЛИЦЫ                               -->
+    <!-- ════════════════════════════════════ -->
+
+    <Style Selector="Border.tableCard">
+        <Setter Property="Background" Value="White" />
+        <Setter Property="CornerRadius" Value="12" />
+        <Setter Property="BoxShadow" Value="0 2 12 0 rgba(0,0,0,0.06)" />
+        <Setter Property="Padding" Value="0" />
+    </Style>
+
+    <Style Selector="DataGrid.dataTable">
+        <Setter Property="Background" Value="White" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="RowHeight" Value="44" />
+        <Setter Property="ColumnHeaderHeight" Value="40" />
+        <Setter Property="GridLinesVisibility" Value="Horizontal" />
+        <Setter Property="HorizontalScrollBarVisibility" Value="Auto" />
+    </Style>
+
+    <Style Selector="DataGrid.dataTable DataGridColumnHeader">
+        <Setter Property="Background" Value="#F0F0F6" />
+        <Setter Property="Foreground" Value="#555" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="FontWeight" Value="600" />
+        <Setter Property="Padding" Value="12,0" />
+    </Style>
+
+    <Style Selector="DataGrid.dataTable DataGridCell">
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="Foreground" Value="#333" />
+        <Setter Property="Padding" Value="12,0" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+
+    <!-- ════════════════════════════════════ -->
+    <!-- КНОПКИ                                -->
+    <!-- ════════════════════════════════════ -->
+
+    <Style Selector="Button.primaryButton">
+        <Setter Property="Height" Value="38" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontWeight" Value="600" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="Background" Value="{StaticResource ButtonGradient}" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Padding" Value="20,0" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+
+    <Style Selector="Button.primaryButton:pointerover">
+        <Setter Property="Background" Value="{StaticResource ButtonHoverGradient}" />
+    </Style>
+
+    <Style Selector="Button.primaryButton:pressed">
+        <Setter Property="Background" Value="{StaticResource AccentDark}" />
+    </Style>
+
+    <Style Selector="Button.secondaryButton">
+        <Setter Property="Height" Value="38" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontWeight" Value="500" />
+        <Setter Property="Foreground" Value="#555" />
+        <Setter Property="Background" Value="#F0F0F6" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Padding" Value="20,0" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="BorderThickness" Value="0" />
+    </Style>
+
+    <Style Selector="Button.secondaryButton:pointerover">
+        <Setter Property="Background" Value="#E4E4EC" />
+    </Style>
+
+    <Style Selector="Button.dangerButton">
+        <Setter Property="Height" Value="38" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontWeight" Value="500" />
+        <Setter Property="Foreground" Value="#D32F2F" />
+        <Setter Property="Background" Value="#FFF0F0" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Padding" Value="20,0" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+
+    <Style Selector="Button.dangerButton:pointerover">
+        <Setter Property="Background" Value="#FFE0E0" />
+        <Setter Property="Foreground" Value="#C62828" />
+    </Style>
+
+    <Style Selector="Button.iconButton">
+        <Setter Property="Width" Value="38" />
+        <Setter Property="Height" Value="38" />
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="Background" Value="#F0F0F6" />
+        <Setter Property="Foreground" Value="#555" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+
+    <Style Selector="Button.iconButton:pointerover">
+        <Setter Property="Background" Value="#E4E4EC" />
+        <Setter Property="Foreground" Value="#333" />
+    </Style>
+
+    <Style Selector="Button.tableActionBtn">
+        <Setter Property="Width" Value="32" />
+        <Setter Property="Height" Value="32" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="#888" />
+        <Setter Property="CornerRadius" Value="6" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+
+    <Style Selector="Button.tableActionBtn:pointerover">
+        <Setter Property="Background" Value="#F0F0F6" />
+        <Setter Property="Foreground" Value="{StaticResource AccentColor}" />
+    </Style>
+
+    <Style Selector="Button.tableActionBtnDanger">
+        <Setter Property="Width" Value="32" />
+        <Setter Property="Height" Value="32" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="#888" />
+        <Setter Property="CornerRadius" Value="6" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+
+    <Style Selector="Button.tableActionBtnDanger:pointerover">
+        <Setter Property="Background" Value="#FFF0F0" />
+        <Setter Property="Foreground" Value="#D32F2F" />
+    </Style>
+
+    <!-- ════════════════════════════════════ -->
+    <!-- ФОРМЫ                                 -->
+    <!-- ════════════════════════════════════ -->
+
+    <Style Selector="Border.formCard">
+        <Setter Property="Background" Value="White" />
+        <Setter Property="CornerRadius" Value="12" />
+        <Setter Property="BoxShadow" Value="0 2 12 0 rgba(0,0,0,0.06)" />
+        <Setter Property="Padding" Value="24" />
+    </Style>
+
+    <Style Selector="TextBlock.formSectionTitle">
+        <Setter Property="FontSize" Value="15" />
+        <Setter Property="FontWeight" Value="700" />
+        <Setter Property="Foreground" Value="#1A1A2E" />
+        <Setter Property="Margin" Value="0,0,0,4" />
+    </Style>
+
+    <Style Selector="TextBlock.formLabel">
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="FontWeight" Value="500" />
+        <Setter Property="Foreground" Value="#666" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+
+    <Style Selector="TextBox.formField">
+        <Setter Property="Height" Value="42" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="Padding" Value="12,0" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="Background" Value="#F5F5F8" />
+        <Setter Property="BorderBrush" Value="#E4E4EC" />
+        <Setter Property="BorderThickness" Value="2" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+
+    <Style Selector="TextBox.formField:focus">
+        <Setter Property="BorderBrush" Value="{StaticResource AccentColor}" />
+        <Setter Property="Background" Value="White" />
+    </Style>
+
+    <Style Selector="ComboBox.formField">
+        <Setter Property="Height" Value="42" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="Padding" Value="12,0" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="Background" Value="#F5F5F8" />
+        <Setter Property="BorderBrush" Value="#E4E4EC" />
+        <Setter Property="BorderThickness" Value="2" />
+    </Style>
+
+    <Style Selector="ComboBox.formField:focus">
+        <Setter Property="BorderBrush" Value="{StaticResource AccentColor}" />
+        <Setter Property="Background" Value="White" />
+    </Style>
+
+    <!-- ════════════════════════════════════ -->
+    <!-- ПОИСК                                 -->
+    <!-- ════════════════════════════════════ -->
+
+    <Style Selector="TextBox.searchField">
+        <Setter Property="Height" Value="42" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="Padding" Value="14,0" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="Background" Value="#F5F5F8" />
+        <Setter Property="BorderBrush" Value="#E4E4EC" />
+        <Setter Property="BorderThickness" Value="2" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+
+    <Style Selector="TextBox.searchField:focus">
+        <Setter Property="BorderBrush" Value="{StaticResource AccentColor}" />
+        <Setter Property="Background" Value="White" />
+    </Style>
+
+    <Style Selector="ComboBox.filterCombo">
+        <Setter Property="Height" Value="42" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="Padding" Value="12,0" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="Background" Value="#F5F5F8" />
+        <Setter Property="BorderBrush" Value="#E4E4EC" />
+        <Setter Property="BorderThickness" Value="2" />
+    </Style>
+
+    <Style Selector="ComboBox.filterCombo:focus">
+        <Setter Property="BorderBrush" Value="{StaticResource AccentColor}" />
+        <Setter Property="Background" Value="White" />
+    </Style>
+
 </Styles>

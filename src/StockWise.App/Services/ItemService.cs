@@ -87,7 +87,7 @@ namespace StockWise.App.Services
             }
 
             item.Name = dto.Name.Trim();
-            item.Article = article;
+            item.Article =article;
             item.Unit = (dto.Unit ?? "").Trim();
             item.MinStock = dto.MinStock;
             item.MaxStock = dto.MaxStock;
@@ -139,6 +139,12 @@ namespace StockWise.App.Services
             var existing = await _repo.GetByBarcodeAsync(barcode.Trim());
             return existing is null || existing.Id == excludeId;
         }
+        public async Task<string> GetNextArticleAsync()
+        {
+            var last = await _repo.GetLastArticleAsync();
+            return GenerateNextArticle(last);
+        }
+
         private static string GenerateNextArticle(string? lastArticle)
         {
             var number = 1;
