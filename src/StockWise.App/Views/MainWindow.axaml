@@ -2,6 +2,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="clr-namespace:StockWise.App.ViewModels"
         xmlns:views="clr-namespace:StockWise.App.Views"
+        xmlns:models="clr-namespace:StockWise.App.Models"
+        xmlns:converters="clr-namespace:StockWise.App.Converters"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="800"
@@ -12,6 +14,10 @@
         MinWidth="900" MinHeight="600"
         WindowStartupLocation="CenterScreen"
         Background="{DynamicResource BgPrimary}">
+
+    <Window.Resources>
+        <converters:ToastTypeToBrushConverter x:Key="ToastTypeToBrushConverter" />
+    </Window.Resources>
 
     <Window.DataTemplates>
         <DataTemplate DataType="vm:ItemListViewModel">
@@ -142,7 +148,9 @@
             <Border Grid.Row="1" Classes="pageHeaderAccent" />
 
             <Border Grid.Row="2" IsHitTestVisible="False"
-                    Background="{StaticResource GridPattern}" Opacity="0.15" />
+                    Background="{StaticResource GridPattern}"
+                    Opacity="0.12"
+                    Classes="animatedGrid" />
             <ContentControl Grid.Row="2" Content="{Binding CurrentPageViewModel}"
                               HorizontalContentAlignment="Stretch"
                               VerticalContentAlignment="Stretch">
@@ -177,7 +185,87 @@
                 </ContentControl.Transitions>
             </ContentControl>
 
+            <!-- Ambient overlays (on top of content, non-interactive) -->
+            <Border Grid.Row="0" Grid.RowSpan="3"
+                    IsHitTestVisible="False"
+                    Background="{StaticResource ScanlineBrush}"
+                    Classes="scanlineOverlay" />
+            <Border Grid.Row="0" Grid.RowSpan="3"
+                    IsHitTestVisible="False"
+                    Background="{StaticResource VignetteGradient}" />
+
+            <!-- Floating particles -->
+            <Grid Grid.Row="0" Grid.RowSpan="3"
+                  IsHitTestVisible="False">
+                <Ellipse Fill="{DynamicResource AccentCyan}"
+                         Width="3" Height="3" Opacity="0.2"
+                         Classes="particle p1" />
+                <Ellipse Fill="{DynamicResource AccentMagenta}"
+                         Width="2" Height="2" Opacity="0.15"
+                         Classes="particle p2" />
+                <Ellipse Fill="{DynamicResource AccentCyan}"
+                         Width="4" Height="4" Opacity="0.12"
+                         Classes="particle p3" />
+                <Ellipse Fill="{DynamicResource AccentMagenta}"
+                         Width="2" Height="2" Opacity="0.1"
+                         Classes="particle p4" />
+                <Ellipse Fill="{DynamicResource AccentCyan}"
+                         Width="3" Height="3" Opacity="0.15"
+                         Classes="particle p5" />
+            </Grid>
+
         </Grid>
+
+        <!-- Dialog overlay (covers entire window) -->
+        <Border Grid.ColumnSpan="2"
+                IsVisible="{Binding Dialog.IsVisible}"
+                Background="{DynamicResource OverlayBg}"
+                Classes="dialogOverlay">
+            <Border Classes="dialogCard"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center">
+                <StackPanel Spacing="16">
+                    <TextBlock Text="{Binding Dialog.Title}" Classes="dialogTitle" />
+                    <TextBlock Text="{Binding Dialog.Message}" Classes="dialogMessage" />
+                    <StackPanel Orientation="Horizontal"
+                                HorizontalAlignment="Right" Spacing="8">
+                        <Button Content="{Binding Dialog.CancelText}"
+                                Classes="dialogGhost"
+                                Command="{Binding Dialog.CancelCommand}"
+                                IsVisible="{Binding Dialog.ShowCancel}" />
+                        <Button Content="{Binding Dialog.ConfirmText}"
+                                Classes="dialogPrimary"
+                                Command="{Binding Dialog.ConfirmCommand}" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </Border>
+
+        <!-- Toast notifications (top-right) -->
+        <ItemsControl Grid.ColumnSpan="2"
+                      ItemsSource="{Binding Toasts}"
+                      Classes="toastContainer"
+                      IsHitTestVisible="False"
+                      HorizontalAlignment="Right"
+                      VerticalAlignment="Top"
+                      Margin="0,16,16,0">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="models:ToastNotification">
+                    <Border Classes="toast"
+                            IsVisible="{Binding IsVisible}"
+                            BorderBrush="{Binding Type, Converter={StaticResource ToastTypeToBrushConverter}}"
+                            MinHeight="44">
+                        <Grid ColumnDefinitions="Auto,*">
+                            <TextBlock Text="{Binding Icon}" FontSize="16"
+                                       VerticalAlignment="Center" Margin="0,0,8,0" />
+                            <TextBlock Grid.Column="1"
+                                       Text="{Binding Message}"
+                                       Classes="toastMessage" />
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
 
     </Grid>
 

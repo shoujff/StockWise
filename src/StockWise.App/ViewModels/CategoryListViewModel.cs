@@ -8,10 +8,13 @@ using StockWise.App.Services;
 
 namespace StockWise.App.ViewModels;
 
-public partial class CategoryListViewModel : ObservableObject
-{
-    private readonly ICategoryService _categoryService;
+    public partial class CategoryListViewModel : ObservableObject
+    {
+        private readonly ICategoryService _categoryService;
 
+        public event Action? CategorySaved;
+        public event Action? CategoryDeleted;
+    
     [ObservableProperty]
     private ObservableCollection<CategoryNode> _roots = [];
 
@@ -161,6 +164,7 @@ public partial class CategoryListViewModel : ObservableObject
             EditingId = null;
             SelectedNode = null;
 
+            CategorySaved?.Invoke();
             await LoadAsync();
         }
         catch (Exception ex)
@@ -185,6 +189,7 @@ public partial class CategoryListViewModel : ObservableObject
 
             IsEditing = false;
             SelectedNode = null;
+            CategoryDeleted?.Invoke();
             await LoadAsync();
         }
         catch (Exception ex)

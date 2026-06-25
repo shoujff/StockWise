@@ -22,7 +22,7 @@
 
         <Grid Grid.Row="2" ColumnDefinitions="1*,320" Margin="28,20,28,0">
 
-            <Border Grid.Column="0" Classes="tableCard" Margin="0,0,12,0">
+            <Border Grid.Column="0" Classes="tableCard glassCard" Margin="0,0,12,0">
                 <Grid RowDefinitions="Auto,*">
                     <TextBlock Grid.Row="0" Text="Дерево категорий"
                                Classes="formSectionTitle" Margin="16,12,16,8" />
@@ -51,7 +51,7 @@
                 </Grid>
             </Border>
 
-            <Border Grid.Column="1" Classes="formCard">
+            <Border Grid.Column="1" Classes="formCard glassCard">
                 <Grid RowDefinitions="Auto,Auto,Auto" RowSpacing="16">
 
                     <TextBlock Grid.Row="0"

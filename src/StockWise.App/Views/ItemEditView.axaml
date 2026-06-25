@@ -38,7 +38,7 @@
         <ScrollViewer Grid.Row="2">
             <Grid Margin="28,20,28,0" RowDefinitions="Auto,Auto">
 
-                <Border Grid.Row="0" Classes="formCard">
+                <Border Grid.Row="0" Classes="formCard glassCard">
                     <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
                           ColumnDefinitions="200,*,200,*"
                           RowSpacing="16" ColumnSpacing="16">

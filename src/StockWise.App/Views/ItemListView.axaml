@@ -44,7 +44,7 @@
                         ToolTip.Tip="Обновить" />
             </Grid>
 
-            <Border Grid.Row="1" Classes="tableCard">
+            <Border Grid.Row="1" Classes="tableCard glassCard">
                 <Grid RowDefinitions="Auto,*">
                     <TextBlock Grid.Row="0" Margin="16,12" FontSize="13" Foreground="{DynamicResource TextTertiary}">
                         <Run Text="Загружено товаров: " />
@@ -61,35 +61,39 @@
                         <Border Classes="skeleton" Height="44" />
                     </StackPanel>
 
-                    <ScrollViewer Grid.Row="1" IsVisible="{Binding HasItems}">
-                        <ItemsControl ItemsSource="{Binding Items}" Margin="8">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <Border Padding="12,8" Margin="0,2" CornerRadius="6" Background="{DynamicResource BgTertiary}">
-                                        <Grid ColumnDefinitions="120,*,150,60,80,80,*,100">
-                                            <TextBlock Grid.Column="0" Text="{Binding Article}" FontSize="13" Foreground="{DynamicResource TextTertiary}" />
-                                            <TextBlock Grid.Column="1" Text="{Binding Name}" FontSize="14" FontWeight="600" Foreground="{DynamicResource TextPrimary}" />
-                                            <TextBlock Grid.Column="2" Text="{Binding CategoryName}" FontSize="13" Foreground="{DynamicResource TextSecondary}" />
-                                            <TextBlock Grid.Column="3" Text="{Binding Unit}" FontSize="13" Foreground="{DynamicResource TextTertiary}" />
-                                            <TextBlock Grid.Column="4" Text="{Binding MinStock}" FontSize="13" Foreground="{DynamicResource TextTertiary}" />
-                                            <TextBlock Grid.Column="5" Text="{Binding MaxStock}" FontSize="13" Foreground="{DynamicResource TextTertiary}" />
-                                            <TextBlock Grid.Column="6" Text="{Binding Barcode}" FontSize="13" Foreground="{DynamicResource TextTertiary}" />
-                                            <StackPanel Grid.Column="7" Orientation="Horizontal" Spacing="4" HorizontalAlignment="Center">
-                                                <Button Content="✏️" Classes="tableActionBtn"
-                                                        Command="{Binding $parent[ItemsControl].DataContext.EditCommand}"
-                                                        CommandParameter="{Binding Id}"
-                                                        ToolTip.Tip="Редактировать" />
-                                                <Button Content="🗑️" Classes="tableActionBtnDanger"
-                                                        Command="{Binding $parent[ItemsControl].DataContext.DeleteCommand}"
-                                                        CommandParameter="{Binding Id}"
-                                                        ToolTip.Tip="Удалить" />
-                                            </StackPanel>
-                                        </Grid>
-                                    </Border>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-                    </ScrollViewer>
+                    <DataGrid Grid.Row="1"
+                              Classes="dataTable"
+                              ItemsSource="{Binding Items}"
+                              IsVisible="{Binding HasItems}"
+                              AutoGenerateColumns="False"
+                              IsReadOnly="True"
+                              Margin="4,0,4,4">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Артикул" Binding="{Binding Article}" Width="120" />
+                            <DataGridTextColumn Header="Наименование" Binding="{Binding Name}" Width="*" />
+                            <DataGridTextColumn Header="Категория" Binding="{Binding CategoryName}" Width="150" />
+                            <DataGridTextColumn Header="Ед." Binding="{Binding Unit}" Width="60" />
+                            <DataGridTextColumn Header="Мин." Binding="{Binding MinStock}" Width="80" />
+                            <DataGridTextColumn Header="Макс." Binding="{Binding MaxStock}" Width="80" />
+                            <DataGridTextColumn Header="Штрихкод" Binding="{Binding Barcode}" Width="*" />
+                            <DataGridTemplateColumn Header="" Width="100">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" Spacing="4" HorizontalAlignment="Center">
+                                            <Button Content="✏️" Classes="tableActionBtn"
+                                                    Command="{Binding $parent[DataGrid].DataContext.EditCommand}"
+                                                    CommandParameter="{Binding Id}"
+                                                    ToolTip.Tip="Редактировать" />
+                                            <Button Content="🗑️" Classes="tableActionBtnDanger"
+                                                    Command="{Binding $parent[DataGrid].DataContext.DeleteCommand}"
+                                                    CommandParameter="{Binding Id}"
+                                                    ToolTip.Tip="Удалить" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
 
                     <StackPanel Grid.Row="1" Classes="emptyState"
                                 IsVisible="{Binding HasNoItems}">

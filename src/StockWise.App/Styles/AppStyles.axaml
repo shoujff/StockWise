@@ -51,6 +51,31 @@
                 </DrawingGroup>
             </DrawingBrush.Drawing>
         </DrawingBrush>
+
+        <!-- Scanline overlay -->
+        <DrawingBrush x:Key="ScanlineBrush" TileMode="Tile" Stretch="None"
+                      DestinationRect="0,0,4,4" Opacity="1">
+            <DrawingBrush.Drawing>
+                <DrawingGroup>
+                    <GeometryDrawing Geometry="M0,0 L4,0">
+                        <GeometryDrawing.Pen>
+                            <Pen Brush="#0A00FFFF" Thickness="0.5" />
+                        </GeometryDrawing.Pen>
+                    </GeometryDrawing>
+                </DrawingGroup>
+            </DrawingBrush.Drawing>
+        </DrawingBrush>
+
+        <!-- Vignette / subtle edge darkening -->
+        <RadialGradientBrush x:Key="VignetteGradient"
+                             RadiusX="100%" RadiusY="100%">
+            <RadialGradientBrush.GradientStops>
+                <GradientStop Offset="0" Color="#00000000" />
+                <GradientStop Offset="0.5" Color="#00000000" />
+                <GradientStop Offset="0.85" Color="#05050880" />
+                <GradientStop Offset="1" Color="#0A0A0F" />
+            </RadialGradientBrush.GradientStops>
+        </RadialGradientBrush>
     </Styles.Resources>
 
     <!-- ═══════════════════════════════════════════ -->
@@ -890,6 +915,316 @@
     <Style Selector="ComboBox.formField:focus-visible, ComboBox.filterCombo:focus-visible">
         <Setter Property="BorderBrush" Value="{DynamicResource FieldBorderFocus}" />
         <Setter Property="BorderThickness" Value="2" />
+    </Style>
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- 16. AMBIENT EFFECTS (Phase 1)              -->
+    <!-- ═══════════════════════════════════════════ -->
+
+    <!-- Static grid background (animation removed — RenderTransform not animatable via Style in Avalonia 11.3) -->
+    <Style Selector="Border.animatedGrid">
+    </Style>
+
+    <!-- Static scanline overlay (animation removed — same reason) -->
+    <Style Selector="Border.scanlineOverlay">
+    </Style>
+
+    <!-- Floating particles: opacity pulses only, no RenderTransform animation -->
+    <Style Selector="Ellipse.particle">
+        <Setter Property="Transitions">
+            <Transitions>
+                <DoubleTransition Property="Opacity" Duration="0:0:4" />
+            </Transitions>
+        </Setter>
+    </Style>
+
+    <Style Selector="Ellipse.particle.p1">
+        <Style.Animations>
+            <Animation Duration="0:0:12" IterationCount="INFINITE" Delay="0:0:0">
+                <KeyFrame Cue="0%">
+                    <Setter Property="Opacity" Value="0.2" />
+                </KeyFrame>
+                <KeyFrame Cue="50%">
+                    <Setter Property="Opacity" Value="0.5" />
+                </KeyFrame>
+                <KeyFrame Cue="100%">
+                    <Setter Property="Opacity" Value="0.2" />
+                </KeyFrame>
+            </Animation>
+        </Style.Animations>
+    </Style>
+
+    <Style Selector="Ellipse.particle.p2">
+        <Style.Animations>
+            <Animation Duration="0:0:18" IterationCount="INFINITE" Delay="0:0:2">
+                <KeyFrame Cue="0%">
+                    <Setter Property="Opacity" Value="0.15" />
+                </KeyFrame>
+                <KeyFrame Cue="50%">
+                    <Setter Property="Opacity" Value="0.4" />
+                </KeyFrame>
+                <KeyFrame Cue="100%">
+                    <Setter Property="Opacity" Value="0.15" />
+                </KeyFrame>
+            </Animation>
+        </Style.Animations>
+    </Style>
+
+    <Style Selector="Ellipse.particle.p3">
+        <Style.Animations>
+            <Animation Duration="0:0:15" IterationCount="INFINITE" Delay="0:0:5">
+                <KeyFrame Cue="0%">
+                    <Setter Property="Opacity" Value="0.12" />
+                </KeyFrame>
+                <KeyFrame Cue="50%">
+                    <Setter Property="Opacity" Value="0.35" />
+                </KeyFrame>
+                <KeyFrame Cue="100%">
+                    <Setter Property="Opacity" Value="0.12" />
+                </KeyFrame>
+            </Animation>
+        </Style.Animations>
+    </Style>
+    
+    <Style Selector="Ellipse.particle.p4">
+        <Style.Animations>
+            <Animation Duration="0:0:22" IterationCount="INFINITE" Delay="0:0:8">
+                <KeyFrame Cue="0%">
+                    <Setter Property="Opacity" Value="0.1" />
+                </KeyFrame>
+                <KeyFrame Cue="50%">
+                    <Setter Property="Opacity" Value="0.45" />
+                </KeyFrame>
+                <KeyFrame Cue="100%">
+                    <Setter Property="Opacity" Value="0.1" />
+                </KeyFrame>
+            </Animation>
+        </Style.Animations>
+    </Style>
+    
+    <Style Selector="Ellipse.particle.p5">
+        <Style.Animations>
+            <Animation Duration="0:0:10" IterationCount="INFINITE" Delay="0:0:3">
+                <KeyFrame Cue="0%">
+                    <Setter Property="Opacity" Value="0.15" />
+                </KeyFrame>
+                <KeyFrame Cue="50%">
+                    <Setter Property="Opacity" Value="0.4" />
+                </KeyFrame>
+                <KeyFrame Cue="100%">
+                    <Setter Property="Opacity" Value="0.15" />
+                </KeyFrame>
+            </Animation>
+        </Style.Animations>
+    </Style>
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- 17. TOOLTIP (Phase 2 — cyberpunk)          -->
+    <!-- ═══════════════════════════════════════════ -->
+
+    <Style Selector="ToolTip">
+        <Setter Property="Background" Value="{DynamicResource GlassBg}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderAccent}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimary}" />
+        <Setter Property="FontFamily" Value="{StaticResource FontUI}" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Padding" Value="8,4" />
+        <Setter Property="CornerRadius" Value="4" />
+    </Style>
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- 18. GLASS CARDS V2 (Phase 2 — glow)        -->
+    <!-- ═══════════════════════════════════════════ -->
+
+    <Style Selector="Border.glassCard:hover">
+        <Setter Property="BorderBrush" Value="{DynamicResource AccentCyan}" />
+    </Style>
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- 19. DATAGRID NEON (Phase 2)                -->
+    <!-- ═══════════════════════════════════════════ -->
+
+    <!-- Glass header with neon bottom line -->
+    <Style Selector="DataGrid.dataTable DataGridColumnHeader">
+        <Setter Property="Background" Value="{DynamicResource TableHeaderBg}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextSecondary}" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="FontWeight" Value="600" />
+        <Setter Property="FontFamily" Value="{StaticResource FontUI}" />
+        <Setter Property="Padding" Value="12,0" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderAccent}" />
+        <Setter Property="BorderThickness" Value="0,0,0,1" />
+    </Style>
+
+    <!-- Neon row hover -->
+    <Style Selector="DataGrid.dataTable DataGridRow:pointerover">
+        <Setter Property="Background" Value="{DynamicResource TableRowHover}" />
+    </Style>
+
+    <!-- Selected row with cyan left accent -->
+    <Style Selector="DataGrid.dataTable DataGridRow:selected /template/ ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource TableRowSelected}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AccentCyan}" />
+        <Setter Property="BorderThickness" Value="2,0,0,0" />
+    </Style>
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- 20. CONTEXT MENU (Phase 2 — cyberpunk)     -->
+    <!-- ═══════════════════════════════════════════ -->
+
+    <Style Selector="ContextMenu">
+        <Setter Property="Background" Value="{DynamicResource BgElevated}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderAccent}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="6" />
+        <Setter Property="Padding" Value="4" />
+        <Setter Property="FontFamily" Value="{StaticResource FontUI}" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimary}" />
+    </Style>
+
+    <Style Selector="MenuItem">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimary}" />
+        <Setter Property="FontFamily" Value="{StaticResource FontUI}" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="Padding" Value="8,6" />
+        <Setter Property="CornerRadius" Value="4" />
+    </Style>
+
+    <Style Selector="MenuItem:pointerover">
+        <Setter Property="Background" Value="{DynamicResource TableRowHover}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AccentCyan}" />
+        <Setter Property="BorderThickness" Value="2,0,0,0" />
+    </Style>
+
+    <Style Selector="ContextMenu Separator">
+        <Setter Property="Background" Value="{DynamicResource DividerColor}" />
+        <Setter Property="Height" Value="1" />
+        <Setter Property="Margin" Value="4" />
+    </Style>
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- 21. MODAL / DIALOG (Phase 2 — overlay)     -->
+    <!-- ═══════════════════════════════════════════ -->
+
+    <Style Selector="Border.dialogOverlay">
+        <Setter Property="Background" Value="{DynamicResource OverlayBg}" />
+        <Setter Property="IsHitTestVisible" Value="True" />
+    </Style>
+
+    <Style Selector="Border.dialogCard">
+        <Setter Property="Background" Value="{DynamicResource BgElevated}" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderAccent}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Padding" Value="24" />
+        <Setter Property="MinWidth" Value="400" />
+        <Setter Property="MaxWidth" Value="560" />
+    </Style>
+
+    <Style Selector="TextBlock.dialogTitle">
+        <Setter Property="FontSize" Value="18" />
+        <Setter Property="FontWeight" Value="700" />
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimary}" />
+        <Setter Property="FontFamily" Value="{StaticResource FontUI}" />
+    </Style>
+
+    <Style Selector="TextBlock.dialogMessage">
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="Foreground" Value="{DynamicResource TextSecondary}" />
+        <Setter Property="FontFamily" Value="{StaticResource FontUI}" />
+        <Setter Property="Margin" Value="0,8,0,16" />
+    </Style>
+
+    <Style Selector="Button.dialogPrimary">
+        <Setter Property="Background" Value="{DynamicResource ButtonGradient}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimary}" />
+        <Setter Property="FontFamily" Value="{StaticResource FontUI}" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="FontWeight" Value="700" />
+        <Setter Property="Padding" Value="20,10" />
+        <Setter Property="CornerRadius" Value="6" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="MinWidth" Value="100" />
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Property="Background" Duration="0:0:0.15" />
+                <BrushTransition Property="Foreground" Duration="0:0:0.15" />
+            </Transitions>
+        </Setter>
+    </Style>
+
+    <Style Selector="Button.dialogPrimary:pointerover">
+        <Setter Property="Background" Value="{DynamicResource ButtonGradientHover}" />
+    </Style>
+
+    <Style Selector="Button.dialogGhost">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{DynamicResource TextSecondary}" />
+        <Setter Property="FontFamily" Value="{StaticResource FontUI}" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="Padding" Value="20,10" />
+        <Setter Property="CornerRadius" Value="6" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderPrimary}" />
+        <Setter Property="MinWidth" Value="100" />
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Property="Background" Duration="0:0:0.15" />
+                <BrushTransition Property="Foreground" Duration="0:0:0.15" />
+                <BrushTransition Property="BorderBrush" Duration="0:0:0.15" />
+            </Transitions>
+        </Setter>
+    </Style>
+
+    <Style Selector="Button.dialogGhost:pointerover">
+        <Setter Property="Background" Value="{DynamicResource TableRowHover}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimary}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AccentCyan}" />
+    </Style>
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- 22. TOAST / NOTIFICATION (Phase 2)         -->
+    <!-- ═══════════════════════════════════════════ -->
+
+    <Style Selector="Border.toastContainer">
+        <Setter Property="IsHitTestVisible" Value="False" />
+    </Style>
+
+    <Style Selector="Border.toast">
+        <Setter Property="Background" Value="{DynamicResource BgElevated}" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderAccent}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Padding" Value="14,10" />
+        <Setter Property="Margin" Value="0,0,0,8" />
+        <Setter Property="MinWidth" Value="280" />
+        <Setter Property="MaxWidth" Value="400" />
+    </Style>
+
+    <Style Selector="Border.toastSuccess">
+        <Setter Property="BorderBrush" Value="{DynamicResource AccentGreen}" />
+    </Style>
+
+    <Style Selector="Border.toastError">
+        <Setter Property="BorderBrush" Value="{DynamicResource AccentRed}" />
+    </Style>
+
+    <Style Selector="Border.toastWarning">
+        <Setter Property="BorderBrush" Value="{DynamicResource AccentAmber}" />
+    </Style>
+
+    <Style Selector="Border.toastInfo">
+        <Setter Property="BorderBrush" Value="{DynamicResource AccentCyan}" />
+    </Style>
+
+    <Style Selector="TextBlock.toastMessage">
+        <Setter Property="FontFamily" Value="{StaticResource FontUI}" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimary}" />
+        <Setter Property="TextWrapping" Value="Wrap" />
     </Style>
 
 </Styles>

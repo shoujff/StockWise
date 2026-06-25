@@ -49,6 +49,7 @@ internal class Program
             var configuration = context.Configuration;
             services.AddSingleton(configuration);
             services.AddSingleton<ThemeService>();
+            services.AddSingleton<ToastService>();
             services.AddTransient<MainWindow>();
             services.AddTransient<MainWindowViewModel>();
             services.AddTransient<ItemListViewModel>();

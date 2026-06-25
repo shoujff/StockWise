@@ -39,6 +39,7 @@ public partial class ItemListViewModel : ObservableObject
 
     public event Action? CreateRequested;
     public event Action<int>? EditRequested;
+    public event Action? ItemDeleted;
 
     public ItemListViewModel(IItemService itemService, ICategoryService categoryService)
     {
@@ -91,6 +92,7 @@ public partial class ItemListViewModel : ObservableObject
             Items.Remove(Items.FirstOrDefault(i => i.Id == id));
             HasItems = Items.Count > 0;
             HasNoItems = Items.Count == 0;
+            ItemDeleted?.Invoke();
         }
     }
 
