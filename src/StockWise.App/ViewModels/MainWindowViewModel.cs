@@ -80,6 +80,12 @@ public partial class MainWindowViewModel : ObservableObject
         NavigateTo(PageType.Dashboard);
     }
 
+    public void Cleanup()
+    {
+        CurrentPageViewModel = null;
+        ActivePage = PageType.Dashboard;
+    }
+
     public void ShowToast(ToastType type, string message, int durationMs = 3000)
     {
         _toastService.Show(type, message, durationMs);

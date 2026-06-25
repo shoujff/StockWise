@@ -89,6 +89,7 @@ public partial class RegisterViewModel : ObservableObject
         }
 
         _authService.Login(user);
+        IsLoading = false;
         RegisterSucceeded?.Invoke(user);
     }
 

@@ -58,6 +58,7 @@ public partial class LoginViewModel : ObservableObject
         }
 
         _authService.Login(user);
+        IsLoading = false;
         LoginSucceeded?.Invoke(user);
     }
 

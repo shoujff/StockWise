@@ -71,6 +71,7 @@ public class AuthService : IAuthService
     public void Logout()
     {
         CurrentUser = null;
+        _permissionCache.Clear();
     }
 
     public string HashPassword(string password)

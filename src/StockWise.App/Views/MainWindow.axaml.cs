@@ -1,7 +1,9 @@
+using System;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Interactivity;
+using Avalonia.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using StockWise.App.Services;
 using StockWise.App.ViewModels;
@@ -37,6 +39,10 @@ public partial class MainWindow : Window
             desktop.MainWindow = loginWindow;
         }
 
-        Close();
+        Dispatcher.UIThread.Post(() =>
+        {
+            Hide();
+            _viewModel.Cleanup();
+        });
     }
 }

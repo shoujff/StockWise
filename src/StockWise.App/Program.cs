@@ -50,8 +50,8 @@ internal class Program
             services.AddSingleton(configuration);
             services.AddSingleton<ThemeService>();
             services.AddSingleton<ToastService>();
-            services.AddTransient<MainWindow>();
-            services.AddTransient<MainWindowViewModel>();
+            services.AddSingleton<MainWindow>();
+            services.AddSingleton<MainWindowViewModel>();
             services.AddTransient<ItemListViewModel>();
             services.AddTransient<ItemEditViewModel>();
             services.AddTransient<CategoryListViewModel>();
@@ -69,7 +69,7 @@ internal class Program
             services.AddScoped<StockBalanceRepository>();
             services.AddScoped<TransactionRepository>();
             services.AddScoped<RolePermissionRepository>();
-            services.AddScoped<IAuthService, AuthService>();
+            services.AddSingleton<IAuthService, AuthService>();
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IItemService, ItemService>();
         });
