@@ -9,6 +9,7 @@
              x:Class="StockWise.App.Views.DocumentEditView">
     <UserControl.Resources>
         <c:DateOnlyToDateTimeOffsetConverter x:Key="DateOnlyConverter" />
+        <c:BoolNegationConverter x:Key="NotBool" />
     </UserControl.Resources>
 
     <Grid RowDefinitions="Auto,Auto,*" Background="{DynamicResource WorkspaceBg}">
@@ -151,12 +152,35 @@
                                 <DataGridTextColumn Header="Кол-во" Binding="{Binding Quantity}" Width="80" />
                                 <DataGridTextColumn Header="Цена" Binding="{Binding Price}" Width="100" />
                                 <DataGridTextColumn Header="Сумма" Binding="{Binding Amount, StringFormat={}{0:N2}}" Width="100" IsReadOnly="True" />
-                                <DataGridTextColumn Header="Партия" Binding="{Binding BatchNo}" Width="80" />
+                                <DataGridTemplateColumn Header="Партия" Width="100">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Grid>
+                                                <TextBox Text="{Binding BatchNo}"
+                                                         IsVisible="{Binding IsBatch}"
+                                                         Watermark="Обязательно" />
+                                                <TextBlock Text="—"
+                                                           IsVisible="{Binding IsBatch, Converter={StaticResource NotBool}}"
+                                                           Foreground="{DynamicResource TextTertiary}"
+                                                           VerticalAlignment="Center"
+                                                           Margin="8,0,0,0" />
+                                            </Grid>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
                                 <DataGridTemplateColumn Header="Срок годн." Width="140">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
-                                            <DatePicker SelectedDate="{Binding ExpiryDate, Converter={StaticResource DateOnlyConverter}}"
-                                                        MinWidth="120" />
+                                            <Grid>
+                                                <DatePicker SelectedDate="{Binding ExpiryDate, Converter={StaticResource DateOnlyConverter}}"
+                                                            MinWidth="120"
+                                                            IsVisible="{Binding IsBatch}" />
+                                                <TextBlock Text="—"
+                                                           IsVisible="{Binding IsBatch, Converter={StaticResource NotBool}}"
+                                                           Foreground="{DynamicResource TextTertiary}"
+                                                           VerticalAlignment="Center"
+                                                           Margin="8,0,0,0" />
+                                            </Grid>
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>

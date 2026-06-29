@@ -25,14 +25,26 @@ public class StockService : IStockService
     {
         using var connection = _dapper.CreateConnection();
         var rows = await connection.QueryAsync(
-            @"SELECT sb.Id, sb.ItemId, i.Name, i.Article, i.Barcode,
+            @"SELECT sb.Id AS Id, sb.ItemId, i.Name, i.Article, i.Barcode,
                      sb.Quantity, sb.ReservedQty,
                      sb.Quantity - sb.ReservedQty AS AvailableQty,
                      sb.Price, sb.BatchNo, sb.ExpiryDate, i.MinStock
               FROM StockBalances sb
               INNER JOIN Items i ON i.Id = sb.ItemId
-              WHERE sb.WarehouseId = @warehouseId
-              ORDER BY i.Name",
+              WHERE sb.WarehouseId = @warehouseId AND i.IsBatch = 1
+
+              UNION ALL
+
+              SELECT MIN(sb.Id), sb.ItemId, i.Name, i.Article, i.Barcode,
+                     SUM(sb.Quantity), SUM(sb.ReservedQty),
+                     SUM(sb.Quantity - sb.ReservedQty),
+                     AVG(sb.Price), CAST(NULL AS NVARCHAR(50)), CAST(NULL AS DATE), MIN(i.MinStock)
+              FROM StockBalances sb
+              INNER JOIN Items i ON i.Id = sb.ItemId
+              WHERE sb.WarehouseId = @warehouseId AND i.IsBatch = 0
+              GROUP BY sb.ItemId, i.Name, i.Article, i.Barcode, i.MinStock
+
+              ORDER BY Name",
             new { warehouseId });
 
         return rows.Select(r =>

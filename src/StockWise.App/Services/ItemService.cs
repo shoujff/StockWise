@@ -58,6 +58,7 @@ namespace StockWise.App.Services
                 Price = dto.Price,
                 MinStock = dto.MinStock,
                 MaxStock = dto.MaxStock,
+                IsBatch = dto.IsBatch,
                 Barcode = barcode,
                 CategoryId = dto.CategoryId,
             };

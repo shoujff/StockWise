@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,6 +20,7 @@ public partial class DocumentLineEditDto : ObservableObject
     [ObservableProperty] private decimal _amount;
     [ObservableProperty] private string? _batchNo;
     [ObservableProperty] private DateOnly? _expiryDate;
+    [ObservableProperty] private bool _isBatch;
 
     partial void OnQuantityChanged(decimal value) => Amount = value * Price;
     partial void OnPriceChanged(decimal value) => Amount = value * Quantity;
@@ -93,6 +95,13 @@ public partial class DocumentEditViewModel : ObservableObject
     public bool IsDraft => Status == "Draft";
     public bool IsPosted => Status == "Posted";
 
+    private async Task<Dictionary<int, bool>> GetItemBatchFlagsAsync(IEnumerable<int> itemIds)
+    {
+        var ids = itemIds.Distinct().ToList();
+        var items = await _itemService.GetAllAsync();
+        return items.Where(i => ids.Contains(i.Id)).ToDictionary(i => i.Id, i => i.IsBatch);
+    }
+
     public event Action? Saved;
     public event Action? Cancelled;
 
@@ -163,6 +172,8 @@ public partial class DocumentEditViewModel : ObservableObject
         };
 
         Lines.Clear();
+
+        var batchFlags = await GetItemBatchFlagsAsync(doc.Lines.Select(l => l.ItemId));
         foreach (var l in doc.Lines)
         {
             Lines.Add(new DocumentLineEditDto
@@ -175,7 +186,8 @@ public partial class DocumentEditViewModel : ObservableObject
                 Price = l.Price,
                 Amount = l.Amount,
                 BatchNo = l.BatchNo,
-                ExpiryDate = l.ExpiryDate
+                ExpiryDate = l.ExpiryDate,
+                IsBatch = batchFlags.TryGetValue(l.ItemId, out var b) && b
             });
         }
 
@@ -243,7 +255,8 @@ public partial class DocumentEditViewModel : ObservableObject
             Unit = item.Unit,
             Quantity = 1,
             Price = item.Price,
-            Amount = item.Price
+            Amount = item.Price,
+            IsBatch = item.IsBatch
         });
 
         SelectedSearchItem = null;
@@ -265,6 +278,16 @@ public partial class DocumentEditViewModel : ObservableObject
         TotalAmount = Lines.Sum(l => l.Amount);
     }
 
+    private void ValidateLines()
+    {
+        foreach (var line in Lines)
+        {
+            if (line.IsBatch && string.IsNullOrWhiteSpace(line.BatchNo))
+                throw new ArgumentException(
+                    $"Для товара \"{line.ItemName}\" (партионный учёт) укажите номер партии");
+        }
+    }
+
     [RelayCommand]
     private async Task SaveAsync()
     {
@@ -275,6 +298,7 @@ public partial class DocumentEditViewModel : ObservableObject
         {
             if (Lines.Count == 0)
                 throw new ArgumentException("Добавьте хотя бы одну строку");
+            ValidateLines();
 
             var fromId = SelectedFromWarehouse?.Id;
             var toId = SelectedToWarehouse?.Id;
@@ -338,6 +362,7 @@ public partial class DocumentEditViewModel : ObservableObject
 
         try
         {
+            ValidateLines();
             var (success, error) = await _documentService.PostAsync(_editingId.Value, 1);
             if (success)
             {

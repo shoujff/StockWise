@@ -18,6 +18,21 @@ public class StockCoreService : IStockCoreService
         _db = db;
     }
 
+    private async Task<Dictionary<int, (bool IsBatch, string Name)>> GetItemMetaAsync(IEnumerable<int> itemIds)
+    {
+        var ids = itemIds.Distinct().ToList();
+        return await _db.Items
+            .Where(i => ids.Contains(i.Id))
+            .ToDictionaryAsync(i => i.Id, i => (i.IsBatch, i.Name));
+    }
+
+    private static PostResult? CheckBatchRequired(Dictionary<int, (bool IsBatch, string Name)> meta, StockLineDto line)
+    {
+        if (meta.TryGetValue(line.ItemId, out var info) && info.IsBatch && string.IsNullOrWhiteSpace(line.BatchNo))
+            return Fail($"Товар \"{info.Name}\" требует указания партии (партионный учёт)");
+        return null;
+    }
+
     public async Task<PostResult> PostIncomeAsync(
         int warehouseId,
         IEnumerable<StockLineDto> lines,
@@ -27,6 +42,14 @@ public class StockCoreService : IStockCoreService
         var list = lines.ToList();
         if (list.Count == 0)
             return Fail("Нет строк для проводки");
+
+        var meta = await GetItemMetaAsync(list.Select(l => l.ItemId));
+
+        foreach (var line in list)
+        {
+            var err = CheckBatchRequired(meta, line);
+            if (err is not null) return err;
+        }
 
         var refDocId = GenerateRefDocId();
 
@@ -80,6 +103,13 @@ public class StockCoreService : IStockCoreService
         if (list.Count == 0)
             return Fail("Нет строк для проводки");
 
+        var meta = await GetItemMetaAsync(list.Select(l => l.ItemId));
+        foreach (var line in list)
+        {
+            var err = CheckBatchRequired(meta, line);
+            if (err is not null) return err;
+        }
+
         var refDocId = GenerateRefDocId();
 
         await using var tx = await _db.Database.BeginTransactionAsync();
@@ -91,8 +121,8 @@ public class StockCoreService : IStockCoreService
                 var balance = await FindBalanceForOutcomeAsync(line.ItemId, warehouseId, line.Quantity, line.BatchNo);
                 if (balance is null)
                 {
-                    var item = await _db.Items.FindAsync(line.ItemId);
-                    return Fail($"Недостаточно остатка для товара \"{item?.Name ?? "#" + line.ItemId}\" на складе");
+                    var name = meta.TryGetValue(line.ItemId, out var mi) ? mi.Name : "#" + line.ItemId;
+                    return Fail($"Недостаточно остатка для товара \"{name}\" на складе");
                 }
 
                 balance.Quantity -= line.Quantity;
@@ -136,6 +166,13 @@ public class StockCoreService : IStockCoreService
         if (list.Count == 0)
             return Fail("Нет строк для проводки");
 
+        var meta = await GetItemMetaAsync(list.Select(l => l.ItemId));
+        foreach (var line in list)
+        {
+            var err = CheckBatchRequired(meta, line);
+            if (err is not null) return err;
+        }
+
         var refDocId = GenerateRefDocId();
 
         await using var tx = await _db.Database.BeginTransactionAsync();
@@ -148,8 +185,8 @@ public class StockCoreService : IStockCoreService
                     line.ItemId, fromWarehouseId, line.Quantity, line.BatchNo);
                 if (sourceBalance is null)
                 {
-                    var item = await _db.Items.FindAsync(line.ItemId);
-                    return Fail($"Недостаточно остатка для товара \"{item?.Name ?? "#" + line.ItemId}\" на складе отправления");
+                    var name = meta.TryGetValue(line.ItemId, out var mi) ? mi.Name : "#" + line.ItemId;
+                    return Fail($"Недостаточно остатка для товара \"{name}\" на складе отправления");
                 }
 
                 sourceBalance.Quantity -= line.Quantity;
