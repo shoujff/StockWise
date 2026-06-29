@@ -10,6 +10,7 @@ public class Item
     public string Name { get; set; } = string.Empty;
     public string Article { get; set; } = string.Empty;
     public string Unit { get; set; } = string.Empty;
+    public decimal Price { get; set; }
     public decimal MinStock { get; set; }
     public decimal MaxStock { get; set; }
     public bool IsBatch { get; set; }

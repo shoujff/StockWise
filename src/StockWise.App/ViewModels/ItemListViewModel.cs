@@ -40,6 +40,7 @@ public partial class ItemListViewModel : ObservableObject
     public event Action? CreateRequested;
     public event Action<int>? EditRequested;
     public event Action? ItemDeleted;
+    public event Action<string>? ItemDeleteError;
 
     public ItemListViewModel(IItemService itemService, ICategoryService categoryService)
     {
@@ -86,13 +87,21 @@ public partial class ItemListViewModel : ObservableObject
     [RelayCommand]
     private async Task DeleteAsync(int id)
     {
-        var success = await _itemService.DeleteAsync(id);
-        if (success)
+        try
         {
-            Items.Remove(Items.FirstOrDefault(i => i.Id == id));
-            HasItems = Items.Count > 0;
-            HasNoItems = Items.Count == 0;
-            ItemDeleted?.Invoke();
+            var success = await _itemService.DeleteAsync(id);
+            if (success)
+            {
+                Items.Remove(Items.FirstOrDefault(i => i.Id == id));
+                HasItems = Items.Count > 0;
+                HasNoItems = Items.Count == 0;
+                ItemDeleted?.Invoke();
+            }
+        }
+        catch (Exception ex)
+        {
+            var inner = ex.InnerException?.Message ?? ex.Message;
+            ItemDeleteError?.Invoke(inner);
         }
     }
 

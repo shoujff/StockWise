@@ -27,6 +27,9 @@ public partial class ItemEditViewModel : ObservableObject
     private string _unit = "";
 
     [ObservableProperty]
+    private decimal _price;
+
+    [ObservableProperty]
     private decimal _minStock;
 
     [ObservableProperty]
@@ -120,6 +123,7 @@ public partial class ItemEditViewModel : ObservableObject
             Name = item.Name;
             Article = item.Article;
             Unit = item.Unit;
+            Price = item.Price;
             MinStock = item.MinStock;
             MaxStock = item.MaxStock;
             IsBatch = item.IsBatch;
@@ -149,7 +153,7 @@ public partial class ItemEditViewModel : ObservableObject
             {
                 await _itemService.UpdateAsync(_editingId.Value, new UpdateItemDto(
                     Name.Trim(), Article.Trim(), Unit.Trim(),
-                    MinStock, MaxStock, IsBatch,
+                    Price, MinStock, MaxStock, IsBatch,
                     string.IsNullOrWhiteSpace(Barcode) ? null : Barcode.Trim(),
                     CategoryId));
             }
@@ -157,7 +161,7 @@ public partial class ItemEditViewModel : ObservableObject
             {
                 await _itemService.CreateAsync(new CreateItemDto(
                     Name.Trim(), Article.Trim(), Unit.Trim(),
-                    MinStock, MaxStock, IsBatch,
+                    Price, MinStock, MaxStock, IsBatch,
                     string.IsNullOrWhiteSpace(Barcode) ? null : Barcode.Trim(),
                     CategoryId));
             }

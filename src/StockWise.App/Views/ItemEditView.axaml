@@ -3,7 +3,7 @@
              xmlns:vm="clr-namespace:StockWise.App.ViewModels"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="700"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="750"
              x:DataType="vm:ItemEditViewModel"
              x:Class="StockWise.App.Views.ItemEditView">
 
@@ -25,7 +25,7 @@
                 <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8">
                     <Button Content="Отмена" Classes="secondaryButton"
                             Command="{Binding CancelCommand}" />
-                    <Button Content="💾 Сохранить" Classes="primaryButton"
+                    <Button Content="Сохранить" Classes="primaryButton"
                             Command="{Binding SaveCommand}"
                             IsDefault="True"
                             IsEnabled="{Binding IsNotSaving}" />
@@ -39,7 +39,7 @@
             <Grid Margin="28,20,28,0" RowDefinitions="Auto,Auto">
 
                 <Border Grid.Row="0" Classes="formCard glassCard">
-                    <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
+                    <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
                           ColumnDefinitions="200,*,200,*"
                           RowSpacing="16" ColumnSpacing="16">
 
@@ -48,28 +48,22 @@
                                    Classes="formSectionTitle" />
 
                         <TextBlock Grid.Row="1" Grid.Column="0"
+                                   Text="Артикул" Classes="formLabel" />
+                        <TextBox Grid.Row="1" Grid.Column="1"
+                                 Classes="formField"
+                                 Text="{Binding Article}"
+                                 Watermark="Авто: ART-00001" />
+
+                        <TextBlock Grid.Row="1" Grid.Column="2"
                                    Text="Наименование *" Classes="formLabel" />
-                        <TextBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3"
+                        <TextBox Grid.Row="1" Grid.Column="3"
                                  Classes="formField"
                                  Watermark="Введите название товара"
                                  Text="{Binding Name}" />
 
                         <TextBlock Grid.Row="2" Grid.Column="0"
-                                   Text="Артикул" Classes="formLabel" />
-                        <TextBox Grid.Row="2" Grid.Column="1"
-                                 Classes="formField"
-                                 IsReadOnly="True"
-                                 Text="{Binding Article}" />
-                        <TextBlock Grid.Row="2" Grid.Column="2"
-                                   Text="Единица измерения" Classes="formLabel" />
-                        <TextBox Grid.Row="2" Grid.Column="3"
-                                 Classes="formField"
-                                 Watermark="шт, кг, м"
-                                 Text="{Binding Unit}" />
-
-                        <TextBlock Grid.Row="3" Grid.Column="0"
                                    Text="Категория" Classes="formLabel" />
-                        <ComboBox Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3"
+                        <ComboBox Grid.Row="2" Grid.Column="1"
                                   Classes="formField"
                                   ItemsSource="{Binding Categories}"
                                   SelectedItem="{Binding SelectedCategory}"
@@ -81,21 +75,35 @@
                             </ComboBox.ItemTemplate>
                         </ComboBox>
 
-                        <TextBlock Grid.Row="4" Grid.ColumnSpan="4"
+                        <TextBlock Grid.Row="2" Grid.Column="2"
+                                   Text="Ед. измерения" Classes="formLabel" />
+                        <TextBox Grid.Row="2" Grid.Column="3"
+                                 Classes="formField"
+                                 Watermark="шт, кг, м"
+                                 Text="{Binding Unit}" />
+
+                        <TextBlock Grid.Row="3" Grid.ColumnSpan="4"
                                    Text="Параметры учёта"
                                    Classes="formSectionTitle" Margin="0,8,0,0" />
 
-                        <TextBlock Grid.Row="5" Grid.Column="0"
+                        <TextBlock Grid.Row="4" Grid.Column="0"
                                    Text="Мин. остаток" Classes="formLabel" />
-                        <TextBox Grid.Row="5" Grid.Column="1"
+                        <TextBox Grid.Row="4" Grid.Column="1"
                                  Classes="formField"
                                  Text="{Binding MinStock}" />
 
-                        <TextBlock Grid.Row="5" Grid.Column="2"
+                        <TextBlock Grid.Row="4" Grid.Column="2"
                                    Text="Макс. остаток" Classes="formLabel" />
-                        <TextBox Grid.Row="5" Grid.Column="3"
+                        <TextBox Grid.Row="4" Grid.Column="3"
                                  Classes="formField"
                                  Text="{Binding MaxStock}" />
+
+                        <TextBlock Grid.Row="5" Grid.Column="0"
+                                   Text="Цена" Classes="formLabel" />
+                        <TextBox Grid.Row="5" Grid.Column="1"
+                                 Classes="formField"
+                                 Watermark="0.00"
+                                 Text="{Binding Price}" />
 
                         <StackPanel Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="4"
                                     Orientation="Horizontal" Spacing="8">

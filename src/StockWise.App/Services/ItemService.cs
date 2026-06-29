@@ -55,6 +55,7 @@ namespace StockWise.App.Services
                 Name = dto.Name.Trim(),
                 Article = article,
                 Unit = (dto.Unit ?? "").Trim(),
+                Price = dto.Price,
                 MinStock = dto.MinStock,
                 MaxStock = dto.MaxStock,
                 Barcode = barcode,
@@ -89,6 +90,7 @@ namespace StockWise.App.Services
             item.Name = dto.Name.Trim();
             item.Article =article;
             item.Unit = (dto.Unit ?? "").Trim();
+            item.Price = dto.Price;
             item.MinStock = dto.MinStock;
             item.MaxStock = dto.MaxStock;
             item.IsBatch = dto.IsBatch;
@@ -158,6 +160,6 @@ namespace StockWise.App.Services
         
 
    
-      private static ItemDto ToDto(Item item) => new( item.Id,item.Name,  item.Article, item.Unit, item.MinStock,item.MaxStock,item.IsBatch, item.Barcode,item.ImagePath,item.CategoryId,item.Category?.Name ?? "");
+      private static ItemDto ToDto(Item item) => new(item.Id, item.Name, item.Article, item.Unit, item.Price, item.MinStock, item.MaxStock, item.IsBatch, item.Barcode, item.ImagePath, item.CategoryId, item.Category?.Name ?? "");
   }
 }

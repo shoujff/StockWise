@@ -4,15 +4,15 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="700"
-             x:DataType="vm:ItemListViewModel"
-             x:Class="StockWise.App.Views.ItemListView">
+             x:DataType="vm:WarehouseListViewModel"
+             x:Class="StockWise.App.Views.WarehouseListView">
 
     <Grid RowDefinitions="Auto,Auto,*" Background="{DynamicResource WorkspaceBg}">
 
         <Border Grid.Row="0" Classes="pageHeader">
             <Grid ColumnDefinitions="*,Auto">
-                <TextBlock Text="Номенклатура" Classes="pageTitle" />
-                <Button Grid.Column="1" Content="+ Новый товар"
+                <TextBlock Text="Склады" Classes="pageTitle" />
+                <Button Grid.Column="1" Content="+ Новый склад"
                         Classes="primaryButton"
                         Command="{Binding CreateCommand}" />
             </Grid>
@@ -22,22 +22,11 @@
 
         <Grid Grid.Row="2" RowDefinitions="Auto,*" Margin="28,20,28,0">
 
-            <Grid Grid.Row="0" ColumnDefinitions="1*,200,Auto" Margin="0,0,0,16">
+            <Grid Grid.Row="0" ColumnDefinitions="1*,Auto" Margin="0,0,0,16">
                 <TextBox Grid.Column="0" Classes="searchField"
-                         Watermark="Поиск по названию, артикулу или штрихкоду..."
+                         Watermark="Поиск по названию или адресу..."
                          Text="{Binding SearchTerm}" />
-                <ComboBox Grid.Column="1" Classes="filterCombo"
-                          ItemsSource="{Binding Categories}"
-                          SelectedItem="{Binding SelectedCategory}"
-                          PlaceholderText="Все категории"
-                          Margin="12,0,0,0">
-                    <ComboBox.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Path}" />
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>
-                </ComboBox>
-                <Button Grid.Column="2" Content="⟳"
+                <Button Grid.Column="1" Content="⟳"
                         Classes="iconButton"
                         Command="{Binding SearchCommand}"
                         Margin="8,0,0,0"
@@ -47,8 +36,8 @@
             <Border Grid.Row="1" Classes="tableCard glassCard">
                 <Grid RowDefinitions="Auto,*">
                     <TextBlock Grid.Row="0" Margin="16,12" FontSize="13" Foreground="{DynamicResource TextTertiary}">
-                        <Run Text="Загружено товаров: " />
-                        <Run Text="{Binding Items.Count}" FontWeight="600" Foreground="{DynamicResource TextPrimary}" />
+                        <Run Text="Складов: " />
+                        <Run Text="{Binding Warehouses.Count}" FontWeight="600" Foreground="{DynamicResource TextPrimary}" />
                     </TextBlock>
 
                     <StackPanel Grid.Row="1" Spacing="8" Margin="16,8"
@@ -56,31 +45,36 @@
                         <Border Classes="skeleton" Height="44" />
                         <Border Classes="skeleton" Height="44" />
                         <Border Classes="skeleton" Height="44" />
-                        <Border Classes="skeleton" Height="44" />
-                        <Border Classes="skeleton" Height="44" />
-                        <Border Classes="skeleton" Height="44" />
                     </StackPanel>
 
                     <DataGrid Grid.Row="1"
                               Classes="dataTable"
-                              ItemsSource="{Binding Items}"
+                              ItemsSource="{Binding Warehouses}"
                               IsVisible="{Binding HasItems}"
                               AutoGenerateColumns="False"
                               IsReadOnly="True"
                               Margin="4,0,4,4">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Артикул" Binding="{Binding Article}" Width="120" />
-                            <DataGridTextColumn Header="Наименование" Binding="{Binding Name}" Width="*" />
-                            <DataGridTextColumn Header="Категория" Binding="{Binding CategoryName}" Width="150" />
-                            <DataGridTextColumn Header="Ед." Binding="{Binding Unit}" Width="60" />
-                            <DataGridTextColumn Header="Мин." Binding="{Binding MinStock}" Width="80" />
-                            <DataGridTextColumn Header="Макс." Binding="{Binding MaxStock}" Width="80" />
-                            <DataGridTextColumn Header="Цена" Binding="{Binding Price}" Width="100" />
-                            <DataGridTextColumn Header="Штрихкод" Binding="{Binding Barcode}" Width="*" />
-                            <DataGridTemplateColumn Header="" Width="100">
+                            <DataGridTextColumn Header="Название" Binding="{Binding Name}" Width="*" />
+                            <DataGridTextColumn Header="Адрес" Binding="{Binding Address}" Width="2*" />
+                            <DataGridTemplateColumn Header="Активен" Width="80">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding IsActive, StringFormat='{}{0}'}"
+                                                   HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTextColumn Header="Позиций" Binding="{Binding StockCount}" Width="80" />
+                            <DataGridTemplateColumn Header="" Width="140">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal" Spacing="4" HorizontalAlignment="Center">
+                                            <Button Content="📦" Classes="tableActionBtn"
+                                                    Command="{Binding $parent[DataGrid].DataContext.ViewStockCommand}"
+                                                    CommandParameter="{Binding Id}"
+                                                    ToolTip.Tip="Остатки" />
                                             <Button Content="✏️" Classes="tableActionBtn"
                                                     Command="{Binding $parent[DataGrid].DataContext.EditCommand}"
                                                     CommandParameter="{Binding Id}"
@@ -98,12 +92,12 @@
 
                     <StackPanel Grid.Row="1" Classes="emptyState"
                                 IsVisible="{Binding HasNoItems}">
-                        <TextBlock Text="📦" Classes="emptyStateIcon" />
-                        <TextBlock Text="Товары не найдены"
+                        <TextBlock Text="🏭" Classes="emptyStateIcon" />
+                        <TextBlock Text="Склады не найдены"
                                    Classes="emptyStateTitle" />
-                        <TextBlock Text="Измените параметры поиска или создайте новый товар"
+                        <TextBlock Text="Создайте новый склад для начала работы"
                                    Classes="emptyStateHint" />
-                        <Button Content="+ Создать товар" Classes="primaryButton"
+                        <Button Content="+ Создать склад" Classes="primaryButton"
                                 Command="{Binding CreateCommand}"
                                 HorizontalAlignment="Center"
                                 Margin="0,8,0,0" />

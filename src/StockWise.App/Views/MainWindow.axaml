@@ -29,6 +29,21 @@
         <DataTemplate DataType="vm:CategoryListViewModel">
             <views:CategoryListView />
         </DataTemplate>
+        <DataTemplate DataType="vm:WarehouseListViewModel">
+            <views:WarehouseListView />
+        </DataTemplate>
+        <DataTemplate DataType="vm:WarehouseEditViewModel">
+            <views:WarehouseEditView />
+        </DataTemplate>
+        <DataTemplate DataType="vm:StockViewModel">
+            <views:StockView />
+        </DataTemplate>
+        <DataTemplate DataType="vm:DocumentListViewModel">
+            <views:DocumentListView />
+        </DataTemplate>
+        <DataTemplate DataType="vm:DocumentEditViewModel">
+            <views:DocumentEditView />
+        </DataTemplate>
     </Window.DataTemplates>
 
     <Design.DataContext>

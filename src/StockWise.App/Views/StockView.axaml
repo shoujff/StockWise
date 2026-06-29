@@ -1,0 +1,135 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:StockWise.App.ViewModels"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="700"
+             x:DataType="vm:StockViewModel"
+             x:Class="StockWise.App.Views.StockView">
+
+    <Grid RowDefinitions="Auto,Auto,*" Background="{DynamicResource WorkspaceBg}">
+
+        <Border Grid.Row="0" Classes="pageHeader">
+            <Grid ColumnDefinitions="*,Auto">
+                <TextBlock Text="Остатки" Classes="pageTitle" />
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="1" Classes="pageHeaderAccent" />
+
+        <Grid Grid.Row="2" RowDefinitions="Auto,Auto,*" Margin="28,20,28,0">
+
+            <!-- KPI Cards -->
+            <Grid Grid.Row="0" ColumnDefinitions="*,*,*" ColumnSpacing="16" Margin="0,0,0,16">
+                <Border Grid.Column="0" Classes="kpiCard">
+                    <StackPanel Orientation="Horizontal" Spacing="12" Margin="16">
+                        <Border Classes="kpiIconBox" Background="{DynamicResource AccentCyan}">
+                            <TextBlock Text="📦" FontSize="20" />
+                        </Border>
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock Text="{Binding TotalItems}" Classes="kpiValue" />
+                            <TextBlock Text="Всего позиций" Classes="kpiLabel" />
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+                <Border Grid.Column="1" Classes="kpiCard">
+                    <StackPanel Orientation="Horizontal" Spacing="12" Margin="16">
+                        <Border Classes="kpiIconBox" Background="{DynamicResource AccentMagenta}">
+                            <TextBlock Text="📊" FontSize="20" />
+                        </Border>
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock Text="{Binding TotalQuantityDisplay}" Classes="kpiValue" />
+                            <TextBlock Text="Общее кол-во" Classes="kpiLabel" />
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+                <Border Grid.Column="2" Classes="kpiCard">
+                    <StackPanel Orientation="Horizontal" Spacing="12" Margin="16">
+                        <Border Classes="kpiIconBox" Background="{DynamicResource AccentRed}">
+                            <TextBlock Text="⚠️" FontSize="20" />
+                        </Border>
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock Text="{Binding LowStockCount}" Classes="kpiValue" />
+                            <TextBlock Text="Ниже минимума" Classes="kpiLabel" />
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <!-- Filters -->
+            <Grid Grid.Row="1" ColumnDefinitions="200,1*,Auto" Margin="0,0,0,16">
+                <ComboBox Grid.Column="0" Classes="filterCombo"
+                          ItemsSource="{Binding Warehouses}"
+                          SelectedItem="{Binding SelectedWarehouse}"
+                          PlaceholderText="Выберите склад">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Name}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+                <TextBox Grid.Column="1" Classes="searchField"
+                         Watermark="Поиск по товару, артикулу или штрихкоду..."
+                         Text="{Binding SearchTerm}"
+                         Margin="12,0,0,0" />
+            </Grid>
+
+            <!-- Stock Table -->
+            <Border Grid.Row="2" Classes="tableCard glassCard">
+                <Grid RowDefinitions="Auto,*">
+                    <StackPanel Grid.Row="1" Spacing="8" Margin="16,8"
+                                IsVisible="{Binding IsLoading}">
+                        <Border Classes="skeleton" Height="44" />
+                        <Border Classes="skeleton" Height="44" />
+                        <Border Classes="skeleton" Height="44" />
+                        <Border Classes="skeleton" Height="44" />
+                        <Border Classes="skeleton" Height="44" />
+                    </StackPanel>
+
+                    <DataGrid Grid.Row="1"
+                              Classes="dataTable"
+                              ItemsSource="{Binding StockItems}"
+                              IsVisible="{Binding HasItems}"
+                              AutoGenerateColumns="False"
+                              IsReadOnly="True"
+                              Margin="4,0,4,4">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Товар" Binding="{Binding ItemName}" Width="*" />
+                            <DataGridTextColumn Header="Артикул" Binding="{Binding Article}" Width="100" />
+                            <DataGridTextColumn Header="Кол-во" Binding="{Binding Quantity}" Width="80" />
+                            <DataGridTextColumn Header="Резерв" Binding="{Binding ReservedQty}" Width="80" />
+                            <DataGridTextColumn Header="Свободно" Binding="{Binding AvailableQty}" Width="80" />
+                            <DataGridTextColumn Header="Цена" Binding="{Binding Price}" Width="100" />
+                            <DataGridTextColumn Header="Партия" Binding="{Binding BatchNo}" Width="100" />
+                            <DataGridTextColumn Header="Срок годн." Binding="{Binding ExpiryDate}" Width="100" />
+                            <DataGridTemplateColumn Header="Статус" Width="100">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Border CornerRadius="4"
+                                                Padding="6,2"
+                                                HorizontalAlignment="Center">
+                                            <TextBlock Text="{Binding IsLowStock, StringFormat='{}{0}'}"
+                                                       FontSize="11" />
+                                        </Border>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <StackPanel Grid.Row="1" Classes="emptyState"
+                                IsVisible="{Binding HasNoItems}">
+                        <TextBlock Text="📦" Classes="emptyStateIcon" />
+                        <TextBlock Text="Нет остатков"
+                                   Classes="emptyStateTitle" />
+                        <TextBlock Text="На этом складе пока нет товаров"
+                                   Classes="emptyStateHint" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+        </Grid>
+
+    </Grid>
+
+</UserControl>

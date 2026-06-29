@@ -14,6 +14,8 @@ public class StockDb : DbContext
     public DbSet<StockBalance> StockBalances => Set<StockBalance>();
     public DbSet<Transaction> Transactions => Set<Transaction>();
     public DbSet<RolePermission> RolePermissions => Set<RolePermission>();
+    public DbSet<Document> Documents => Set<Document>();
+    public DbSet<DocumentLine> DocumentLines => Set<DocumentLine>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

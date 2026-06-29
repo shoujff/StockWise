@@ -15,4 +15,5 @@ public class Customer
 
     public List<Order> Orders { get; set; } = new();
     public List<OutgoingInvoice> OutgoingInvoices { get; set; } = new();
+    public List<Document> Documents { get; set; } = new();
 }

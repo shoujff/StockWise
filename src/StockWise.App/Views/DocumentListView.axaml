@@ -1,0 +1,113 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:StockWise.App.ViewModels"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="700"
+             x:DataType="vm:DocumentListViewModel"
+             x:Class="StockWise.App.Views.DocumentListView">
+
+    <Grid RowDefinitions="Auto,Auto,*" Background="{DynamicResource WorkspaceBg}">
+
+        <Border Grid.Row="0" Classes="pageHeader">
+            <Grid ColumnDefinitions="*,Auto">
+                <TextBlock Text="Документы" Classes="pageTitle" />
+                <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8">
+                    <Button Content="+ Приход"
+                            Classes="primaryButton"
+                            Command="{Binding CreateCommand}"
+                            CommandParameter="Income" />
+                    <Button Content="+ Расход"
+                            Classes="primaryButton"
+                            Command="{Binding CreateCommand}"
+                            CommandParameter="Outcome" />
+                    <Button Content="+ Перемещение"
+                            Classes="secondaryButton"
+                            Command="{Binding CreateCommand}"
+                            CommandParameter="Transfer" />
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="1" Classes="pageHeaderAccent" />
+
+        <Grid Grid.Row="2" RowDefinitions="Auto,*" Margin="28,20,28,0">
+
+            <Grid Grid.Row="0" ColumnDefinitions="Auto,Auto,*,Auto" Margin="0,0,0,16">
+                <TextBlock Grid.Column="0" Text="Тип:" VerticalAlignment="Center"
+                           Foreground="{DynamicResource TextSecondary}" Margin="0,0,8,0" />
+                <ComboBox Grid.Column="1" Classes="formField" Width="140"
+                          ItemsSource="{Binding TypeFilters}"
+                          SelectedItem="{Binding SelectedTypeFilter}"
+                          PlaceholderText="Все типы" />
+                <TextBlock Grid.Column="2" Text="Статус:" VerticalAlignment="Center"
+                           Foreground="{DynamicResource TextSecondary}"
+                           Margin="16,0,8,0" />
+                <ComboBox Grid.Column="3" Classes="formField" Width="140"
+                          ItemsSource="{Binding StatusFilters}"
+                          SelectedItem="{Binding SelectedStatusFilter}"
+                          PlaceholderText="Все статусы" />
+            </Grid>
+
+            <Border Grid.Row="1" Classes="tableCard glassCard">
+                <Grid RowDefinitions="Auto,*">
+                    <TextBlock Grid.Row="0" Margin="16,12" FontSize="13" Foreground="{DynamicResource TextTertiary}">
+                        <Run Text="Документов: " />
+                        <Run Text="{Binding Documents.Count}" FontWeight="600" Foreground="{DynamicResource TextPrimary}" />
+                    </TextBlock>
+
+                    <StackPanel Grid.Row="1" Spacing="8" Margin="16,8"
+                                IsVisible="{Binding IsLoading}">
+                        <Border Classes="skeleton" Height="44" />
+                        <Border Classes="skeleton" Height="44" />
+                        <Border Classes="skeleton" Height="44" />
+                    </StackPanel>
+
+                    <DataGrid Grid.Row="1"
+                              Classes="dataTable"
+                              ItemsSource="{Binding Documents}"
+                              IsVisible="{Binding HasItems}"
+                              AutoGenerateColumns="False"
+                              IsReadOnly="True"
+                              Margin="4,0,4,4">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Номер" Binding="{Binding Number}" Width="140" />
+                            <DataGridTextColumn Header="Тип" Binding="{Binding Type}" Width="Auto" />
+                            <DataGridTextColumn Header="Дата" Binding="{Binding Date}" Width="Auto" />
+                            <DataGridTextColumn Header="Сумма" Binding="{Binding TotalAmount}" Width="Auto" />
+                            <DataGridTextColumn Header="Позиций" Binding="{Binding LinesCount}" Width="Auto" />
+                            <DataGridTextColumn Header="Статус" Binding="{Binding Status}" Width="Auto" />
+                            <DataGridTemplateColumn Header="" Width="140">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" Spacing="4" HorizontalAlignment="Center">
+                                            <Button Content="Просмотр" Classes="tableActionBtn"
+                                                    Command="{Binding $parent[DataGrid].DataContext.ViewCommand}"
+                                                    CommandParameter="{Binding Id}"
+                                                    ToolTip.Tip="Просмотр" />
+                                            <Button Content="Редакт." Classes="tableActionBtn"
+                                                    Command="{Binding $parent[DataGrid].DataContext.EditCommand}"
+                                                    CommandParameter="{Binding Id}"
+                                                    ToolTip.Tip="Редактировать" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <StackPanel Grid.Row="1" Classes="emptyState"
+                                IsVisible="{Binding HasNoItems}">
+                        <TextBlock Text="Документы не найдены"
+                                   Classes="emptyStateTitle" />
+                        <TextBlock Text="Создайте приход, расход или перемещение"
+                                   Classes="emptyStateHint" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+        </Grid>
+
+    </Grid>
+
+</UserControl>

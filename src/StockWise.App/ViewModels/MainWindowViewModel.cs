@@ -14,7 +14,10 @@ public enum PageType
     ItemEdit,
     Categories,
     Warehouses,
+    WarehouseEdit,
+    Stock,
     Documents,
+    DocumentEdit,
     Orders,
     Inventory,
     Reports,
@@ -29,6 +32,9 @@ public partial class MainWindowViewModel : ObservableObject
     private readonly IAuthService _authService;
     private readonly ThemeService _themeService;
     private readonly ToastService _toastService;
+    private readonly IWarehouseService _warehouseService;
+    private readonly IStockService _stockService;
+    private readonly IDocumentService _documentService;
 
     [ObservableProperty]
     private string _version = "v1.0.0";
@@ -60,13 +66,19 @@ public partial class MainWindowViewModel : ObservableObject
         ICategoryService categoryService,
         IAuthService authService,
         ThemeService themeService,
-        ToastService toastService)
+        ToastService toastService,
+        IWarehouseService warehouseService,
+        IStockService stockService,
+        IDocumentService documentService)
     {
         _itemService = itemService;
         _categoryService = categoryService;
         _authService = authService;
         _themeService = themeService;
         _toastService = toastService;
+        _warehouseService = warehouseService;
+        _stockService = stockService;
+        _documentService = documentService;
         _themeService.ThemeChanged += OnThemeChanged;
     }
 
@@ -109,7 +121,10 @@ public partial class MainWindowViewModel : ObservableObject
             PageType.ItemEdit => "Редактирование товара",
             PageType.Categories => "Категории",
             PageType.Warehouses => "Склады",
+            PageType.WarehouseEdit => "Редактирование склада",
+            PageType.Stock => "Остатки",
             PageType.Documents => "Документы",
+            PageType.DocumentEdit => "Редактирование документа",
             PageType.Orders => "Заказы",
             PageType.Inventory => "Инвентаризация",
             PageType.Reports => "Отчёты",
@@ -123,8 +138,23 @@ public partial class MainWindowViewModel : ObservableObject
             PageType.Items => CreateItemListViewModel(),
             PageType.ItemEdit => CreateItemEditViewModel(),
             PageType.Categories => CreateCategoryListViewModel(),
+            PageType.Warehouses => CreateWarehouseListViewModel(),
+            PageType.WarehouseEdit => CreateWarehouseEditViewModel(),
+            PageType.Stock => CreateStockViewModel(),
+            PageType.Documents => CreateDocumentListViewModel(),
+            PageType.DocumentEdit => CreateDocumentEditViewModel(),
             _ => null
         };
+    }
+
+    [RelayCommand]
+    private void NavigateToDocumentEdit(string type)
+    {
+        ActivePage = PageType.DocumentEdit;
+        ActivePageName = "Новый документ";
+        var vm = CreateDocumentEditViewModel();
+        vm.Initialize(type);
+        CurrentPageViewModel = vm;
     }
 
     [RelayCommand]
@@ -156,6 +186,7 @@ public partial class MainWindowViewModel : ObservableObject
         vm.EditRequested += (id) => NavigateToItemEdit(id);
         vm.CreateRequested += () => NavigateTo(PageType.ItemEdit);
         vm.ItemDeleted += () => _toastService.Success("Товар удалён");
+        vm.ItemDeleteError += (msg) => _toastService.Error(msg);
         return vm;
     }
 
@@ -177,5 +208,83 @@ public partial class MainWindowViewModel : ObservableObject
         vm.CategorySaved += () => _toastService.Success("Категория сохранена");
         vm.CategoryDeleted += () => _toastService.Success("Категория удалена");
         return vm;
+    }
+
+    [RelayCommand]
+    private void NavigateToWarehouseEdit(int id)
+    {
+        ActivePage = PageType.WarehouseEdit;
+        ActivePageName = "Редактирование склада";
+        var vm = CreateWarehouseEditViewModel();
+        _ = vm.LoadForEditAsync(id);
+        CurrentPageViewModel = vm;
+    }
+
+    [RelayCommand]
+    private void NavigateToStock(int id)
+    {
+        ActivePage = PageType.Stock;
+        ActivePageName = "Остатки";
+        var vm = CreateStockViewModel();
+        CurrentPageViewModel = vm;
+        _ = vm.LoadForWarehouseAsync(id);
+    }
+
+    private WarehouseListViewModel CreateWarehouseListViewModel()
+    {
+        var vm = new WarehouseListViewModel(_warehouseService);
+        vm.EditRequested += (id) => NavigateToWarehouseEdit(id);
+        vm.CreateRequested += () => NavigateTo(PageType.WarehouseEdit);
+        vm.ViewStockRequested += (id) => NavigateToStock(id);
+        vm.WarehouseDeleted += () => _toastService.Success("Склад удалён");
+        return vm;
+    }
+
+    private WarehouseEditViewModel CreateWarehouseEditViewModel()
+    {
+        var vm = new WarehouseEditViewModel(_warehouseService);
+        vm.Saved += () =>
+        {
+            _toastService.Success("Склад сохранён");
+            NavigateTo(PageType.Warehouses);
+        };
+        vm.Cancelled += () => NavigateTo(PageType.Warehouses);
+        return vm;
+    }
+
+    private StockViewModel CreateStockViewModel()
+    {
+        var vm = new StockViewModel(_stockService);
+        return vm;
+    }
+
+    private DocumentListViewModel CreateDocumentListViewModel()
+    {
+        var vm = new DocumentListViewModel(_documentService);
+        vm.CreateRequested += (type) => NavigateToDocumentEdit(type);
+        vm.EditRequested += (id) => NavigateToDocumentEdit(id);
+        vm.ViewRequested += (id) => NavigateToDocumentEdit(id);
+        return vm;
+    }
+
+    private DocumentEditViewModel CreateDocumentEditViewModel()
+    {
+        var vm = new DocumentEditViewModel(_documentService, _itemService, _warehouseService);
+        vm.Saved += () =>
+        {
+            _toastService.Success("Документ сохранён");
+            NavigateTo(PageType.Documents);
+        };
+        vm.Cancelled += () => NavigateTo(PageType.Documents);
+        return vm;
+    }
+
+    private void NavigateToDocumentEdit(int id)
+    {
+        ActivePage = PageType.DocumentEdit;
+        ActivePageName = "Редактирование документа";
+        var vm = CreateDocumentEditViewModel();
+        _ = vm.LoadForEditAsync(id);
+        CurrentPageViewModel = vm;
     }
 }

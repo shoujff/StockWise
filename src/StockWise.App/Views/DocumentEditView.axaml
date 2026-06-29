@@ -1,0 +1,199 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:StockWise.App.ViewModels"
+             xmlns:c="clr-namespace:StockWise.App.Converters"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="700"
+             x:DataType="vm:DocumentEditViewModel"
+             x:Class="StockWise.App.Views.DocumentEditView">
+    <UserControl.Resources>
+        <c:DateOnlyToDateTimeOffsetConverter x:Key="DateOnlyConverter" />
+    </UserControl.Resources>
+
+    <Grid RowDefinitions="Auto,Auto,*" Background="{DynamicResource WorkspaceBg}">
+
+        <Border Grid.Row="0" Classes="pageHeader">
+            <Grid ColumnDefinitions="*,Auto">
+                <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                    <Button Content="Документы"
+                            FontSize="14" Foreground="{DynamicResource AccentCyan}"
+                            Cursor="Hand" Background="Transparent" BorderThickness="0"
+                            Padding="0" HorizontalAlignment="Left"
+                            Command="{Binding CancelCommand}" />
+                    <TextBlock Text="/" FontSize="14" Foreground="{DynamicResource TextMuted}"
+                               VerticalAlignment="Center" />
+                    <TextBlock Text="{Binding PageTitle}" FontSize="14"
+                               Foreground="{DynamicResource TextTertiary}" VerticalAlignment="Center" />
+                </StackPanel>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8">
+                    <Button Content="Отмена" Classes="secondaryButton"
+                            Command="{Binding CancelCommand}" />
+                    <Button Content="Сохранить" Classes="secondaryButton"
+                            Command="{Binding SaveCommand}"
+                            IsVisible="{Binding IsDraft}" />
+                    <Button Content="Провести" Classes="primaryButton"
+                            Command="{Binding PostCommand}"
+                            IsVisible="{Binding IsDraft}" />
+                    <Button Content="Отменить" Classes="dangerButton"
+                            Command="{Binding CancelDocCommand}"
+                            IsVisible="{Binding IsPosted}" />
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="1" Classes="pageHeaderAccent" />
+
+        <ScrollViewer Grid.Row="2">
+            <Grid Margin="28,20,28,0" RowDefinitions="Auto,Auto,Auto">
+
+                <Border Grid.Row="0" Classes="formCard glassCard">
+                    <Grid RowDefinitions="Auto,Auto,Auto,Auto"
+                          ColumnDefinitions="200,*,200,*"
+                          RowSpacing="16" ColumnSpacing="16">
+
+                        <TextBlock Grid.Row="0" Grid.ColumnSpan="4"
+                                   Text="Основная информация"
+                                   Classes="formSectionTitle" />
+
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Номер" Classes="formLabel" />
+                        <TextBox Grid.Row="1" Grid.Column="1" Classes="formField"
+                                 Text="{Binding DocumentNumber}" IsReadOnly="True" />
+
+                        <TextBlock Grid.Row="1" Grid.Column="2" Text="Тип" Classes="formLabel" />
+                        <TextBox Grid.Row="1" Grid.Column="3" Classes="formField"
+                                 Text="{Binding DocumentType}" IsReadOnly="True" />
+
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Склад"
+                                   Classes="formLabel"
+                                   IsVisible="{Binding IsIncome}" />
+                        <ComboBox Grid.Row="2" Grid.Column="1" Classes="formField"
+                                  ItemsSource="{Binding Warehouses}"
+                                  SelectedItem="{Binding SelectedToWarehouse}"
+                                  DisplayMemberBinding="{Binding Name}"
+                                  PlaceholderText="Выберите склад"
+                                  IsVisible="{Binding IsIncome}" />
+
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Склад"
+                                   Classes="formLabel"
+                                   IsVisible="{Binding IsOutcome}" />
+                        <ComboBox Grid.Row="2" Grid.Column="1" Classes="formField"
+                                  ItemsSource="{Binding Warehouses}"
+                                  SelectedItem="{Binding SelectedFromWarehouse}"
+                                  DisplayMemberBinding="{Binding Name}"
+                                  PlaceholderText="Выберите склад"
+                                  IsVisible="{Binding IsOutcome}" />
+
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Склад отправления"
+                                   Classes="formLabel"
+                                   IsVisible="{Binding IsTransfer}" />
+                        <ComboBox Grid.Row="2" Grid.Column="1" Classes="formField"
+                                  ItemsSource="{Binding Warehouses}"
+                                  SelectedItem="{Binding SelectedFromWarehouse}"
+                                  DisplayMemberBinding="{Binding Name}"
+                                  PlaceholderText="Выберите склад"
+                                  IsVisible="{Binding IsTransfer}" />
+
+                        <TextBlock Grid.Row="3" Grid.Column="0" Text="Склад назначения"
+                                   Classes="formLabel"
+                                   IsVisible="{Binding IsTransfer}" />
+                        <ComboBox Grid.Row="3" Grid.Column="1" Classes="formField"
+                                  ItemsSource="{Binding Warehouses}"
+                                  SelectedItem="{Binding SelectedToWarehouse}"
+                                  DisplayMemberBinding="{Binding Name}"
+                                  PlaceholderText="Выберите склад"
+                                  IsVisible="{Binding IsTransfer}" />
+
+                    </Grid>
+                </Border>
+
+                <Border Grid.Row="1" Classes="formCard glassCard" Margin="0,16,0,0">
+                    <Grid RowDefinitions="Auto,Auto,Auto">
+                        <TextBlock Grid.Row="0" Text="Позиции документа"
+                                   Classes="formSectionTitle" />
+
+                        <Grid Grid.Row="1" RowDefinitions="Auto,Auto" Margin="0,8,0,8"
+                              IsVisible="{Binding IsDraft}">
+                            <Grid Grid.Row="0" ColumnDefinitions="*,Auto">
+                                <TextBox Grid.Column="0" Classes="formField"
+                                         Watermark="Поиск товара по названию или артикулу..."
+                                         Text="{Binding SearchItemTerm}" />
+                                <Button Grid.Column="1" Content="+ Добавить"
+                                        Classes="primaryButton" Margin="8,0,0,0"
+                                        Command="{Binding AddLineCommand}" />
+                            </Grid>
+                            <ListBox Grid.Row="1" ItemsSource="{Binding SearchResults}"
+                                     SelectedItem="{Binding SelectedSearchItem}"
+                                     MaxHeight="200" Margin="0,4,0,0"
+                                     IsVisible="{Binding HasSearchResults}">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid ColumnDefinitions="Auto,*,Auto">
+                                            <TextBlock Text="{Binding Article}" FontWeight="600"
+                                                       Foreground="{DynamicResource AccentCyan}"
+                                                       Margin="0,0,8,0" />
+                                            <TextBlock Grid.Column="1" Text="{Binding Name}" />
+                                            <TextBlock Grid.Column="2" Text="{Binding Unit}"
+                                                       Foreground="{DynamicResource TextTertiary}" />
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </Grid>
+
+                        <DataGrid Grid.Row="2" Classes="dataTable"
+                                  ItemsSource="{Binding Lines}"
+                                  AutoGenerateColumns="False"
+                                  Margin="0,8,0,4">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Товар" Binding="{Binding ItemName}" Width="*" IsReadOnly="True" />
+                                <DataGridTextColumn Header="Артикул" Binding="{Binding Article}" Width="80" IsReadOnly="True" />
+                                <DataGridTextColumn Header="Кол-во" Binding="{Binding Quantity}" Width="80" />
+                                <DataGridTextColumn Header="Цена" Binding="{Binding Price}" Width="100" />
+                                <DataGridTextColumn Header="Сумма" Binding="{Binding Amount, StringFormat={}{0:N2}}" Width="100" IsReadOnly="True" />
+                                <DataGridTextColumn Header="Партия" Binding="{Binding BatchNo}" Width="80" />
+                                <DataGridTemplateColumn Header="Срок годн." Width="140">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <DatePicker SelectedDate="{Binding ExpiryDate, Converter={StaticResource DateOnlyConverter}}"
+                                                        MinWidth="120" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="" Width="60">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button Content="X" Classes="tableActionBtnDanger"
+                                                    Command="{Binding $parent[DataGrid].DataContext.RemoveLineCommand}"
+                                                    CommandParameter="{Binding}"
+                                                    ToolTip.Tip="Удалить" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+
+                        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,8,8,8">
+                            <TextBlock Text="Итого: " FontSize="16" FontWeight="600"
+                                       Foreground="{DynamicResource TextPrimary}" />
+                            <TextBlock Text="{Binding TotalAmount, StringFormat={}{0:N2}}"
+                                       FontSize="16" FontWeight="700"
+                                       Foreground="{DynamicResource AccentCyan}" />
+                            <TextBlock Text=" руб." FontSize="16" Foreground="{DynamicResource TextTertiary}" />
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <Border Grid.Row="2" Classes="loginErrorBox"
+                        IsVisible="{Binding HasError}"
+                        Margin="0,16,0,0">
+                    <TextBlock Text="{Binding ErrorMessage}"
+                               Classes="loginError" />
+                </Border>
+
+            </Grid>
+        </ScrollViewer>
+
+    </Grid>
+
+</UserControl>

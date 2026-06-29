@@ -14,6 +14,7 @@ public class ItemConfiguration : IEntityTypeConfiguration<Item>
         builder.Property(x => x.Article).HasMaxLength(50).IsRequired();
         builder.HasIndex(x => x.Article).IsUnique();
         builder.Property(x => x.Unit).HasMaxLength(20).IsRequired();
+        builder.Property(x => x.Price).HasColumnType("decimal(18,2)");
         builder.Property(x => x.MinStock).HasColumnType("decimal(18,2)");
         builder.Property(x => x.MaxStock).HasColumnType("decimal(18,2)");
         builder.Property(x => x.Barcode).HasMaxLength(50);

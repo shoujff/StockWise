@@ -55,6 +55,11 @@ internal class Program
             services.AddTransient<ItemListViewModel>();
             services.AddTransient<ItemEditViewModel>();
             services.AddTransient<CategoryListViewModel>();
+            services.AddTransient<WarehouseListViewModel>();
+            services.AddTransient<WarehouseEditViewModel>();
+            services.AddTransient<StockViewModel>();
+            services.AddTransient<DocumentListViewModel>();
+            services.AddTransient<DocumentEditViewModel>();
 
             var connString = configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<StockDb>(options =>
@@ -72,6 +77,10 @@ internal class Program
             services.AddSingleton<IAuthService, AuthService>();
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IItemService, ItemService>();
+            services.AddScoped<IWarehouseService, WarehouseService>();
+            services.AddScoped<IStockService, StockService>();
+            services.AddScoped<IStockCoreService, StockCoreService>();
+            services.AddScoped<IDocumentService, DocumentService>();
         });
     }
 
