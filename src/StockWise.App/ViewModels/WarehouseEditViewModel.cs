@@ -9,6 +9,7 @@ namespace StockWise.App.ViewModels;
 public partial class WarehouseEditViewModel : ObservableObject
 {
     private readonly IWarehouseService _warehouseService;
+    private readonly IAuthService _authService;
     private int? _editingId;
 
     [ObservableProperty]
@@ -40,10 +41,12 @@ public partial class WarehouseEditViewModel : ObservableObject
 
     public event Action? Saved;
     public event Action? Cancelled;
+    public event Action<string>? PermissionDenied;
 
-    public WarehouseEditViewModel(IWarehouseService warehouseService)
+    public WarehouseEditViewModel(IWarehouseService warehouseService, IAuthService authService)
     {
         _warehouseService = warehouseService;
+        _authService = authService;
     }
 
     [RelayCommand]
@@ -79,6 +82,13 @@ public partial class WarehouseEditViewModel : ObservableObject
     [RelayCommand]
     private async Task SaveAsync()
     {
+        var perm = _editingId.HasValue ? Permissions.WarehouseEdit : Permissions.WarehouseCreate;
+        if (!await _authService.HasPermissionAsync(_authService.CurrentUser!, perm))
+        {
+            PermissionDenied?.Invoke("Нет прав на сохранение склада");
+            return;
+        }
+
         HasError = false;
         IsSaving = true;
         IsNotSaving = false;

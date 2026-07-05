@@ -11,6 +11,7 @@ namespace StockWise.App.ViewModels;
 public partial class WarehouseListViewModel : ObservableObject
 {
     private readonly IWarehouseService _warehouseService;
+    private readonly IAuthService _authService;
 
     [ObservableProperty]
     private ObservableCollection<WarehouseDto> _warehouses = [];
@@ -31,10 +32,12 @@ public partial class WarehouseListViewModel : ObservableObject
     public event Action<int>? EditRequested;
     public event Action<int>? ViewStockRequested;
     public event Action? WarehouseDeleted;
+    public event Action<string>? PermissionDenied;
 
-    public WarehouseListViewModel(IWarehouseService warehouseService)
+    public WarehouseListViewModel(IWarehouseService warehouseService, IAuthService authService)
     {
         _warehouseService = warehouseService;
+        _authService = authService;
     }
 
     [RelayCommand]
@@ -72,6 +75,11 @@ public partial class WarehouseListViewModel : ObservableObject
     [RelayCommand]
     private async Task DeleteAsync(int id)
     {
+        if (!await _authService.HasPermissionAsync(_authService.CurrentUser!, Permissions.WarehouseDelete))
+        {
+            PermissionDenied?.Invoke("Нет прав на удаление складов");
+            return;
+        }
         var success = await _warehouseService.DeleteAsync(id);
         if (success)
         {

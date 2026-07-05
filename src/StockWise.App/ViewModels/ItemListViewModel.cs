@@ -12,6 +12,7 @@ public partial class ItemListViewModel : ObservableObject
 {
     private readonly IItemService _itemService;
     private readonly ICategoryService _categoryService;
+    private readonly IAuthService _authService;
 
     [ObservableProperty]
     private ObservableCollection<ItemDto> _items = [];
@@ -41,11 +42,13 @@ public partial class ItemListViewModel : ObservableObject
     public event Action<int>? EditRequested;
     public event Action? ItemDeleted;
     public event Action<string>? ItemDeleteError;
+    public event Action<string>? PermissionDenied;
 
-    public ItemListViewModel(IItemService itemService, ICategoryService categoryService)
+    public ItemListViewModel(IItemService itemService, ICategoryService categoryService, IAuthService authService)
     {
         _itemService = itemService;
         _categoryService = categoryService;
+        _authService = authService;
     }
 
     [RelayCommand]
@@ -87,6 +90,11 @@ public partial class ItemListViewModel : ObservableObject
     [RelayCommand]
     private async Task DeleteAsync(int id)
     {
+        if (!await _authService.HasPermissionAsync(_authService.CurrentUser!, Permissions.ItemsDelete))
+        {
+            PermissionDenied?.Invoke("Нет прав на удаление товаров");
+            return;
+        }
         try
         {
             var success = await _itemService.DeleteAsync(id);

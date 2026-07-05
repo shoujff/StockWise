@@ -81,27 +81,38 @@
                         <RadioButton Content="📦  Товары" Classes="navItem"
                                      GroupName="nav"
                                      Command="{Binding NavigateToCommand}"
-                                     CommandParameter="{x:Static vm:PageType.Items}" />
+                                     CommandParameter="{x:Static vm:PageType.Items}"
+                                     IsVisible="{Binding CanViewItems}" />
                         <RadioButton Content="📂  Категории" Classes="navItem"
                                      GroupName="nav"
                                      Command="{Binding NavigateToCommand}"
-                                     CommandParameter="{x:Static vm:PageType.Categories}" />
+                                     CommandParameter="{x:Static vm:PageType.Categories}"
+                                     IsVisible="{Binding CanViewCategories}" />
                         <RadioButton Content="🏭  Склады" Classes="navItem"
                                      GroupName="nav"
                                      Command="{Binding NavigateToCommand}"
-                                     CommandParameter="{x:Static vm:PageType.Warehouses}" />
+                                     CommandParameter="{x:Static vm:PageType.Warehouses}"
+                                     IsVisible="{Binding CanViewWarehouses}" />
+                        <RadioButton Content="📦  Остатки" Classes="navItem"
+                                     GroupName="nav"
+                                     Command="{Binding NavigateToCommand}"
+                                     CommandParameter="{x:Static vm:PageType.Stock}"
+                                     IsVisible="{Binding CanViewStock}" />
                         <RadioButton Content="📄  Документы" Classes="navItem"
                                      GroupName="nav"
                                      Command="{Binding NavigateToCommand}"
-                                     CommandParameter="{x:Static vm:PageType.Documents}" />
+                                     CommandParameter="{x:Static vm:PageType.Documents}"
+                                     IsVisible="{Binding CanViewDocuments}" />
                         <RadioButton Content="📋  Заказы" Classes="navItem"
                                      GroupName="nav"
                                      Command="{Binding NavigateToCommand}"
-                                     CommandParameter="{x:Static vm:PageType.Orders}" />
+                                     CommandParameter="{x:Static vm:PageType.Orders}"
+                                     IsVisible="{Binding CanViewOrders}" />
                         <RadioButton Content="🔄  Инвентаризация" Classes="navItem"
                                      GroupName="nav"
                                      Command="{Binding NavigateToCommand}"
-                                     CommandParameter="{x:Static vm:PageType.Inventory}" />
+                                     CommandParameter="{x:Static vm:PageType.Inventory}"
+                                     IsVisible="{Binding CanViewInventory}" />
 
                         <Border Classes="sidebarDivider" />
 
@@ -109,19 +120,24 @@
                         <RadioButton Content="📈  Отчёты" Classes="navItem"
                                      GroupName="nav"
                                      Command="{Binding NavigateToCommand}"
-                                     CommandParameter="{x:Static vm:PageType.Reports}" />
+                                     CommandParameter="{x:Static vm:PageType.Reports}"
+                                     IsVisible="{Binding CanViewReports}" />
 
-                        <Border Classes="sidebarDivider" />
+                        <Border Classes="sidebarDivider"
+                                IsVisible="{Binding CanViewUsers}" />
 
-                        <TextBlock Text="АДМИНИСТРИРОВАНИЕ" Classes="sidebarSection" />
+                        <TextBlock Text="АДМИНИСТРИРОВАНИЕ" Classes="sidebarSection"
+                                   IsVisible="{Binding CanViewUsers}" />
                         <RadioButton Content="👥  Пользователи" Classes="navItem"
                                      GroupName="nav"
                                      Command="{Binding NavigateToCommand}"
-                                     CommandParameter="{x:Static vm:PageType.Users}" />
+                                     CommandParameter="{x:Static vm:PageType.Users}"
+                                     IsVisible="{Binding CanViewUsers}" />
                         <RadioButton Content="⚙️  Настройки" Classes="navItem"
                                      GroupName="nav"
                                      Command="{Binding NavigateToCommand}"
-                                     CommandParameter="{x:Static vm:PageType.Settings}" />
+                                     CommandParameter="{x:Static vm:PageType.Settings}"
+                                     IsVisible="{Binding CanViewSettings}" />
 
                     </StackPanel>
                 </ScrollViewer>
@@ -129,15 +145,15 @@
                 <Border Grid.Row="2" Classes="userArea">
                     <Grid ColumnDefinitions="36,*,Auto,Auto">
                         <Border Grid.Column="0" Classes="avatar">
-                            <TextBlock Text="A" FontSize="16" FontWeight="700"
+                            <TextBlock Text="U" FontSize="16" FontWeight="700"
                                        Foreground="White"
                                        HorizontalAlignment="Center"
                                        VerticalAlignment="Center" />
                         </Border>
                         <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0">
-                            <TextBlock Text="Admin" FontSize="14" FontWeight="600"
+                            <TextBlock Text="{Binding UserDisplayName}" FontSize="14" FontWeight="600"
                                        Foreground="{DynamicResource SidebarTextSelected}" />
-                            <TextBlock Text="admin@stockwise.local" FontSize="11"
+                            <TextBlock Text="{Binding UserEmail}" FontSize="11"
                                        Foreground="{DynamicResource SidebarText}"
                                        TextTrimming="CharacterEllipsis" />
                         </StackPanel>

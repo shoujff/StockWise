@@ -11,9 +11,11 @@ namespace StockWise.App.ViewModels;
     public partial class CategoryListViewModel : ObservableObject
     {
         private readonly ICategoryService _categoryService;
+        private readonly IAuthService _authService;
 
         public event Action? CategorySaved;
         public event Action? CategoryDeleted;
+        public event Action<string>? PermissionDenied;
     
     [ObservableProperty]
     private ObservableCollection<CategoryNode> _roots = [];
@@ -45,9 +47,10 @@ namespace StockWise.App.ViewModels;
     [ObservableProperty]
     private bool _hasError;
 
-    public CategoryListViewModel(ICategoryService categoryService)
+    public CategoryListViewModel(ICategoryService categoryService, IAuthService authService)
     {
         _categoryService = categoryService;
+        _authService = authService;
     }
 
     [RelayCommand]
@@ -133,6 +136,12 @@ namespace StockWise.App.ViewModels;
     [RelayCommand]
     private async Task SaveAsync()
     {
+        if (!await _authService.HasPermissionAsync(_authService.CurrentUser!, Permissions.ItemsCreate))
+        {
+            PermissionDenied?.Invoke("Нет прав на управление категориями");
+            return;
+        }
+
         HasError = false;
 
         if (string.IsNullOrWhiteSpace(EditName))
@@ -177,6 +186,12 @@ namespace StockWise.App.ViewModels;
     [RelayCommand]
     private async Task DeleteAsync(int id)
     {
+        if (!await _authService.HasPermissionAsync(_authService.CurrentUser!, Permissions.ItemsCreate))
+        {
+            PermissionDenied?.Invoke("Нет прав на управление категориями");
+            return;
+        }
+
         try
         {
             var success = await _categoryService.DeleteAsync(id);

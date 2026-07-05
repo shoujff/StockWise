@@ -11,6 +11,7 @@ namespace StockWise.App.ViewModels;
 public partial class DocumentListViewModel : ObservableObject
 {
     private readonly IDocumentService _documentService;
+    private readonly IAuthService _authService;
 
     [ObservableProperty]
     private ObservableCollection<DocumentListDto> _documents = [];
@@ -36,10 +37,12 @@ public partial class DocumentListViewModel : ObservableObject
     public event Action<string>? CreateRequested;
     public event Action<int>? EditRequested;
     public event Action<int>? ViewRequested;
+    public event Action<string>? PermissionDenied;
 
-    public DocumentListViewModel(IDocumentService documentService)
+    public DocumentListViewModel(IDocumentService documentService, IAuthService authService)
     {
         _documentService = documentService;
+        _authService = authService;
     }
 
     [RelayCommand]
@@ -87,8 +90,13 @@ public partial class DocumentListViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void Create(string type)
+    private async Task Create(string type)
     {
+        if (!await _authService.HasPermissionAsync(_authService.CurrentUser!, Permissions.DocumentsCreate))
+        {
+            PermissionDenied?.Invoke("Нет прав на создание документов");
+            return;
+        }
         CreateRequested?.Invoke(type);
     }
 

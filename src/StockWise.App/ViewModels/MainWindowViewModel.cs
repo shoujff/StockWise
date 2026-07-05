@@ -58,6 +58,45 @@ public partial class MainWindowViewModel : ObservableObject
     [ObservableProperty]
     private DialogViewModel _dialog = new();
 
+    [ObservableProperty]
+    private string _userDisplayName = "";
+
+    [ObservableProperty]
+    private string _userEmail = "";
+
+    [ObservableProperty]
+    private string _userRole = "";
+
+    [ObservableProperty]
+    private bool _canViewItems = true;
+
+    [ObservableProperty]
+    private bool _canViewCategories;
+
+    [ObservableProperty]
+    private bool _canViewWarehouses = true;
+
+    [ObservableProperty]
+    private bool _canViewStock = true;
+
+    [ObservableProperty]
+    private bool _canViewDocuments = true;
+
+    [ObservableProperty]
+    private bool _canViewOrders;
+
+    [ObservableProperty]
+    private bool _canViewInventory;
+
+    [ObservableProperty]
+    private bool _canViewReports = true;
+
+    [ObservableProperty]
+    private bool _canViewUsers;
+
+    [ObservableProperty]
+    private bool _canViewSettings;
+
     public ObservableCollection<ToastNotification> Toasts => _toastService.Toasts;
 
     public event Action? LogoutRequested;
@@ -92,7 +131,30 @@ public partial class MainWindowViewModel : ObservableObject
 
     public void Initialize()
     {
+        UpdateUserInfo();
         NavigateTo(PageType.Dashboard);
+    }
+
+    private void UpdateUserInfo()
+    {
+        var user = _authService.CurrentUser;
+        if (user is null) return;
+
+        UserDisplayName = user.GetFullName();
+        UserEmail = user.Login;
+        UserRole = user.Role;
+
+        var role = user.Role;
+        CanViewItems = true;
+        CanViewCategories = role is "Admin" or "Manager";
+        CanViewWarehouses = true;
+        CanViewStock = true;
+        CanViewDocuments = true;
+        CanViewOrders = role is "Admin" or "Manager";
+        CanViewInventory = role is "Admin" or "Warehouse";
+        CanViewReports = role is not "Warehouse";
+        CanViewUsers = role is "Admin";
+        CanViewSettings = role is "Admin";
     }
 
     public void Cleanup()
@@ -113,11 +175,42 @@ public partial class MainWindowViewModel : ObservableObject
         Dialog.Show(title, message, confirmText, cancelText, true, callback);
     }
 
+    private bool IsPageAllowed(PageType page)
+    {
+        var role = _authService.CurrentUser?.Role ?? "";
+        if (role == "Admin") return true;
+
+        return page switch
+        {
+            PageType.Items => true,
+            PageType.ItemEdit => role == "Manager",
+            PageType.Categories => role == "Manager",
+            PageType.Warehouses => true,
+            PageType.WarehouseEdit => role == "Manager",
+            PageType.Stock => true,
+            PageType.Documents => true,
+            PageType.DocumentEdit => role == "Manager",
+            PageType.Orders => role == "Manager",
+            PageType.Inventory => role == "Warehouse",
+            PageType.Reports => role is "Manager" or "Viewer",
+            PageType.Users => false,
+            PageType.Settings => false,
+            PageType.Dashboard => true,
+            _ => false
+        };
+    }
+
     [RelayCommand]
     private void NavigateTo(PageType page)
     {
         try
         {
+            if (!IsPageAllowed(page))
+            {
+                ShowToast(ToastType.Warning, "Недостаточно прав для просмотра этой страницы");
+                return;
+            }
+
             ActivePage = page;
             ActivePageName = page switch
             {
@@ -163,6 +256,11 @@ public partial class MainWindowViewModel : ObservableObject
     [RelayCommand]
     private void NavigateToDocumentEdit(string type)
     {
+        if (!IsPageAllowed(PageType.DocumentEdit))
+        {
+            ShowToast(ToastType.Warning, "Недостаточно прав");
+            return;
+        }
         ActivePage = PageType.DocumentEdit;
         ActivePageName = "Новый документ";
         var vm = CreateDocumentEditViewModel();
@@ -186,6 +284,11 @@ public partial class MainWindowViewModel : ObservableObject
     [RelayCommand]
     private void NavigateToItemEdit(int id)
     {
+        if (!IsPageAllowed(PageType.ItemEdit))
+        {
+            ShowToast(ToastType.Warning, "Недостаточно прав");
+            return;
+        }
         ActivePage = PageType.ItemEdit;
         ActivePageName = "Редактирование товара";
         var vm = CreateItemEditViewModel();
@@ -195,37 +298,45 @@ public partial class MainWindowViewModel : ObservableObject
 
     private ItemListViewModel CreateItemListViewModel()
     {
-        var vm = new ItemListViewModel(_itemService, _categoryService);
+        var vm = new ItemListViewModel(_itemService, _categoryService, _authService);
         vm.EditRequested += (id) => NavigateToItemEdit(id);
         vm.CreateRequested += () => NavigateTo(PageType.ItemEdit);
         vm.ItemDeleted += () => _toastService.Success("Товар удалён");
         vm.ItemDeleteError += (msg) => _toastService.Error(msg);
+        vm.PermissionDenied += (msg) => _toastService.Warning(msg);
         return vm;
     }
 
     private ItemEditViewModel CreateItemEditViewModel()
     {
-        var vm = new ItemEditViewModel(_itemService, _categoryService);
+        var vm = new ItemEditViewModel(_itemService, _categoryService, _authService);
         vm.Saved += () =>
         {
             _toastService.Success("Товар сохранён");
             NavigateTo(PageType.Items);
         };
         vm.Cancelled += () => NavigateTo(PageType.Items);
+        vm.PermissionDenied += (msg) => _toastService.Warning(msg);
         return vm;
     }
 
     private CategoryListViewModel CreateCategoryListViewModel()
     {
-        var vm = new CategoryListViewModel(_categoryService);
+        var vm = new CategoryListViewModel(_categoryService, _authService);
         vm.CategorySaved += () => _toastService.Success("Категория сохранена");
         vm.CategoryDeleted += () => _toastService.Success("Категория удалена");
+        vm.PermissionDenied += (msg) => _toastService.Warning(msg);
         return vm;
     }
 
     [RelayCommand]
     private void NavigateToWarehouseEdit(int id)
     {
+        if (!IsPageAllowed(PageType.WarehouseEdit))
+        {
+            ShowToast(ToastType.Warning, "Недостаточно прав");
+            return;
+        }
         ActivePage = PageType.WarehouseEdit;
         ActivePageName = "Редактирование склада";
         var vm = CreateWarehouseEditViewModel();
@@ -245,23 +356,25 @@ public partial class MainWindowViewModel : ObservableObject
 
     private WarehouseListViewModel CreateWarehouseListViewModel()
     {
-        var vm = new WarehouseListViewModel(_warehouseService);
+        var vm = new WarehouseListViewModel(_warehouseService, _authService);
         vm.EditRequested += (id) => NavigateToWarehouseEdit(id);
         vm.CreateRequested += () => NavigateTo(PageType.WarehouseEdit);
         vm.ViewStockRequested += (id) => NavigateToStock(id);
         vm.WarehouseDeleted += () => _toastService.Success("Склад удалён");
+        vm.PermissionDenied += (msg) => _toastService.Warning(msg);
         return vm;
     }
 
     private WarehouseEditViewModel CreateWarehouseEditViewModel()
     {
-        var vm = new WarehouseEditViewModel(_warehouseService);
+        var vm = new WarehouseEditViewModel(_warehouseService, _authService);
         vm.Saved += () =>
         {
             _toastService.Success("Склад сохранён");
             NavigateTo(PageType.Warehouses);
         };
         vm.Cancelled += () => NavigateTo(PageType.Warehouses);
+        vm.PermissionDenied += (msg) => _toastService.Warning(msg);
         return vm;
     }
 
@@ -273,22 +386,24 @@ public partial class MainWindowViewModel : ObservableObject
 
     private DocumentListViewModel CreateDocumentListViewModel()
     {
-        var vm = new DocumentListViewModel(_documentService);
+        var vm = new DocumentListViewModel(_documentService, _authService);
         vm.CreateRequested += (type) => NavigateToDocumentEdit(type);
         vm.EditRequested += (id) => NavigateToDocumentEdit(id);
         vm.ViewRequested += (id) => NavigateToDocumentEdit(id);
+        vm.PermissionDenied += (msg) => _toastService.Warning(msg);
         return vm;
     }
 
     private DocumentEditViewModel CreateDocumentEditViewModel()
     {
-        var vm = new DocumentEditViewModel(_documentService, _itemService, _warehouseService);
+        var vm = new DocumentEditViewModel(_documentService, _itemService, _warehouseService, _authService);
         vm.Saved += () =>
         {
             _toastService.Success("Документ сохранён");
             NavigateTo(PageType.Documents);
         };
         vm.Cancelled += () => NavigateTo(PageType.Documents);
+        vm.PermissionDenied += (msg) => _toastService.Warning(msg);
         return vm;
     }
 
@@ -308,6 +423,8 @@ public partial class MainWindowViewModel : ObservableObject
 
     private ReportsViewModel CreateReportsViewModel()
     {
-        return new ReportsViewModel(_reportService);
+        var vm = new ReportsViewModel(_reportService, _authService);
+        vm.PermissionDenied += (msg) => _toastService.Warning(msg);
+        return vm;
     }
 }

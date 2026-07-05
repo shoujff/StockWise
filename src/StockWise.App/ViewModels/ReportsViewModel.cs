@@ -10,6 +10,7 @@ namespace StockWise.App.ViewModels;
 public partial class ReportsViewModel : ObservableObject
 {
     private readonly IReportService _reportService;
+    private readonly IAuthService _authService;
 
     [ObservableProperty]
     private DateTimeOffset _startDate = DateTimeOffset.Now.AddMonths(-1);
@@ -43,9 +44,12 @@ public partial class ReportsViewModel : ObservableObject
 
     public string[] ReportTypes { get; } = ["ABC-анализ", "Оборотно-сальдовая"];
 
-    public ReportsViewModel(IReportService reportService)
+    public event Action<string>? PermissionDenied;
+
+    public ReportsViewModel(IReportService reportService, IAuthService authService)
     {
         _reportService = reportService;
+        _authService = authService;
     }
 
     partial void OnSelectedReportIndexChanged(int value)
@@ -63,6 +67,12 @@ public partial class ReportsViewModel : ObservableObject
     [RelayCommand]
     private async Task GenerateAsync()
     {
+        if (!await _authService.HasPermissionAsync(_authService.CurrentUser!, Permissions.ReportsView))
+        {
+            PermissionDenied?.Invoke("Нет прав на просмотр отчётов");
+            return;
+        }
+
         IsLoading = true;
         HasError = false;
         try
@@ -93,4 +103,5 @@ public partial class ReportsViewModel : ObservableObject
             IsLoading = false;
         }
     }
+
 }

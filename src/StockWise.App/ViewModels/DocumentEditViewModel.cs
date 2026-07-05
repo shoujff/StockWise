@@ -31,6 +31,7 @@ public partial class DocumentEditViewModel : ObservableObject
     private readonly IDocumentService _documentService;
     private readonly IItemService _itemService;
     private readonly IWarehouseService _warehouseService;
+    private readonly IAuthService _authService;
     private int? _editingId;
 
     [ObservableProperty]
@@ -44,6 +45,9 @@ public partial class DocumentEditViewModel : ObservableObject
 
     [ObservableProperty]
     private string _status = "Draft";
+
+    [ObservableProperty]
+    private bool _hasDocument;
 
     [ObservableProperty]
     private string? _supplierName;
@@ -104,16 +108,21 @@ public partial class DocumentEditViewModel : ObservableObject
 
     public event Action? Saved;
     public event Action? Cancelled;
+    public event Action<string>? PermissionDenied;
 
     public DocumentEditViewModel(
         IDocumentService documentService,
         IItemService itemService,
-        IWarehouseService warehouseService)
+        IWarehouseService warehouseService,
+        IAuthService authService)
     {
         _documentService = documentService;
         _itemService = itemService;
         _warehouseService = warehouseService;
+        _authService = authService;
     }
+
+    private int CurrentUserId => _authService.CurrentUser?.Id ?? 0;
 
     public void Initialize(string type)
     {
@@ -153,6 +162,7 @@ public partial class DocumentEditViewModel : ObservableObject
     public async Task LoadForEditAsync(int id)
     {
         _editingId = id;
+        HasDocument = true;
         var doc = await _documentService.GetByIdAsync(id);
         if (doc is null) return;
 
@@ -291,6 +301,12 @@ public partial class DocumentEditViewModel : ObservableObject
     [RelayCommand]
     private async Task SaveAsync()
     {
+        if (!await _authService.HasPermissionAsync(_authService.CurrentUser!, Permissions.DocumentsCreate))
+        {
+            PermissionDenied?.Invoke("Нет прав на создание документов");
+            return;
+        }
+
         HasError = false;
         IsSaving = true;
 
@@ -337,7 +353,7 @@ public partial class DocumentEditViewModel : ObservableObject
                 DocumentType == "Transfer" || DocumentType == "Income" ? toId : null,
                 createLines);
 
-            await _documentService.CreateAsync(dto, 1);
+            await _documentService.CreateAsync(dto, CurrentUserId);
 
             Saved?.Invoke();
         }
@@ -357,13 +373,19 @@ public partial class DocumentEditViewModel : ObservableObject
     {
         if (_editingId is null) return;
 
+        if (!await _authService.HasPermissionAsync(_authService.CurrentUser!, Permissions.DocumentsPost))
+        {
+            PermissionDenied?.Invoke("Нет прав на проведение документов");
+            return;
+        }
+
         HasError = false;
         IsSaving = true;
 
         try
         {
             ValidateLines();
-            var (success, error) = await _documentService.PostAsync(_editingId.Value, 1);
+            var (success, error) = await _documentService.PostAsync(_editingId.Value, CurrentUserId);
             if (success)
             {
                 Status = "Posted";
@@ -393,12 +415,18 @@ public partial class DocumentEditViewModel : ObservableObject
     {
         if (_editingId is null) return;
 
+        if (!await _authService.HasPermissionAsync(_authService.CurrentUser!, Permissions.DocumentsCancel))
+        {
+            PermissionDenied?.Invoke("Нет прав на отмену документов");
+            return;
+        }
+
         HasError = false;
         IsSaving = true;
 
         try
         {
-            var (success, error) = await _documentService.CancelAsync(_editingId.Value, 1);
+            var (success, error) = await _documentService.CancelAsync(_editingId.Value, CurrentUserId);
             if (success)
             {
                 Status = "Cancelled";

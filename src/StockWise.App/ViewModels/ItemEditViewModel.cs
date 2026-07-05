@@ -12,6 +12,7 @@ public partial class ItemEditViewModel : ObservableObject
 {
     private readonly IItemService _itemService;
     private readonly ICategoryService _categoryService;
+    private readonly IAuthService _authService;
     private int? _editingId;
 
     [ObservableProperty]
@@ -67,11 +68,13 @@ public partial class ItemEditViewModel : ObservableObject
 
     public event Action? Saved;
     public event Action? Cancelled;
+    public event Action<string>? PermissionDenied;
 
-    public ItemEditViewModel(IItemService itemService, ICategoryService categoryService)
+    public ItemEditViewModel(IItemService itemService, ICategoryService categoryService, IAuthService authService)
     {
         _itemService = itemService;
         _categoryService = categoryService;
+        _authService = authService;
     }
 
     [RelayCommand]
@@ -143,6 +146,13 @@ public partial class ItemEditViewModel : ObservableObject
     [RelayCommand]
     private async Task SaveAsync()
     {
+        var perm = _editingId.HasValue ? Permissions.ItemsEdit : Permissions.ItemsCreate;
+        if (!await _authService.HasPermissionAsync(_authService.CurrentUser!, perm))
+        {
+            PermissionDenied?.Invoke("Нет прав на сохранение товара");
+            return;
+        }
+
         HasError = false;
         IsSaving = true;
         IsNotSaving = false;
