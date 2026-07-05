@@ -35,6 +35,7 @@ public partial class MainWindowViewModel : ObservableObject
     private readonly IWarehouseService _warehouseService;
     private readonly IStockService _stockService;
     private readonly IDocumentService _documentService;
+    private readonly IReportService _reportService;
 
     [ObservableProperty]
     private string _version = "v1.0.0";
@@ -69,7 +70,8 @@ public partial class MainWindowViewModel : ObservableObject
         ToastService toastService,
         IWarehouseService warehouseService,
         IStockService stockService,
-        IDocumentService documentService)
+        IDocumentService documentService,
+        IReportService reportService)
     {
         _itemService = itemService;
         _categoryService = categoryService;
@@ -79,6 +81,7 @@ public partial class MainWindowViewModel : ObservableObject
         _warehouseService = warehouseService;
         _stockService = stockService;
         _documentService = documentService;
+        _reportService = reportService;
         _themeService.ThemeChanged += OnThemeChanged;
     }
 
@@ -113,38 +116,48 @@ public partial class MainWindowViewModel : ObservableObject
     [RelayCommand]
     private void NavigateTo(PageType page)
     {
-        ActivePage = page;
-        ActivePageName = page switch
+        try
         {
-            PageType.Dashboard => "Дашборд",
-            PageType.Items => "Номенклатура",
-            PageType.ItemEdit => "Редактирование товара",
-            PageType.Categories => "Категории",
-            PageType.Warehouses => "Склады",
-            PageType.WarehouseEdit => "Редактирование склада",
-            PageType.Stock => "Остатки",
-            PageType.Documents => "Документы",
-            PageType.DocumentEdit => "Редактирование документа",
-            PageType.Orders => "Заказы",
-            PageType.Inventory => "Инвентаризация",
-            PageType.Reports => "Отчёты",
-            PageType.Users => "Пользователи",
-            PageType.Settings => "Настройки",
-            _ => ""
-        };
+            ActivePage = page;
+            ActivePageName = page switch
+            {
+                PageType.Dashboard => "Дашборд",
+                PageType.Items => "Номенклатура",
+                PageType.ItemEdit => "Редактирование товара",
+                PageType.Categories => "Категории",
+                PageType.Warehouses => "Склады",
+                PageType.WarehouseEdit => "Редактирование склада",
+                PageType.Stock => "Остатки",
+                PageType.Documents => "Документы",
+                PageType.DocumentEdit => "Редактирование документа",
+                PageType.Orders => "Заказы",
+                PageType.Inventory => "Инвентаризация",
+                PageType.Reports => "Отчёты",
+                PageType.Users => "Пользователи",
+                PageType.Settings => "Настройки",
+                _ => ""
+            };
 
-        CurrentPageViewModel = page switch
+            CurrentPageViewModel = page switch
+            {
+                PageType.Dashboard => CreateDashboardViewModel(),
+                PageType.Items => CreateItemListViewModel(),
+                PageType.ItemEdit => CreateItemEditViewModel(),
+                PageType.Categories => CreateCategoryListViewModel(),
+                PageType.Warehouses => CreateWarehouseListViewModel(),
+                PageType.WarehouseEdit => CreateWarehouseEditViewModel(),
+                PageType.Stock => CreateStockViewModel(),
+                PageType.Documents => CreateDocumentListViewModel(),
+                PageType.DocumentEdit => CreateDocumentEditViewModel(),
+                PageType.Reports => CreateReportsViewModel(),
+                _ => null
+            };
+        }
+        catch (Exception ex)
         {
-            PageType.Items => CreateItemListViewModel(),
-            PageType.ItemEdit => CreateItemEditViewModel(),
-            PageType.Categories => CreateCategoryListViewModel(),
-            PageType.Warehouses => CreateWarehouseListViewModel(),
-            PageType.WarehouseEdit => CreateWarehouseEditViewModel(),
-            PageType.Stock => CreateStockViewModel(),
-            PageType.Documents => CreateDocumentListViewModel(),
-            PageType.DocumentEdit => CreateDocumentEditViewModel(),
-            _ => null
-        };
+            System.IO.File.AppendAllText("crash.log",
+                $"[{DateTime.Now}] NavigateTo error: {ex}{Environment.NewLine}");
+        }
     }
 
     [RelayCommand]
@@ -286,5 +299,15 @@ public partial class MainWindowViewModel : ObservableObject
         var vm = CreateDocumentEditViewModel();
         _ = vm.LoadForEditAsync(id);
         CurrentPageViewModel = vm;
+    }
+
+    private DashboardViewModel CreateDashboardViewModel()
+    {
+        return new DashboardViewModel(_reportService);
+    }
+
+    private ReportsViewModel CreateReportsViewModel()
+    {
+        return new ReportsViewModel(_reportService);
     }
 }

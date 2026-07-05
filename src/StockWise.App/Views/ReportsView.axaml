@@ -1,0 +1,118 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:StockWise.App.ViewModels"
+             xmlns:converters="clr-namespace:StockWise.App.Converters"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="700"
+             x:DataType="vm:ReportsViewModel"
+             x:Class="StockWise.App.Views.ReportsView">
+
+    <UserControl.Resources>
+        <converters:BoolNegationConverter x:Key="BoolNegation" />
+    </UserControl.Resources>
+
+    <Grid RowDefinitions="Auto,Auto,*" Background="{DynamicResource WorkspaceBg}">
+
+        <Border Grid.Row="0" Classes="pageHeader">
+            <Grid ColumnDefinitions="*,Auto">
+                <TextBlock Text="Отчёты" Classes="pageTitle" />
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="1" Classes="pageHeaderAccent" />
+
+        <Grid Grid.Row="2" RowDefinitions="Auto,*" Margin="28,20,28,0">
+
+            <!-- Filters -->
+            <Border Grid.Row="0" Classes="tableCard" Margin="0,0,0,16">
+                <Grid ColumnDefinitions="Auto,180,Auto,180,Auto,160,Auto" ColumnSpacing="12" Margin="16">
+                    <TextBlock Grid.Column="0" Text="От:" VerticalAlignment="Center" />
+                    <DatePicker Grid.Column="1" SelectedDate="{Binding StartDate}" />
+                    <TextBlock Grid.Column="2" Text="До:" VerticalAlignment="Center" />
+                    <DatePicker Grid.Column="3" SelectedDate="{Binding EndDate}" />
+                    <TextBlock Grid.Column="4" Text="Тип:" VerticalAlignment="Center" />
+                    <ComboBox Grid.Column="5" ItemsSource="{Binding ReportTypes}"
+                              SelectedIndex="{Binding SelectedReportIndex}" />
+                    <Button Grid.Column="6" Content="Сформировать"
+                            Classes="btnPrimary"
+                            Command="{Binding GenerateCommand}" />
+                </Grid>
+            </Border>
+
+            <!-- ABC Analysis Table -->
+            <Border Grid.Row="1" Classes="tableCard"
+                    IsVisible="{Binding IsAbcVisible}">
+                <Grid RowDefinitions="Auto,*">
+                    <DataGrid Grid.Row="1"
+                              Classes="dataTable"
+                              ItemsSource="{Binding AbcItems}"
+                              IsVisible="{Binding HasAbcData}"
+                              AutoGenerateColumns="False"
+                              IsReadOnly="True"
+                              Margin="4,0,4,4">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Товар" Binding="{Binding Name}" Width="*" />
+                            <DataGridTextColumn Header="Артикул" Binding="{Binding Article}" Width="100" />
+                            <DataGridTextColumn Header="Продажи" Binding="{Binding TotalSales, StringFormat='{}{0:N2}'}" Width="120" />
+                            <DataGridTextColumn Header="Доля, %" Binding="{Binding SharePct}" Width="80" />
+                            <DataGridTextColumn Header="Нараст., %" Binding="{Binding CumulativePct}" Width="80" />
+                            <DataGridTextColumn Header="Класс" Binding="{Binding AbcClass}" Width="80" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <StackPanel Grid.Row="1" Classes="emptyState"
+                                IsVisible="{Binding HasAbcData, Converter={StaticResource BoolNegation}}">
+                        <TextBlock Text="📈" Classes="emptyStateIcon" />
+                        <TextBlock Text="Нет данных за период" Classes="emptyStateTitle" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- Turnover Table -->
+            <Border Grid.Row="1" Classes="tableCard"
+                    IsVisible="{Binding IsTurnoverVisible}">
+                <Grid RowDefinitions="Auto,*">
+                    <DataGrid Grid.Row="1"
+                              Classes="dataTable"
+                              ItemsSource="{Binding TurnoverItems}"
+                              IsVisible="{Binding HasTurnoverData}"
+                              AutoGenerateColumns="False"
+                              IsReadOnly="True"
+                              Margin="4,0,4,4">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Товар" Binding="{Binding ItemName}" Width="*" />
+                            <DataGridTextColumn Header="Артикул" Binding="{Binding Article}" Width="100" />
+                            <DataGridTextColumn Header="Склад" Binding="{Binding WarehouseName}" Width="120" />
+                            <DataGridTextColumn Header="Нач. остаток" Binding="{Binding OpenBalance, StringFormat='{}{0:N0}'}" Width="100" />
+                            <DataGridTextColumn Header="Приход" Binding="{Binding IncomeQty, StringFormat='{}{0:N0}'}" Width="100" />
+                            <DataGridTextColumn Header="Расход" Binding="{Binding OutcomeQty, StringFormat='{}{0:N0}'}" Width="100" />
+                            <DataGridTextColumn Header="Кон. остаток" Binding="{Binding CloseBalance, StringFormat='{}{0:N0}'}" Width="100" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <StackPanel Grid.Row="1" Classes="emptyState"
+                                IsVisible="{Binding HasTurnoverData, Converter={StaticResource BoolNegation}}">
+                        <TextBlock Text="📊" Classes="emptyStateIcon" />
+                        <TextBlock Text="Нет данных за период" Classes="emptyStateTitle" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- Error -->
+            <Border Grid.Row="1" Classes="tableCard"
+                    IsVisible="{Binding HasError}" Margin="0,0,0,16">
+                <TextBlock Text="{Binding ErrorMessage}" Foreground="{DynamicResource AccentRed}"
+                           Margin="16" TextWrapping="Wrap" />
+            </Border>
+
+            <!-- Loading -->
+            <StackPanel Grid.Row="1" Spacing="8" Margin="16,8"
+                        IsVisible="{Binding IsLoading}">
+                <Border Classes="skeleton" Height="44" />
+                <Border Classes="skeleton" Height="44" />
+            </StackPanel>
+
+        </Grid>
+
+    </Grid>
+
+</UserControl>

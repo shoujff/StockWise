@@ -44,6 +44,12 @@
         <DataTemplate DataType="vm:DocumentEditViewModel">
             <views:DocumentEditView />
         </DataTemplate>
+        <DataTemplate DataType="vm:DashboardViewModel">
+            <views:DashboardView />
+        </DataTemplate>
+        <DataTemplate DataType="vm:ReportsViewModel">
+            <views:ReportsView />
+        </DataTemplate>
     </Window.DataTemplates>
 
     <Design.DataContext>

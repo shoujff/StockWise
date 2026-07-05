@@ -1,0 +1,106 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:StockWise.App.ViewModels"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="700"
+             x:DataType="vm:DashboardViewModel"
+             x:Class="StockWise.App.Views.DashboardView">
+
+    <Grid RowDefinitions="*,*" Background="{DynamicResource WorkspaceBg}">
+
+        <!-- Top row: KPI cards -->
+        <Grid Grid.Row="0" ColumnDefinitions="*,*,*" ColumnSpacing="16"
+              Margin="28,20,28,0" VerticalAlignment="Center">
+
+            <Border Grid.Column="0" Classes="kpiCard">
+                <StackPanel Orientation="Horizontal" Spacing="12" Margin="16">
+                    <Border Classes="kpiIconBox" Background="{DynamicResource AccentCyan}">
+                        <TextBlock Text="📦" FontSize="20" />
+                    </Border>
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="{Binding TotalItems}" Classes="kpiValue" />
+                        <TextBlock Text="Всего товаров" Classes="kpiLabel" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Column="1" Classes="kpiCard">
+                <StackPanel Orientation="Horizontal" Spacing="12" Margin="16">
+                    <Border Classes="kpiIconBox" Background="{DynamicResource AccentGreen}">
+                        <TextBlock Text="💰" FontSize="20" />
+                    </Border>
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="{Binding TotalStockValueDisplay}" Classes="kpiValue" />
+                        <TextBlock Text="Стоимость запасов" Classes="kpiLabel" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Column="2" Classes="kpiCard">
+                <StackPanel Orientation="Horizontal" Spacing="12" Margin="16">
+                    <Border Classes="kpiIconBox" Background="{DynamicResource AccentMagenta}">
+                        <TextBlock Text="📄" FontSize="20" />
+                    </Border>
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="{Binding DocumentsThisMonth}" Classes="kpiValue" />
+                        <TextBlock Text="Документов за месяц" Classes="kpiLabel" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+        </Grid>
+
+        <!-- Bottom row: KPI cards -->
+        <Grid Grid.Row="1" ColumnDefinitions="*,*,*" ColumnSpacing="16"
+              Margin="28,0,28,28" VerticalAlignment="Center">
+
+            <Border Grid.Column="0" Classes="kpiCard">
+                <StackPanel Orientation="Horizontal" Spacing="12" Margin="16">
+                    <Border Classes="kpiIconBox" Background="{DynamicResource AccentRed}">
+                        <TextBlock Text="⚠️" FontSize="20" />
+                    </Border>
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="{Binding LowStockItems}" Classes="kpiValue" />
+                        <TextBlock Text="Ниже минимума" Classes="kpiLabel" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Column="1" Classes="kpiCard">
+                <StackPanel Orientation="Horizontal" Spacing="12" Margin="16">
+                    <Border Classes="kpiIconBox" Background="{DynamicResource AccentBlue}">
+                        <TextBlock Text="🏭" FontSize="20" />
+                    </Border>
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="{Binding ActiveWarehouses}" Classes="kpiValue" />
+                        <TextBlock Text="Активных складов" Classes="kpiLabel" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Column="2" Classes="kpiCard">
+                <StackPanel Orientation="Horizontal" Spacing="12" Margin="16">
+                    <Border Classes="kpiIconBox" Background="{DynamicResource AccentOrange}">
+                        <TextBlock Text="🏆" FontSize="20" />
+                    </Border>
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="{Binding TopItem.Name, TargetNullValue='—'}" Classes="kpiValue" />
+                        <TextBlock Text="Топ-товар (ABC)" Classes="kpiLabel" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+        </Grid>
+
+        <!-- Loading overlay -->
+        <Border Grid.RowSpan="2"
+                Background="{DynamicResource OverlayBg}"
+                IsVisible="{Binding IsLoading}">
+            <TextBlock Text="Загрузка..." HorizontalAlignment="Center"
+                       VerticalAlignment="Center" FontSize="18" />
+        </Border>
+
+    </Grid>
+
+</UserControl>

@@ -81,6 +81,9 @@ internal class Program
             services.AddScoped<IStockService, StockService>();
             services.AddScoped<IStockCoreService, StockCoreService>();
             services.AddScoped<IDocumentService, DocumentService>();
+            services.AddScoped<IReportService, ReportService>();
+            services.AddTransient<DashboardViewModel>();
+            services.AddTransient<ReportsViewModel>();
         });
     }
 

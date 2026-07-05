@@ -3,6 +3,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.IO;
 using StockWise.App.Views;
 using StockWise.App.Services;
 
@@ -14,6 +15,11 @@ public partial class App : Application
 
     public override void Initialize()
     {
+        AppDomain.CurrentDomain.UnhandledException += (sender, args) =>
+        {
+            File.AppendAllText("crash.log",
+                $"[{DateTime.Now}] Unhandled: {args.ExceptionObject}{Environment.NewLine}");
+        };
         AvaloniaXamlLoader.Load(this);
     }
 
