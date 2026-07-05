@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StockWise.Data;
 
@@ -11,9 +12,11 @@ using StockWise.Data;
 namespace StockWise.App.Migrations
 {
     [DbContext(typeof(StockDb))]
-    partial class StockDbModelSnapshot : ModelSnapshot
+    [Migration("20260705023601_SeedTestData")]
+    partial class SeedTestData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

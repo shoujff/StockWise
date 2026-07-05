@@ -1,3 +1,4 @@
+using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using StockWise.App.Models;
@@ -32,5 +33,13 @@ public class TransactionConfiguration : IEntityTypeConfiguration<Transaction>
             .WithMany(x => x.Transactions)
             .HasForeignKey(x => x.CreatedBy)
             .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasData(
+            new Transaction { Id = 1001, Type = "Income", Direction = "+", Quantity = 20, Price = 350m, ItemId = 1, WarehouseId = 1, CreatedBy = 1, RefDocId = 1, RefDocType = "Income", CreatedAt = new DateTime(2026, 7, 1, 10, 0, 0, DateTimeKind.Utc) },
+            new Transaction { Id = 1002, Type = "Income", Direction = "+", Quantity = 10, Price = 2500m, ItemId = 2, WarehouseId = 1, CreatedBy = 1, RefDocId = 1, RefDocType = "Income", CreatedAt = new DateTime(2026, 7, 1, 10, 0, 0, DateTimeKind.Utc) },
+            new Transaction { Id = 1003, Type = "Income", Direction = "+", Quantity = 10, Price = 500m, ItemId = 8, WarehouseId = 1, CreatedBy = 1, RefDocId = 1, RefDocType = "Income", CreatedAt = new DateTime(2026, 7, 1, 10, 0, 0, DateTimeKind.Utc) },
+            new Transaction { Id = 1004, Type = "Outcome", Direction = "-", Quantity = 2, Price = 3500m, ItemId = 5, WarehouseId = 1, CreatedBy = 2, RefDocId = 2, RefDocType = "Outcome", CreatedAt = new DateTime(2026, 7, 2, 14, 0, 0, DateTimeKind.Utc) },
+            new Transaction { Id = 1005, Type = "Outcome", Direction = "-", Quantity = 5, Price = 500m, ItemId = 8, WarehouseId = 1, CreatedBy = 2, RefDocId = 2, RefDocType = "Outcome", CreatedAt = new DateTime(2026, 7, 2, 14, 0, 0, DateTimeKind.Utc) }
+        );
     }
 }

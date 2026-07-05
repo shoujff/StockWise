@@ -1,3 +1,4 @@
+using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using StockWise.App.Models;
@@ -38,6 +39,12 @@ public class DocumentConfiguration : IEntityTypeConfiguration<Document>
             .WithMany()
             .HasForeignKey(x => x.CreatedBy)
             .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasData(
+            new Document { Id = 1, Type = "Income", Number = "IN-2026-0001", Date = new DateTime(2026, 7, 1, 10, 0, 0, DateTimeKind.Utc), Status = "Posted", TotalAmount = 37000m, SupplierName = "ООО Электротех", ToWarehouseId = 1, CreatedBy = 1 },
+            new Document { Id = 2, Type = "Outcome", Number = "OUT-2026-0001", Date = new DateTime(2026, 7, 2, 14, 0, 0, DateTimeKind.Utc), Status = "Posted", TotalAmount = 9500m, CustomerId = 1, FromWarehouseId = 1, CreatedBy = 2 },
+            new Document { Id = 3, Type = "Transfer", Number = "TRF-2026-0001", Date = new DateTime(2026, 7, 3, 9, 0, 0, DateTimeKind.Utc), Status = "Draft", TotalAmount = 0m, FromWarehouseId = 1, ToWarehouseId = 2, CreatedBy = 1 }
+        );
     }
 }
 
@@ -61,5 +68,15 @@ public class DocumentLineConfiguration : IEntityTypeConfiguration<DocumentLine>
             .WithMany()
             .HasForeignKey(x => x.ItemId)
             .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasData(
+            new DocumentLine { Id = 1, DocumentId = 1, ItemId = 1, Quantity = 20, Price = 350m, Amount = 7000m },
+            new DocumentLine { Id = 2, DocumentId = 1, ItemId = 2, Quantity = 10, Price = 2500m, Amount = 25000m },
+            new DocumentLine { Id = 3, DocumentId = 1, ItemId = 8, Quantity = 10, Price = 500m, Amount = 5000m },
+            new DocumentLine { Id = 4, DocumentId = 2, ItemId = 5, Quantity = 2, Price = 3500m, Amount = 7000m },
+            new DocumentLine { Id = 5, DocumentId = 2, ItemId = 8, Quantity = 5, Price = 500m, Amount = 2500m },
+            new DocumentLine { Id = 6, DocumentId = 3, ItemId = 1, Quantity = 10, Price = 350m, Amount = 3500m },
+            new DocumentLine { Id = 7, DocumentId = 3, ItemId = 2, Quantity = 3, Price = 2500m, Amount = 7500m }
+        );
     }
 }
