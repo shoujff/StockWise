@@ -60,6 +60,8 @@ internal class Program
             services.AddTransient<StockViewModel>();
             services.AddTransient<DocumentListViewModel>();
             services.AddTransient<DocumentEditViewModel>();
+            services.AddTransient<OrderListViewModel>();
+            services.AddTransient<OrderEditViewModel>();
 
             var connString = configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<StockDb>(options =>
@@ -81,6 +83,7 @@ internal class Program
             services.AddScoped<IStockService, StockService>();
             services.AddScoped<IStockCoreService, StockCoreService>();
             services.AddScoped<IDocumentService, DocumentService>();
+            services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IReportService, ReportService>();
             services.AddTransient<DashboardViewModel>();
             services.AddTransient<ReportsViewModel>();

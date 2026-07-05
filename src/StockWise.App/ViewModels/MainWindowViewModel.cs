@@ -19,6 +19,7 @@ public enum PageType
     Documents,
     DocumentEdit,
     Orders,
+    OrderEdit,
     Inventory,
     Reports,
     Users,
@@ -36,6 +37,7 @@ public partial class MainWindowViewModel : ObservableObject
     private readonly IStockService _stockService;
     private readonly IDocumentService _documentService;
     private readonly IReportService _reportService;
+    private readonly IOrderService _orderService;
 
     [ObservableProperty]
     private string _version = "v1.0.0";
@@ -110,7 +112,8 @@ public partial class MainWindowViewModel : ObservableObject
         IWarehouseService warehouseService,
         IStockService stockService,
         IDocumentService documentService,
-        IReportService reportService)
+        IReportService reportService,
+        IOrderService orderService)
     {
         _itemService = itemService;
         _categoryService = categoryService;
@@ -121,6 +124,7 @@ public partial class MainWindowViewModel : ObservableObject
         _stockService = stockService;
         _documentService = documentService;
         _reportService = reportService;
+        _orderService = orderService;
         _themeService.ThemeChanged += OnThemeChanged;
     }
 
@@ -191,6 +195,7 @@ public partial class MainWindowViewModel : ObservableObject
             PageType.Documents => true,
             PageType.DocumentEdit => role == "Manager",
             PageType.Orders => role == "Manager",
+            PageType.OrderEdit => role == "Manager",
             PageType.Inventory => role == "Warehouse",
             PageType.Reports => role is "Manager" or "Viewer",
             PageType.Users => false,
@@ -224,6 +229,7 @@ public partial class MainWindowViewModel : ObservableObject
                 PageType.Documents => "Документы",
                 PageType.DocumentEdit => "Редактирование документа",
                 PageType.Orders => "Заказы",
+                PageType.OrderEdit => "Редактирование заказа",
                 PageType.Inventory => "Инвентаризация",
                 PageType.Reports => "Отчёты",
                 PageType.Users => "Пользователи",
@@ -242,6 +248,8 @@ public partial class MainWindowViewModel : ObservableObject
                 PageType.Stock => CreateStockViewModel(),
                 PageType.Documents => CreateDocumentListViewModel(),
                 PageType.DocumentEdit => CreateDocumentEditViewModel(),
+                PageType.Orders => CreateOrderListViewModel(),
+                PageType.OrderEdit => CreateOrderEditViewModel(),
                 PageType.Reports => CreateReportsViewModel(),
                 _ => null
             };
@@ -414,6 +422,50 @@ public partial class MainWindowViewModel : ObservableObject
         var vm = CreateDocumentEditViewModel();
         _ = vm.LoadForEditAsync(id);
         CurrentPageViewModel = vm;
+    }
+
+    [RelayCommand]
+    private void NavigateToOrderEdit(int id)
+    {
+        if (!IsPageAllowed(PageType.OrderEdit))
+        {
+            ShowToast(ToastType.Warning, "Недостаточно прав");
+            return;
+        }
+        ActivePage = PageType.OrderEdit;
+        ActivePageName = "Редактирование заказа";
+        var vm = CreateOrderEditViewModel();
+        _ = vm.LoadForEditAsync(id);
+        CurrentPageViewModel = vm;
+    }
+
+    private OrderListViewModel CreateOrderListViewModel()
+    {
+        var vm = new OrderListViewModel(_orderService, _authService);
+        vm.EditRequested += (id) => NavigateToOrderEdit(id);
+        vm.CreateRequested += () =>
+        {
+            ActivePage = PageType.OrderEdit;
+            ActivePageName = "Новый заказ";
+            var editVm = CreateOrderEditViewModel();
+            editVm.LoadCommand.Execute(null);
+            CurrentPageViewModel = editVm;
+        };
+        vm.PermissionDenied += (msg) => _toastService.Warning(msg);
+        return vm;
+    }
+
+    private OrderEditViewModel CreateOrderEditViewModel()
+    {
+        var vm = new OrderEditViewModel(_orderService, _itemService, _warehouseService, _authService);
+        vm.Saved += () =>
+        {
+            _toastService.Success("Заказ сохранён");
+            NavigateTo(PageType.Orders);
+        };
+        vm.Cancelled += () => NavigateTo(PageType.Orders);
+        vm.PermissionDenied += (msg) => _toastService.Warning(msg);
+        return vm;
     }
 
     private DashboardViewModel CreateDashboardViewModel()

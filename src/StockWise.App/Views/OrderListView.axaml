@@ -1,0 +1,89 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:StockWise.App.ViewModels"
+             xmlns:converters="clr-namespace:StockWise.App.Converters"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="700"
+             x:DataType="vm:OrderListViewModel"
+             x:Class="StockWise.App.Views.OrderListView">
+
+    <UserControl.Resources>
+        <converters:BoolNegationConverter x:Key="BoolNegation" />
+    </UserControl.Resources>
+
+    <Grid RowDefinitions="Auto,Auto,*" Background="{DynamicResource WorkspaceBg}">
+
+        <Border Grid.Row="0" Classes="pageHeader">
+            <Grid ColumnDefinitions="*,Auto">
+                <TextBlock Text="Заказы" Classes="pageTitle" />
+                <Button Grid.Column="1" Content="+ Новый заказ"
+                        Classes="btnPrimary"
+                        Command="{Binding CreateCommand}" />
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="1" Classes="pageHeaderAccent" />
+
+        <Grid Grid.Row="2" RowDefinitions="Auto,*" Margin="28,20,28,0">
+
+            <Border Grid.Row="0" Classes="tableCard" Margin="0,0,0,16">
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12" Margin="16">
+                    <ComboBox Grid.Column="0" ItemsSource="{Binding StatusFilters}"
+                              SelectedItem="{Binding SelectedStatusFilter}"
+                              PlaceholderText="Все статусы"
+                              MinWidth="200"
+                              HorizontalAlignment="Left" />
+                </Grid>
+            </Border>
+
+            <Border Grid.Row="1" Classes="tableCard">
+                <Grid RowDefinitions="Auto,*">
+                    <DataGrid Grid.Row="1"
+                              Classes="dataTable"
+                              ItemsSource="{Binding Orders}"
+                              IsVisible="{Binding HasItems}"
+                              AutoGenerateColumns="False"
+                              IsReadOnly="True"
+                              Margin="4,0,4,4">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Номер" Binding="{Binding Number}" Width="120" />
+                            <DataGridTextColumn Header="Статус" Binding="{Binding Status}" Width="100" />
+                            <DataGridTextColumn Header="Клиент" Binding="{Binding CustomerName}" Width="*" />
+                            <DataGridTextColumn Header="Сумма" Binding="{Binding TotalAmount, StringFormat='{}{0:N2}'}" Width="120" />
+                            <DataGridTextColumn Header="Позиций" Binding="{Binding LinesCount}" Width="80" />
+                            <DataGridTextColumn Header="Отгружено" Binding="{Binding TotalShippedQty, StringFormat='{}{0:N0}'}" Width="100" />
+                            <DataGridTextColumn Header="Дата" Binding="{Binding CreatedAt, StringFormat='{}{0:dd.MM.yyyy HH:mm}'}" Width="140" />
+                            <DataGridTemplateColumn Header="" Width="120">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" Spacing="4">
+                                            <Button Content="Открыть"
+                                                    Classes="tableActionBtn"
+                                                    Command="{Binding $parent[DataGrid].DataContext.EditCommand}"
+                                                    CommandParameter="{Binding Id}" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <StackPanel Grid.Row="1" Classes="emptyState"
+                                IsVisible="{Binding HasNoItems}">
+                        <TextBlock Text="📋" Classes="emptyStateIcon" />
+                        <TextBlock Text="Нет заказов" Classes="emptyStateTitle" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <StackPanel Grid.Row="1" Spacing="8" Margin="16,8"
+                        IsVisible="{Binding IsLoading}">
+                <Border Classes="skeleton" Height="44" />
+                <Border Classes="skeleton" Height="44" />
+            </StackPanel>
+
+        </Grid>
+
+    </Grid>
+
+</UserControl>

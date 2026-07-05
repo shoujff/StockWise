@@ -50,6 +50,12 @@
         <DataTemplate DataType="vm:ReportsViewModel">
             <views:ReportsView />
         </DataTemplate>
+        <DataTemplate DataType="vm:OrderListViewModel">
+            <views:OrderListView />
+        </DataTemplate>
+        <DataTemplate DataType="vm:OrderEditViewModel">
+            <views:OrderEditView />
+        </DataTemplate>
     </Window.DataTemplates>
 
     <Design.DataContext>
