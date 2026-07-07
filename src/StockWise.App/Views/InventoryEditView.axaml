@@ -1,0 +1,172 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:StockWise.App.ViewModels"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="700"
+             x:DataType="vm:InventoryEditViewModel"
+             x:Class="StockWise.App.Views.InventoryEditView">
+
+    <Grid RowDefinitions="Auto,Auto,*" Background="{DynamicResource WorkspaceBg}">
+
+        <Border Grid.Row="0" Classes="pageHeader">
+            <Grid ColumnDefinitions="*,Auto">
+                <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                    <Button Content="Инвентаризация"
+                            FontSize="14" Foreground="{DynamicResource AccentCyan}"
+                            Cursor="Hand" Background="Transparent" BorderThickness="0"
+                            Padding="0" HorizontalAlignment="Left"
+                            Command="{Binding CancelCommand}" />
+                    <TextBlock Text="/" FontSize="14" Foreground="{DynamicResource TextMuted}"
+                               VerticalAlignment="Center" />
+                    <TextBlock Text="{Binding PageTitle}" FontSize="14"
+                               Foreground="{DynamicResource TextTertiary}" VerticalAlignment="Center" />
+                </StackPanel>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8">
+                    <Button Content="Отмена" Classes="secondaryButton"
+                            Command="{Binding CancelCommand}" />
+                    <Button Content="Подтвердить" Classes="primaryButton"
+                            Command="{Binding ConfirmCommand}"
+                            IsVisible="{Binding IsDraft}" />
+                    <Button Content="Отменить" Classes="dangerButton"
+                            Command="{Binding CancelInventoryCommand}"
+                            IsVisible="{Binding IsDraft}" />
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="1" Classes="pageHeaderAccent" />
+
+        <ScrollViewer Grid.Row="2">
+            <Grid Margin="28,20,28,0" RowDefinitions="Auto,Auto,Auto">
+
+                <Border Grid.Row="0" Classes="formCard glassCard">
+                    <Grid RowDefinitions="Auto,Auto,Auto,Auto"
+                          ColumnDefinitions="200,*,200,*"
+                          RowSpacing="16" ColumnSpacing="16">
+
+                        <TextBlock Grid.Row="0" Grid.ColumnSpan="4"
+                                   Text="Основная информация"
+                                   Classes="formSectionTitle" />
+
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Номер" Classes="formLabel" />
+                        <TextBox Grid.Row="1" Grid.Column="1" Classes="formField"
+                                 Text="{Binding InventoryNumber}" IsReadOnly="True" />
+
+                        <TextBlock Grid.Row="1" Grid.Column="2" Text="Статус" Classes="formLabel" />
+                        <TextBox Grid.Row="1" Grid.Column="3" Classes="formField"
+                                 Text="{Binding Status}" IsReadOnly="True" />
+
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Склад" Classes="formLabel" />
+                        <TextBox Grid.Row="2" Grid.Column="1" Classes="formField"
+                                 Text="{Binding WarehouseName}" IsReadOnly="True" />
+
+                        <TextBlock Grid.Row="2" Grid.Column="2" Text="Дата" Classes="formLabel" />
+                        <TextBox Grid.Row="2" Grid.Column="3" Classes="formField"
+                                 Text="{Binding Date}" IsReadOnly="True" />
+                    </Grid>
+                </Border>
+
+                <Border Grid.Row="1" Classes="formCard glassCard" Margin="0,16,0,0">
+                    <Grid RowDefinitions="Auto,Auto,Auto,Auto">
+
+                        <TextBlock Grid.Row="0" Text="Позиции инвентаризации"
+                                   Classes="formSectionTitle" />
+
+                        <Border Grid.Row="1" Margin="0,12,0,12"
+                                Background="{DynamicResource CardBgSecondary}">
+                            <Grid ColumnDefinitions="*,*,*,*,*"
+                                  Margin="0,8">
+                                <TextBlock Grid.Column="0" Text="Совпало" Classes="formLabel"
+                                           HorizontalAlignment="Center" />
+                                <TextBlock Grid.Column="1" Text="Избыток" Classes="formLabel"
+                                           HorizontalAlignment="Center" />
+                                <TextBlock Grid.Column="2" Text="Недостача" Classes="formLabel"
+                                           HorizontalAlignment="Center" />
+                                <TextBlock Grid.Column="3" Text="Всего расхождений" Classes="formLabel"
+                                           HorizontalAlignment="Center" Grid.ColumnSpan="2" />
+                            </Grid>
+                        </Border>
+
+                        <Grid Grid.Row="2" ColumnDefinitions="*,*,*,*,*"
+                              Margin="0,0,0,12">
+                            <Border Grid.Column="0" Classes="kpiCard" Margin="4,0"
+                                    Background="{DynamicResource SuccessBg}">
+                                <TextBlock Text="{Binding MatchedCount}"
+                                           FontSize="24" FontWeight="700"
+                                           Foreground="{DynamicResource SuccessColor}"
+                                           HorizontalAlignment="Center" />
+                            </Border>
+                            <Border Grid.Column="1" Classes="kpiCard" Margin="4,0"
+                                    Background="{DynamicResource WarningBg}">
+                                <TextBlock Text="{Binding SurplusCount}"
+                                           FontSize="24" FontWeight="700"
+                                           Foreground="{DynamicResource WarningColor}"
+                                           HorizontalAlignment="Center" />
+                            </Border>
+                            <Border Grid.Column="2" Classes="kpiCard" Margin="4,0"
+                                    Background="{DynamicResource DangerBg}">
+                                <TextBlock Text="{Binding ShortageCount}"
+                                           FontSize="24" FontWeight="700"
+                                           Foreground="{DynamicResource DangerColor}"
+                                           HorizontalAlignment="Center" />
+                            </Border>
+                            <Border Grid.Column="3" Classes="kpiCard" Margin="4,0"
+                                    Grid.ColumnSpan="2"
+                                    Background="{DynamicResource InfoBg}">
+                                <TextBlock Text="{Binding TotalDiff}"
+                                           FontSize="24" FontWeight="700"
+                                           Foreground="{DynamicResource InfoColor}"
+                                           HorizontalAlignment="Center" />
+                            </Border>
+                        </Grid>
+
+                        <TextBlock Grid.Row="3" Text="{Binding ErrorMessage}"
+                                   Foreground="{DynamicResource DangerColor}"
+                                   IsVisible="{Binding HasError}"
+                                   Margin="0,0,0,8" />
+
+                    </Grid>
+                </Border>
+
+                <Border Grid.Row="2" Classes="tableCard glassCard" Margin="0,16,0,28">
+                    <Grid RowDefinitions="Auto,*">
+                        <TextBlock Grid.Row="0" Margin="16,12" FontSize="13" Foreground="{DynamicResource TextTertiary}">
+                            <Run Text="Строк: " />
+                            <Run Text="{Binding Lines.Count}" FontWeight="600" Foreground="{DynamicResource TextPrimary}" />
+                        </TextBlock>
+
+                        <DataGrid Grid.Row="1"
+                                  Classes="dataTable"
+                                  ItemsSource="{Binding Lines}"
+                                  AutoGenerateColumns="False"
+                                  IsReadOnly="True"
+                                  Margin="4,0,4,4">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Товар" Binding="{Binding ItemName}" Width="*" />
+                                <DataGridTextColumn Header="Артикул" Binding="{Binding Article}" Width="80" />
+                                <DataGridTextColumn Header="Ед." Binding="{Binding Unit}" Width="50" />
+                                <DataGridTextColumn Header="Ожидалось" Binding="{Binding ExpectedQty}" Width="80" />
+                                <DataGridTemplateColumn Header="Факт" Width="100">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBox Text="{Binding ActualQty}"
+                                                     Classes="formField"
+                                                     IsReadOnly="{Binding $parent[DataGrid].DataContext.CanEdit, Converter={x:Null}}"
+                                                     Width="80" HorizontalAlignment="Center" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTextColumn Header="Расх." Binding="{Binding Diff}" Width="80" />
+                                <DataGridTextColumn Header="Партия" Binding="{Binding BatchNo}" Width="80" />
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                </Border>
+
+            </Grid>
+        </ScrollViewer>
+
+    </Grid>
+
+</UserControl>

@@ -56,6 +56,12 @@
         <DataTemplate DataType="vm:OrderEditViewModel">
             <views:OrderEditView />
         </DataTemplate>
+        <DataTemplate DataType="vm:InventoryListViewModel">
+            <views:InventoryListView />
+        </DataTemplate>
+        <DataTemplate DataType="vm:InventoryEditViewModel">
+            <views:InventoryEditView />
+        </DataTemplate>
     </Window.DataTemplates>
 
     <Design.DataContext>

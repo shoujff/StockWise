@@ -38,6 +38,7 @@ public partial class MainWindowViewModel : ObservableObject
     private readonly IDocumentService _documentService;
     private readonly IReportService _reportService;
     private readonly IOrderService _orderService;
+    private readonly IInventoryService _inventoryService;
 
     [ObservableProperty]
     private string _version = "v1.0.0";
@@ -113,9 +114,11 @@ public partial class MainWindowViewModel : ObservableObject
         IStockService stockService,
         IDocumentService documentService,
         IReportService reportService,
-        IOrderService orderService)
+        IOrderService orderService,
+        IInventoryService inventoryService)
     {
         _itemService = itemService;
+        _inventoryService = inventoryService;
         _categoryService = categoryService;
         _authService = authService;
         _themeService = themeService;
@@ -250,6 +253,7 @@ public partial class MainWindowViewModel : ObservableObject
                 PageType.DocumentEdit => CreateDocumentEditViewModel(),
                 PageType.Orders => CreateOrderListViewModel(),
                 PageType.OrderEdit => CreateOrderEditViewModel(),
+                PageType.Inventory => CreateInventoryListViewModel(),
                 PageType.Reports => CreateReportsViewModel(),
                 _ => null
             };
@@ -471,6 +475,42 @@ public partial class MainWindowViewModel : ObservableObject
     private DashboardViewModel CreateDashboardViewModel()
     {
         return new DashboardViewModel(_reportService);
+    }
+
+    private InventoryListViewModel CreateInventoryListViewModel()
+    {
+        var vm = new InventoryListViewModel(_inventoryService, _authService, _warehouseService);
+        vm.CreateRequested += (warehouseId) =>
+        {
+            ActivePage = PageType.Inventory;
+            ActivePageName = "Новая инвентаризация";
+            var editVm = CreateInventoryEditViewModel();
+            _ = editVm.LoadForCreateAsync(warehouseId);
+            CurrentPageViewModel = editVm;
+        };
+        vm.EditRequested += (id) =>
+        {
+            ActivePage = PageType.Inventory;
+            ActivePageName = "Инвентаризация";
+            var editVm = CreateInventoryEditViewModel();
+            _ = editVm.LoadForViewAsync(id);
+            CurrentPageViewModel = editVm;
+        };
+        vm.PermissionDenied += (msg) => _toastService.Warning(msg);
+        return vm;
+    }
+
+    private InventoryEditViewModel CreateInventoryEditViewModel()
+    {
+        var vm = new InventoryEditViewModel(_inventoryService, _authService);
+        vm.Saved += () =>
+        {
+            _toastService.Success("Инвентаризация сохранена");
+            NavigateTo(PageType.Inventory);
+        };
+        vm.Cancelled += () => NavigateTo(PageType.Inventory);
+        vm.PermissionDenied += (msg) => _toastService.Warning(msg);
+        return vm;
     }
 
     private ReportsViewModel CreateReportsViewModel()

@@ -1,0 +1,110 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:StockWise.App.ViewModels"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="700"
+             x:DataType="vm:InventoryListViewModel"
+             x:Class="StockWise.App.Views.InventoryListView">
+
+    <Grid RowDefinitions="Auto,Auto,*" Background="{DynamicResource WorkspaceBg}">
+
+        <Border Grid.Row="0" Classes="pageHeader">
+            <Grid ColumnDefinitions="*,Auto">
+                <TextBlock Text="Инвентаризация" Classes="pageTitle" />
+                <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8">
+                    <ComboBox Classes="formField" Width="180"
+                              ItemsSource="{Binding Warehouses}"
+                              SelectedItem="{Binding SelectedWarehouse}"
+                              PlaceholderText="Выберите склад">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Name}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                    <Button Content="+ Новая"
+                            Classes="primaryButton"
+                            Command="{Binding CreateCommand}" />
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="1" Classes="pageHeaderAccent" />
+
+        <Grid Grid.Row="2" RowDefinitions="Auto,*" Margin="28,20,28,0">
+
+            <Grid Grid.Row="0" ColumnDefinitions="Auto,Auto,*" Margin="0,0,0,16">
+                <TextBlock Grid.Column="0" Text="Статус:" VerticalAlignment="Center"
+                           Foreground="{DynamicResource TextSecondary}" Margin="0,0,8,0" />
+                <ComboBox Grid.Column="1" Classes="formField" Width="140"
+                          ItemsSource="{Binding StatusFilters}"
+                          SelectedItem="{Binding SelectedStatusFilter}"
+                          PlaceholderText="Все статусы" />
+            </Grid>
+
+            <TextBlock Grid.Row="0" Grid.Column="2"
+                       Text="{Binding ErrorMessage}"
+                       Foreground="{DynamicResource DangerColor}"
+                       IsVisible="{Binding HasError}"
+                       VerticalAlignment="Center"
+                       Margin="16,0,0,0" />
+
+            <Border Grid.Row="1" Classes="tableCard glassCard">
+                <Grid RowDefinitions="Auto,*">
+                    <TextBlock Grid.Row="0" Margin="16,12" FontSize="13" Foreground="{DynamicResource TextTertiary}">
+                        <Run Text="Инвентаризаций: " />
+                        <Run Text="{Binding Inventories.Count}" FontWeight="600" Foreground="{DynamicResource TextPrimary}" />
+                    </TextBlock>
+
+                    <StackPanel Grid.Row="1" Spacing="8" Margin="16,8"
+                                IsVisible="{Binding IsLoading}">
+                        <Border Classes="skeleton" Height="44" />
+                        <Border Classes="skeleton" Height="44" />
+                        <Border Classes="skeleton" Height="44" />
+                    </StackPanel>
+
+                    <DataGrid Grid.Row="1"
+                              Classes="dataTable"
+                              ItemsSource="{Binding Inventories}"
+                              IsVisible="{Binding HasItems}"
+                              AutoGenerateColumns="False"
+                              IsReadOnly="True"
+                              Margin="4,0,4,4">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Номер" Binding="{Binding Number}" Width="120" />
+                            <DataGridTextColumn Header="Склад" Binding="{Binding WarehouseName}" Width="*" />
+                            <DataGridTextColumn Header="Дата" Binding="{Binding Date}" Width="Auto" />
+                            <DataGridTextColumn Header="Сумма расхождений" Binding="{Binding TotalDiff}" Width="Auto" />
+                            <DataGridTextColumn Header="Позиций" Binding="{Binding LinesCount}" Width="80" />
+                            <DataGridTextColumn Header="Статус" Binding="{Binding Status}" Width="Auto" />
+                            <DataGridTemplateColumn Header="" Width="100">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" Spacing="4" HorizontalAlignment="Center">
+                                            <Button Content="Открыть" Classes="tableActionBtn"
+                                                    Command="{Binding $parent[DataGrid].DataContext.EditCommand}"
+                                                    CommandParameter="{Binding Id}"
+                                                    ToolTip.Tip="Просмотр" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <StackPanel Grid.Row="1" Classes="emptyState"
+                                IsVisible="{Binding HasNoItems}">
+                        <TextBlock Text="Инвентаризации не найдены"
+                                   Classes="emptyStateTitle" />
+                        <TextBlock Text="Создайте новую инвентаризацию, выбрав склад"
+                                   Classes="emptyStateHint" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+        </Grid>
+
+    </Grid>
+
+</UserControl>

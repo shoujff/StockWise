@@ -20,6 +20,8 @@ public class StockDb : DbContext
     public DbSet<Order> Orders => Set<Order>();
     public DbSet<OrderLine> OrderLines => Set<OrderLine>();
     public DbSet<Reservation> Reservations => Set<Reservation>();
+    public DbSet<Inventory> Inventories => Set<Inventory>();
+    public DbSet<InventoryLine> InventoryLines => Set<InventoryLine>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
