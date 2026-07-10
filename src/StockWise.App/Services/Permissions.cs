@@ -27,5 +27,11 @@ public static class Permissions
     public const string ReportsView = "Reports.View";
 
     public const string AdminUsers = "Admin.Users";
-    public const string AdminSettings = "Admin.Settings";
+    public const string AdminUsersCreate = "Admin.Users.Create";
+    public const string AdminUsersEdit = "Admin.Users.Edit";
+    public const string AdminUsersDelete = "Admin.Users.Delete";
+    public const string AdminCustomers = "Admin.Customers";
+    public const string AdminCustomersCreate = "Admin.Customers.Create";
+    public const string AdminCustomersEdit = "Admin.Customers.Edit";
+    public const string AdminCustomersDelete = "Admin.Customers.Delete";
 }

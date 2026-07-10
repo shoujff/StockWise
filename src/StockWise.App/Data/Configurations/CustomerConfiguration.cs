@@ -18,7 +18,9 @@ public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
         builder.Property(x => x.Email).HasMaxLength(200);
 
         builder.HasData(
-            new Customer { Id = 1, Name = "ООО Розница", INN = "7701234567", ContactPerson = "Иван Иванов", Phone = "+7 (495) 123-45-67", Email = "info@roznica.ru" }
+            new Customer { Id = 1, Name = "ООО Розница", INN = "7701234567", ContactPerson = "Иван Иванов", Phone = "+7 (495) 123-45-67", Email = "info@roznica.ru" },
+            new Customer { Id = 2, Name = "ООО ТехноМир", INN = "7702345678", ContactPerson = "Петр Петров", Phone = "+7 (495) 234-56-78", Email = "info@technomir.ru" },
+            new Customer { Id = 3, Name = "ИП Сидоров А.В.", INN = "7703456789", ContactPerson = "Алексей Сидоров", Phone = "+7 (495) 345-67-89", Email = "sidorov@mail.ru" }
         );
     }
 }

@@ -78,6 +78,7 @@ internal class Program
             services.AddScoped<StockBalanceRepository>();
             services.AddScoped<TransactionRepository>();
             services.AddScoped<RolePermissionRepository>();
+            services.AddScoped<CustomerRepository>();
             services.AddSingleton<IAuthService, AuthService>();
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IItemService, ItemService>();
@@ -88,8 +89,14 @@ internal class Program
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IInventoryService, InventoryService>();
             services.AddScoped<IReportService, ReportService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ICustomerService, CustomerService>();
             services.AddTransient<DashboardViewModel>();
             services.AddTransient<ReportsViewModel>();
+            services.AddTransient<UserListViewModel>();
+            services.AddTransient<UserEditViewModel>();
+            services.AddTransient<CustomerListViewModel>();
+            services.AddTransient<CustomerEditViewModel>();
         });
     }
 

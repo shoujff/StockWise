@@ -11,7 +11,4 @@ public class ItemPrice
 
     public int ItemId { get; set; }
     public Item Item { get; set; } = null!;
-
-    public int PriceGroupId { get; set; }
-    public PriceGroup PriceGroup { get; set; } = null!;
 }

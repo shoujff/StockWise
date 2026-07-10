@@ -15,5 +15,4 @@ public class User
 
    
     public List<Transaction> Transactions { get; set; } = new();
-    public List<AuditLog> AuditLogs { get; set; } = new();
 }

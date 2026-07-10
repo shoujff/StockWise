@@ -62,6 +62,18 @@
         <DataTemplate DataType="vm:InventoryEditViewModel">
             <views:InventoryEditView />
         </DataTemplate>
+        <DataTemplate DataType="vm:UserListViewModel">
+            <views:UserListView />
+        </DataTemplate>
+        <DataTemplate DataType="vm:UserEditViewModel">
+            <views:UserEditView />
+        </DataTemplate>
+        <DataTemplate DataType="vm:CustomerListViewModel">
+            <views:CustomerListView />
+        </DataTemplate>
+        <DataTemplate DataType="vm:CustomerEditViewModel">
+            <views:CustomerEditView />
+        </DataTemplate>
     </Window.DataTemplates>
 
     <Design.DataContext>
@@ -145,12 +157,11 @@
                                      Command="{Binding NavigateToCommand}"
                                      CommandParameter="{x:Static vm:PageType.Users}"
                                      IsVisible="{Binding CanViewUsers}" />
-                        <RadioButton Content="⚙️  Настройки" Classes="navItem"
+                        <RadioButton Content="👤  Контрагенты" Classes="navItem"
                                      GroupName="nav"
                                      Command="{Binding NavigateToCommand}"
-                                     CommandParameter="{x:Static vm:PageType.Settings}"
-                                     IsVisible="{Binding CanViewSettings}" />
-
+                                     CommandParameter="{x:Static vm:PageType.Customers}"
+                                     IsVisible="{Binding CanViewCustomers}" />
                     </StackPanel>
                 </ScrollViewer>
 

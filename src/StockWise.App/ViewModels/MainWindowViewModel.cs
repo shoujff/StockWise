@@ -23,7 +23,9 @@ public enum PageType
     Inventory,
     Reports,
     Users,
-    Settings
+    UserEdit,
+    Customers,
+    CustomerEdit
 }
 
 public partial class MainWindowViewModel : ObservableObject
@@ -39,6 +41,8 @@ public partial class MainWindowViewModel : ObservableObject
     private readonly IReportService _reportService;
     private readonly IOrderService _orderService;
     private readonly IInventoryService _inventoryService;
+    private readonly IUserService _userService;
+    private readonly ICustomerService _customerService;
 
     [ObservableProperty]
     private string _version = "v1.0.0";
@@ -98,7 +102,7 @@ public partial class MainWindowViewModel : ObservableObject
     private bool _canViewUsers;
 
     [ObservableProperty]
-    private bool _canViewSettings;
+    private bool _canViewCustomers;
 
     public ObservableCollection<ToastNotification> Toasts => _toastService.Toasts;
 
@@ -115,10 +119,14 @@ public partial class MainWindowViewModel : ObservableObject
         IDocumentService documentService,
         IReportService reportService,
         IOrderService orderService,
-        IInventoryService inventoryService)
+        IInventoryService inventoryService,
+        IUserService userService,
+        ICustomerService customerService)
     {
         _itemService = itemService;
         _inventoryService = inventoryService;
+        _userService = userService;
+        _customerService = customerService;
         _categoryService = categoryService;
         _authService = authService;
         _themeService = themeService;
@@ -159,9 +167,9 @@ public partial class MainWindowViewModel : ObservableObject
         CanViewDocuments = true;
         CanViewOrders = role is "Admin" or "Manager";
         CanViewInventory = role is "Admin" or "Warehouse";
-        CanViewReports = role is not "Warehouse";
+        CanViewReports = true;
         CanViewUsers = role is "Admin";
-        CanViewSettings = role is "Admin";
+        CanViewCustomers = role is "Admin" or "Manager";
     }
 
     public void Cleanup()
@@ -200,9 +208,11 @@ public partial class MainWindowViewModel : ObservableObject
             PageType.Orders => role == "Manager",
             PageType.OrderEdit => role == "Manager",
             PageType.Inventory => role == "Warehouse",
-            PageType.Reports => role is "Manager" or "Viewer",
+            PageType.Reports => true,
             PageType.Users => false,
-            PageType.Settings => false,
+            PageType.UserEdit => false,
+            PageType.Customers => role is "Admin" or "Manager",
+            PageType.CustomerEdit => role is "Admin" or "Manager",
             PageType.Dashboard => true,
             _ => false
         };
@@ -236,7 +246,9 @@ public partial class MainWindowViewModel : ObservableObject
                 PageType.Inventory => "Инвентаризация",
                 PageType.Reports => "Отчёты",
                 PageType.Users => "Пользователи",
-                PageType.Settings => "Настройки",
+                PageType.UserEdit => "Редактирование пользователя",
+                PageType.Customers => "Контрагенты",
+                PageType.CustomerEdit => "Редактирование контрагента",
                 _ => ""
             };
 
@@ -255,6 +267,10 @@ public partial class MainWindowViewModel : ObservableObject
                 PageType.OrderEdit => CreateOrderEditViewModel(),
                 PageType.Inventory => CreateInventoryListViewModel(),
                 PageType.Reports => CreateReportsViewModel(),
+                PageType.Users => CreateUserListViewModel(),
+                PageType.UserEdit => CreateUserEditViewModel(),
+                PageType.Customers => CreateCustomerListViewModel(),
+                PageType.CustomerEdit => CreateCustomerEditViewModel(),
                 _ => null
             };
         }
@@ -461,7 +477,7 @@ public partial class MainWindowViewModel : ObservableObject
 
     private OrderEditViewModel CreateOrderEditViewModel()
     {
-        var vm = new OrderEditViewModel(_orderService, _itemService, _warehouseService, _authService);
+        var vm = new OrderEditViewModel(_orderService, _itemService, _warehouseService, _customerService, _authService);
         vm.Saved += () =>
         {
             _toastService.Success("Заказ сохранён");
@@ -518,5 +534,81 @@ public partial class MainWindowViewModel : ObservableObject
         var vm = new ReportsViewModel(_reportService, _authService);
         vm.PermissionDenied += (msg) => _toastService.Warning(msg);
         return vm;
+    }
+
+    private UserListViewModel CreateUserListViewModel()
+    {
+        var vm = new UserListViewModel(_userService, _authService);
+        vm.EditRequested += (id) => NavigateToUserEdit(id);
+        vm.CreateRequested += () => NavigateTo(PageType.UserEdit);
+        vm.UserDeleted += () => _toastService.Success("Пользователь удалён");
+        vm.PermissionDenied += (msg) => _toastService.Warning(msg);
+        return vm;
+    }
+
+    private UserEditViewModel CreateUserEditViewModel()
+    {
+        var vm = new UserEditViewModel(_userService, _authService);
+        vm.Saved += () =>
+        {
+            _toastService.Success("Пользователь сохранён");
+            NavigateTo(PageType.Users);
+        };
+        vm.Cancelled += () => NavigateTo(PageType.Users);
+        vm.PermissionDenied += (msg) => _toastService.Warning(msg);
+        return vm;
+    }
+
+    [RelayCommand]
+    private void NavigateToUserEdit(int id)
+    {
+        if (!IsPageAllowed(PageType.UserEdit))
+        {
+            ShowToast(ToastType.Warning, "Недостаточно прав");
+            return;
+        }
+        ActivePage = PageType.UserEdit;
+        ActivePageName = "Редактирование пользователя";
+        var vm = CreateUserEditViewModel();
+        _ = vm.LoadForEditAsync(id);
+        CurrentPageViewModel = vm;
+    }
+
+    private CustomerListViewModel CreateCustomerListViewModel()
+    {
+        var vm = new CustomerListViewModel(_customerService, _authService);
+        vm.EditRequested += (id) => NavigateToCustomerEdit(id);
+        vm.CreateRequested += () => NavigateTo(PageType.CustomerEdit);
+        vm.CustomerDeleted += () => _toastService.Success("Контрагент удалён");
+        vm.PermissionDenied += (msg) => _toastService.Warning(msg);
+        return vm;
+    }
+
+    private CustomerEditViewModel CreateCustomerEditViewModel()
+    {
+        var vm = new CustomerEditViewModel(_customerService, _authService);
+        vm.Saved += () =>
+        {
+            _toastService.Success("Контрагент сохранён");
+            NavigateTo(PageType.Customers);
+        };
+        vm.Cancelled += () => NavigateTo(PageType.Customers);
+        vm.PermissionDenied += (msg) => _toastService.Warning(msg);
+        return vm;
+    }
+
+    [RelayCommand]
+    private void NavigateToCustomerEdit(int id)
+    {
+        if (!IsPageAllowed(PageType.CustomerEdit))
+        {
+            ShowToast(ToastType.Warning, "Недостаточно прав");
+            return;
+        }
+        ActivePage = PageType.CustomerEdit;
+        ActivePageName = "Редактирование контрагента";
+        var vm = CreateCustomerEditViewModel();
+        _ = vm.LoadForEditAsync(id);
+        CurrentPageViewModel = vm;
     }
 }

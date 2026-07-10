@@ -63,9 +63,11 @@
                                  Text="{Binding OrderNumber}" IsReadOnly="True" />
 
                         <TextBlock Grid.Row="2" Grid.Column="0" Text="Клиент" Classes="formLabel" />
-                        <TextBox Grid.Row="2" Grid.Column="1" Classes="formField"
-                                 Text="{Binding CustomerName}"
-                                 IsReadOnly="{Binding IsNew, Converter={StaticResource BoolNegation}}" />
+                        <ComboBox Grid.Row="2" Grid.Column="1" Classes="formField"
+                                  ItemsSource="{Binding Customers}"
+                                  SelectedItem="{Binding SelectedCustomer}"
+                                  DisplayMemberBinding="{Binding Name}"
+                                  IsEnabled="{Binding CanEdit}" />
 
                     </Grid>
                 </Border>

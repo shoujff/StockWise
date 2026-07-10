@@ -39,6 +39,7 @@ public record OrderDetailDto(
 );
 
 public record CreateOrderDto(
+    int? CustomerId,
     string? CustomerName,
     List<CreateOrderLineDto> Lines
 );

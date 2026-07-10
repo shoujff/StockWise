@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StockWise.Data;
 
@@ -11,9 +12,11 @@ using StockWise.Data;
 namespace StockWise.App.Migrations
 {
     [DbContext(typeof(StockDb))]
-    partial class StockDbModelSnapshot : ModelSnapshot
+    [Migration("20260710212004_RemoveAuditAndPriceGroups")]
+    partial class RemoveAuditAndPriceGroups
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -168,24 +171,6 @@ namespace StockWise.App.Migrations
                             INN = "7701234567",
                             Name = "ООО Розница",
                             Phone = "+7 (495) 123-45-67"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            ContactPerson = "Петр Петров",
-                            Email = "info@technomir.ru",
-                            INN = "7702345678",
-                            Name = "ООО ТехноМир",
-                            Phone = "+7 (495) 234-56-78"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            ContactPerson = "Алексей Сидоров",
-                            Email = "sidorov@mail.ru",
-                            INN = "7703456789",
-                            Name = "ИП Сидоров А.В.",
-                            Phone = "+7 (495) 345-67-89"
                         });
                 });
 
@@ -435,19 +420,6 @@ namespace StockWise.App.Migrations
                     b.HasIndex("WarehouseId");
 
                     b.ToTable("Inventory", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedBy = 3,
-                            Date = new DateTime(2026, 7, 10, 9, 0, 0, 0, DateTimeKind.Utc),
-                            Number = "INV-2026-0001",
-                            Status = "Draft",
-                            TotalDiff = -3m,
-                            UserId = 3,
-                            WarehouseId = 1
-                        });
                 });
 
             modelBuilder.Entity("StockWise.App.Models.InventoryLine", b =>
@@ -486,38 +458,6 @@ namespace StockWise.App.Migrations
                     b.HasIndex("ItemId");
 
                     b.ToTable("InventoryLine", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            ActualQty = 28m,
-                            Diff = -2m,
-                            ExpectedQty = 30m,
-                            InventoryId = 1,
-                            ItemId = 1,
-                            Price = 350m
-                        },
-                        new
-                        {
-                            Id = 2,
-                            ActualQty = 6m,
-                            Diff = 0m,
-                            ExpectedQty = 6m,
-                            InventoryId = 1,
-                            ItemId = 5,
-                            Price = 3500m
-                        },
-                        new
-                        {
-                            Id = 3,
-                            ActualQty = 4m,
-                            Diff = -1m,
-                            ExpectedQty = 5m,
-                            InventoryId = 1,
-                            ItemId = 8,
-                            Price = 500m
-                        });
                 });
 
             modelBuilder.Entity("StockWise.App.Models.Item", b =>
@@ -886,38 +826,6 @@ namespace StockWise.App.Migrations
                         .IsUnique();
 
                     b.ToTable("Orders", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedAt = new DateTime(2026, 7, 5, 10, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = 2,
-                            CustomerId = 1,
-                            Number = "ORD-2026-0001",
-                            Status = "New",
-                            TotalAmount = 17000m
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CreatedAt = new DateTime(2026, 7, 7, 14, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = 1,
-                            CustomerId = 2,
-                            Number = "ORD-2026-0002",
-                            Status = "InProgress",
-                            TotalAmount = 8400m
-                        },
-                        new
-                        {
-                            Id = 3,
-                            CreatedAt = new DateTime(2026, 7, 9, 9, 0, 0, 0, DateTimeKind.Utc),
-                            CreatedBy = 2,
-                            CustomerId = 3,
-                            Number = "ORD-2026-0003",
-                            Status = "Cancelled",
-                            TotalAmount = 1750m
-                        });
                 });
 
             modelBuilder.Entity("StockWise.App.Models.OrderLine", b =>
@@ -953,48 +861,6 @@ namespace StockWise.App.Migrations
                     b.HasIndex("OrderId");
 
                     b.ToTable("OrderLines", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Amount = 5000m,
-                            ItemId = 2,
-                            OrderId = 1,
-                            Price = 2500m,
-                            Quantity = 2m,
-                            ShippedQty = 0m
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Amount = 12000m,
-                            ItemId = 4,
-                            OrderId = 1,
-                            Price = 12000m,
-                            Quantity = 1m,
-                            ShippedQty = 0m
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Amount = 8400m,
-                            ItemId = 6,
-                            OrderId = 2,
-                            Price = 2800m,
-                            Quantity = 3m,
-                            ShippedQty = 0m
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Amount = 1750m,
-                            ItemId = 1,
-                            OrderId = 3,
-                            Price = 350m,
-                            Quantity = 5m,
-                            ShippedQty = 0m
-                        });
                 });
 
             modelBuilder.Entity("StockWise.App.Models.OutgoingInvoice", b =>
@@ -1109,44 +975,6 @@ namespace StockWise.App.Migrations
                     b.HasIndex("StockBalanceId");
 
                     b.ToTable("Reservations", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1L,
-                            CreatedAt = new DateTime(2026, 7, 5, 10, 0, 0, 0, DateTimeKind.Utc),
-                            OrderId = 1,
-                            Quantity = 2m,
-                            Status = "Active",
-                            StockBalanceId = 2L
-                        },
-                        new
-                        {
-                            Id = 2L,
-                            CreatedAt = new DateTime(2026, 7, 5, 10, 0, 0, 0, DateTimeKind.Utc),
-                            OrderId = 1,
-                            Quantity = 1m,
-                            Status = "Active",
-                            StockBalanceId = 4L
-                        },
-                        new
-                        {
-                            Id = 3L,
-                            CreatedAt = new DateTime(2026, 7, 7, 14, 0, 0, 0, DateTimeKind.Utc),
-                            OrderId = 2,
-                            Quantity = 3m,
-                            Status = "Active",
-                            StockBalanceId = 6L
-                        },
-                        new
-                        {
-                            Id = 4L,
-                            CreatedAt = new DateTime(2026, 7, 9, 9, 0, 0, 0, DateTimeKind.Utc),
-                            OrderId = 3,
-                            Quantity = 5m,
-                            Status = "Released",
-                            StockBalanceId = 1L
-                        });
                 });
 
             modelBuilder.Entity("StockWise.App.Models.RolePermission", b =>

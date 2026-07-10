@@ -1,0 +1,100 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:StockWise.App.ViewModels"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+             x:DataType="vm:UserEditViewModel"
+             x:Class="StockWise.App.Views.UserEditView">
+
+    <Grid RowDefinitions="Auto,Auto,*" Background="{DynamicResource WorkspaceBg}">
+
+        <Border Grid.Row="0" Classes="pageHeader">
+            <Grid ColumnDefinitions="*,Auto">
+                <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                    <Button Content="Пользователи"
+                            FontSize="14" Foreground="{DynamicResource AccentCyan}"
+                            Cursor="Hand" Background="Transparent" BorderThickness="0"
+                            Padding="0" HorizontalAlignment="Left"
+                            Command="{Binding CancelCommand}" />
+                    <TextBlock Text="/" FontSize="14" Foreground="{DynamicResource TextMuted}"
+                               VerticalAlignment="Center" />
+                    <TextBlock Text="{Binding PageTitle}" FontSize="14"
+                               Foreground="{DynamicResource TextTertiary}" VerticalAlignment="Center" />
+                </StackPanel>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8">
+                    <Button Content="Отмена" Classes="secondaryButton"
+                            Command="{Binding CancelCommand}" />
+                    <Button Content="&#x1F4BE; Сохранить" Classes="primaryButton"
+                            Command="{Binding SaveCommand}"
+                            IsDefault="True"
+                            IsEnabled="{Binding IsNotSaving}" />
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="1" Classes="pageHeaderAccent" />
+
+        <ScrollViewer Grid.Row="2">
+            <Grid Margin="28,20,28,0" RowDefinitions="Auto,Auto">
+
+                <Border Grid.Row="0" Classes="formCard glassCard">
+                    <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto"
+                          ColumnDefinitions="200,*"
+                          RowSpacing="16" ColumnSpacing="16">
+
+                        <TextBlock Grid.Row="0" Grid.ColumnSpan="2"
+                                   Text="Основная информация"
+                                   Classes="formSectionTitle" />
+
+                        <TextBlock Grid.Row="1" Grid.Column="0"
+                                   Text="Имя *" Classes="formLabel" />
+                        <TextBox Grid.Row="1" Grid.Column="1"
+                                 Classes="formField"
+                                 Watermark="Имя пользователя"
+                                 Text="{Binding FirstName}" />
+
+                        <TextBlock Grid.Row="2" Grid.Column="0"
+                                   Text="Фамилия" Classes="formLabel" />
+                        <TextBox Grid.Row="2" Grid.Column="1"
+                                 Classes="formField"
+                                 Watermark="Фамилия (необязательно)"
+                                 Text="{Binding LastName}" />
+
+                        <TextBlock Grid.Row="3" Grid.Column="0"
+                                   Text="Логин *" Classes="formLabel" />
+                        <TextBox Grid.Row="3" Grid.Column="1"
+                                 Classes="formField"
+                                 Watermark="Уникальный логин"
+                                 Text="{Binding Login}" />
+
+                        <TextBlock Grid.Row="4" Grid.Column="0"
+                                   Text="Пароль" Classes="formLabel" />
+                        <TextBox Grid.Row="4" Grid.Column="1"
+                                 Classes="formField"
+                                 Watermark="Пароль (только при создании)"
+                                 Text="{Binding Password}"
+                                 IsEnabled="{Binding IsPasswordEnabled}" />
+
+                        <TextBlock Grid.Row="5" Grid.Column="0"
+                                   Text="Роль *" Classes="formLabel" />
+                        <ComboBox Grid.Row="5" Grid.Column="1"
+                                  ItemsSource="{Binding Roles}"
+                                  SelectedItem="{Binding SelectedRole}" />
+
+                    </Grid>
+                </Border>
+
+                <Border Grid.Row="1" Classes="loginErrorBox"
+                        IsVisible="{Binding HasError}"
+                        Margin="0,16,0,0">
+                    <TextBlock Text="{Binding ErrorMessage}"
+                               Classes="loginError" />
+                </Border>
+
+            </Grid>
+        </ScrollViewer>
+
+    </Grid>
+
+</UserControl>

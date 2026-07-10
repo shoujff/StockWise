@@ -9,6 +9,7 @@ public interface IAuthService
     Task<User?> ValidateUserAsync(string login, string password);
     Task<User?> RegisterAsync(string login, string password, string firstName, string lastName, string role);
     Task<bool> HasPermissionAsync(User user, string permission);
+    string HashPassword(string password);
     void Login(User user);
     void Logout();
 }

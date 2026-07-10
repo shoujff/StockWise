@@ -1,3 +1,4 @@
+using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using StockWise.App.Models;
@@ -24,6 +25,10 @@ public class InventoryConfiguration : IEntityTypeConfiguration<Inventory>
             .WithMany(x => x.Inventories)
             .HasForeignKey(x => x.WarehouseId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasData(
+            new Inventory { Id = 1, Number = "INV-2026-0001", WarehouseId = 1, Date = new DateTime(2026, 7, 10, 9, 0, 0, 0, DateTimeKind.Utc), Status = "Draft", TotalDiff = -3m, CreatedBy = 3, UserId = 3 }
+        );
     }
 }
 
@@ -48,5 +53,11 @@ public class InventoryLineConfiguration : IEntityTypeConfiguration<InventoryLine
             .WithMany()
             .HasForeignKey(x => x.ItemId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasData(
+            new InventoryLine { Id = 1, InventoryId = 1, ItemId = 1, ExpectedQty = 30m, ActualQty = 28m, Diff = -2m, Price = 350m },
+            new InventoryLine { Id = 2, InventoryId = 1, ItemId = 5, ExpectedQty = 6m, ActualQty = 6m, Diff = 0m, Price = 3500m },
+            new InventoryLine { Id = 3, InventoryId = 1, ItemId = 8, ExpectedQty = 5m, ActualQty = 4m, Diff = -1m, Price = 500m }
+        );
     }
 }

@@ -28,9 +28,9 @@
             <Border Grid.Row="0" Classes="tableCard" Margin="0,0,0,16">
                 <Grid ColumnDefinitions="Auto,180,Auto,180,Auto,160,Auto" ColumnSpacing="12" Margin="16">
                     <TextBlock Grid.Column="0" Text="От:" VerticalAlignment="Center" />
-                    <DatePicker Grid.Column="1" SelectedDate="{Binding StartDate}" />
+                    <DatePicker Grid.Column="1" SelectedDate="{Binding StartDate}" VerticalAlignment="Center" />
                     <TextBlock Grid.Column="2" Text="До:" VerticalAlignment="Center" />
-                    <DatePicker Grid.Column="3" SelectedDate="{Binding EndDate}" />
+                    <DatePicker Grid.Column="3" SelectedDate="{Binding EndDate}" VerticalAlignment="Center" />
                     <TextBlock Grid.Column="4" Text="Тип:" VerticalAlignment="Center" />
                     <ComboBox Grid.Column="5" ItemsSource="{Binding ReportTypes}"
                               SelectedIndex="{Binding SelectedReportIndex}" />

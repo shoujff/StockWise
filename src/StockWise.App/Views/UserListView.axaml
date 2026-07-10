@@ -1,0 +1,100 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:StockWise.App.ViewModels"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="700"
+             x:DataType="vm:UserListViewModel"
+             x:Class="StockWise.App.Views.UserListView">
+
+    <Grid RowDefinitions="Auto,Auto,*" Background="{DynamicResource WorkspaceBg}">
+
+        <Border Grid.Row="0" Classes="pageHeader">
+            <Grid ColumnDefinitions="*,Auto">
+                <TextBlock Text="Пользователи" Classes="pageTitle" />
+                <Button Grid.Column="1" Content="+ Новый пользователь"
+                        Classes="primaryButton"
+                        Command="{Binding CreateCommand}" />
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="1" Classes="pageHeaderAccent" />
+
+        <Grid Grid.Row="2" RowDefinitions="Auto,*" Margin="28,20,28,0">
+
+            <Grid Grid.Row="0" ColumnDefinitions="1*,Auto" Margin="0,0,0,16">
+                <TextBox Grid.Column="0" Classes="searchField"
+                         Watermark="Поиск по логину, имени или роли..."
+                         Text="{Binding SearchTerm}" />
+                <Button Grid.Column="1" Content="&#x27F3;"
+                        Classes="iconButton"
+                        Command="{Binding SearchCommand}"
+                        Margin="8,0,0,0"
+                        ToolTip.Tip="Обновить" />
+            </Grid>
+
+            <Border Grid.Row="1" Classes="tableCard glassCard">
+                <Grid RowDefinitions="Auto,*">
+                    <TextBlock Grid.Row="0" Margin="16,12" FontSize="13" Foreground="{DynamicResource TextTertiary}">
+                        <Run Text="Пользователей: " />
+                        <Run Text="{Binding Users.Count}" FontWeight="600" Foreground="{DynamicResource TextPrimary}" />
+                    </TextBlock>
+
+                    <StackPanel Grid.Row="1" Spacing="8" Margin="16,8"
+                                IsVisible="{Binding IsLoading}">
+                        <Border Classes="skeleton" Height="44" />
+                        <Border Classes="skeleton" Height="44" />
+                        <Border Classes="skeleton" Height="44" />
+                    </StackPanel>
+
+                    <DataGrid Grid.Row="1"
+                              Classes="dataTable"
+                              ItemsSource="{Binding Users}"
+                              IsVisible="{Binding HasItems}"
+                              AutoGenerateColumns="False"
+                              IsReadOnly="True"
+                              Margin="4,0,4,4">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Имя" Binding="{Binding FirstName}" Width="*" />
+                            <DataGridTextColumn Header="Фамилия" Binding="{Binding LastName}" Width="*" />
+                            <DataGridTextColumn Header="Логин" Binding="{Binding Login}" Width="150" />
+                            <DataGridTextColumn Header="Роль" Binding="{Binding Role}" Width="100" />
+                            <DataGridTemplateColumn Header="" Width="100">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" Spacing="4" HorizontalAlignment="Center">
+                                            <Button Content="&#x270F;&#xFE0F;" Classes="tableActionBtn"
+                                                    Command="{Binding $parent[DataGrid].DataContext.EditCommand}"
+                                                    CommandParameter="{Binding Id}"
+                                                    ToolTip.Tip="Редактировать" />
+                                            <Button Content="&#x1F5D1;&#xFE0F;" Classes="tableActionBtnDanger"
+                                                    Command="{Binding $parent[DataGrid].DataContext.DeleteCommand}"
+                                                    CommandParameter="{Binding Id}"
+                                                    ToolTip.Tip="Удалить" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <StackPanel Grid.Row="1" Classes="emptyState"
+                                IsVisible="{Binding HasNoItems}">
+                        <TextBlock Text="&#x1F465;" Classes="emptyStateIcon" />
+                        <TextBlock Text="Пользователи не найдены"
+                                   Classes="emptyStateTitle" />
+                        <TextBlock Text="Создайте нового пользователя"
+                                   Classes="emptyStateHint" />
+                        <Button Content="+ Создать пользователя" Classes="primaryButton"
+                                Command="{Binding CreateCommand}"
+                                HorizontalAlignment="Center"
+                                Margin="0,8,0,0" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+        </Grid>
+
+    </Grid>
+
+</UserControl>

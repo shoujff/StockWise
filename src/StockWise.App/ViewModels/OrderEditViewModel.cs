@@ -24,11 +24,24 @@ public partial class OrderLineEditDto : ObservableObject
     partial void OnPriceChanged(decimal value) => Amount = value * Quantity;
 }
 
+public partial class CustomerOptionDto : ObservableObject
+{
+    [ObservableProperty] private int _id;
+    [ObservableProperty] private string _name = "";
+
+    public CustomerOptionDto(int id, string name)
+    {
+        Id = id;
+        Name = name;
+    }
+}
+
 public partial class OrderEditViewModel : ObservableObject
 {
     private readonly IOrderService _orderService;
     private readonly IItemService _itemService;
     private readonly IWarehouseService _warehouseService;
+    private readonly ICustomerService _customerService;
     private readonly IAuthService _authService;
     private int? _editingId;
 
@@ -57,6 +70,12 @@ public partial class OrderEditViewModel : ObservableObject
 
     [ObservableProperty]
     private WarehouseOptionDto? _selectedWarehouse;
+
+    [ObservableProperty]
+    private ObservableCollection<CustomerOptionDto> _customers = [];
+
+    [ObservableProperty]
+    private CustomerOptionDto? _selectedCustomer;
 
     public ObservableCollection<OrderLineEditDto> Lines { get; } = [];
 
@@ -104,11 +123,13 @@ public partial class OrderEditViewModel : ObservableObject
         IOrderService orderService,
         IItemService itemService,
         IWarehouseService warehouseService,
+        ICustomerService customerService,
         IAuthService authService)
     {
         _orderService = orderService;
         _itemService = itemService;
         _warehouseService = warehouseService;
+        _customerService = customerService;
         _authService = authService;
     }
 
@@ -122,6 +143,9 @@ public partial class OrderEditViewModel : ObservableObject
         {
             var whs = await _warehouseService.GetAllAsync();
             Warehouses = [.. whs.Select(w => new WarehouseOptionDto(w.Id, w.Name))];
+
+            var custs = await _customerService.GetAllAsync();
+            Customers = [.. custs.Select(c => new CustomerOptionDto(c.Id, c.Name))];
 
             if (_editingId is null)
             {
@@ -147,6 +171,13 @@ public partial class OrderEditViewModel : ObservableObject
         TotalAmount = order.TotalAmount;
         PageTitle = $"Заказ #{order.Number}";
 
+        await LoadAsync();
+
+        if (order.CustomerName is not null)
+        {
+            SelectedCustomer = Customers.FirstOrDefault(c => c.Name == order.CustomerName);
+        }
+
         Lines.Clear();
         foreach (var l in order.Lines)
         {
@@ -166,8 +197,6 @@ public partial class OrderEditViewModel : ObservableObject
         OriginalLines = [.. order.Lines];
 
         RecalculateTotal();
-
-        await LoadAsync();
     }
 
     [RelayCommand]
@@ -188,6 +217,11 @@ public partial class OrderEditViewModel : ObservableObject
     partial void OnSearchItemTermChanged(string value)
     {
         _ = SearchItemAsync();
+    }
+
+    partial void OnSelectedCustomerChanged(CustomerOptionDto? value)
+    {
+        CustomerName = value?.Name;
     }
 
     partial void OnSelectedSearchItemChanged(ItemDto? value)
@@ -261,7 +295,7 @@ public partial class OrderEditViewModel : ObservableObject
             var createLines = Lines.Select(l => new CreateOrderLineDto(
                 l.ItemId, l.Quantity, l.Price)).ToList();
 
-            var dto = new CreateOrderDto(CustomerName, createLines);
+            var dto = new CreateOrderDto(SelectedCustomer?.Id, CustomerName, createLines);
 
             await _orderService.CreateAsync(dto, CurrentUserId);
 

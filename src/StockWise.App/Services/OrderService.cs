@@ -73,7 +73,11 @@ public class OrderService : IOrderService
         var batchFlags = await GetItemBatchFlagsAsync(dto.Lines.Select(l => l.ItemId));
 
         Customer? customer = null;
-        if (!string.IsNullOrWhiteSpace(dto.CustomerName))
+        if (dto.CustomerId.HasValue && dto.CustomerId.Value > 0)
+        {
+            customer = await _db.Customers.FindAsync(dto.CustomerId.Value);
+        }
+        else if (!string.IsNullOrWhiteSpace(dto.CustomerName))
         {
             customer = await _db.Customers
                 .FirstOrDefaultAsync(c => c.Name == dto.CustomerName);
